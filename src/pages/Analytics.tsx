@@ -8,8 +8,8 @@ import { ComparisonMetrics } from "../components/ComparisonMetrics";
 import { useAudit } from "../context/AuditContext";
 import { computeAuditSummary } from "../parser";
 import { motion, AnimatePresence } from "motion/react";
-import { Download, Scale, CalendarRange, ArrowLeftRight, Activity } from "lucide-react";
-import { exportAuditToPDF } from "../utils/pdfExport";
+import { Scale, CalendarRange, ArrowLeftRight, Activity } from "lucide-react";
+import { ExportButton } from "../components/ui/ExportButton";
 
 import { PageWrapper } from "../components/layout/PageWrapper";
 
@@ -67,21 +67,12 @@ export const Analytics: React.FC = () => {
             <Scale className="w-4 h-4" />
             {isComparisonMode ? "Disable Comparison" : "Compare Two Periods"}
           </button>
-          <button
-            onClick={() => {
-              if (isComparisonMode && compareSummary) {
-                const reportsB = filterReports(reports, compareFilters);
-                exportAuditToPDF(compareSummary, reportsB, compareFilters);
-              } else {
-                exportAuditToPDF(filteredSummary, filteredReports, filters);
-              }
-            }}
-            disabled={isProcessing}
-            className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-2xl font-bold text-xs shadow-lg shadow-slate-200 hover:bg-slate-800 transition-all active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
-          >
-            <Download className="w-4 h-4" />
-            Export PDF
-          </button>
+          <ExportButton
+          summary={filteredSummary}
+          reports={filteredReports}
+          filters={filters}
+          disabled={isProcessing}
+        />
         </div>
       </div>
 

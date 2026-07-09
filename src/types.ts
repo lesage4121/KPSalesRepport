@@ -1,7 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 
 export interface SalesRow {
   currency: string;
@@ -40,15 +36,15 @@ export interface ClosureInfo {
 }
 
 export interface StationReport {
-  id: string; 
-  stationNumber: string;
-  stationName: string;
-  cityCode: string;
-  cityName: string;
-  stationType: "CT" | "AP" | "CC" | "Unknown";
-  dateStr: string;
+  id: string; // random uuid or unique key
+  stationNumber: string; // e.g. "03222811"
+  stationName: string; // e.g. "LFWCT"
+  cityCode: string; // e.g. "LFW"
+  cityName: string; // Lomé
+  stationType: "CT" | "AP" | "CC" | "Unknown"; // City, Airport, Call Center, etc.
+  dateStr: string; // e.g. "01JUN"
   fullDate: Date; // standard JS Date object calculated
-  year: number; 
+  year: number; // e.g. 2026
   status: string; // e.g. "CLOSED"
   currencyBlocks: CurrencyBlock[];
   closure: ClosureInfo | null;
@@ -56,26 +52,6 @@ export interface StationReport {
   isEmpty: boolean;
   hasErrors: boolean;
   errorMessages: string[];
-}
-
-export interface AuditSummary {
-  totalSalesCount: number;
-  emptyReportsCount: number;
-  activeStationsCount: number;
-  currenciesList: string[];
-  totalSalesByCurrency: Record<string, { 
-    refund: number; 
-    netFare: number; 
-    total: number; 
-    commission: number;
-    accountingTotal: number;
-    netFareHT: number;
-  }>;
-  paymentMethodDistribution: Record<string, number>;
-  totalTaxByCurrency: Record<string, number>;
-  commissionsByStation: Record<string, number>; // Station Name -> Total Commission in primary currency or native
-  commissionsByDay: Record<string, number>;     // Date -> Total Commission
-  errorCount: number;
 }
 
 export interface SalesData {
@@ -96,29 +72,22 @@ export interface SalesData {
   totalHt: number;
 }
 
-export interface ProcessingStatus {
-  isProcessing: boolean;
-  progress: number;
-  currentStep: string;
-  error?: string;
-}
-
-export interface CurrencyRate {
-  code: string;
-  name: string;
-  rate: number; // Rate to USD
-}
-
-export interface SavedData {
-  id: string;
-  date: string;
-  filename: string;
-  data: SalesData[];
-}
-
-export interface ChartData {
-  date: string;
-  total: number;
-  totalHT: number;
-  count: number;
+export interface AuditSummary {
+  totalSalesCount: number;
+  emptyReportsCount: number;
+  activeStationsCount: number;
+  currenciesList: string[];
+  totalSalesByCurrency: Record<string, { 
+    refund: number; 
+    netFare: number; 
+    total: number; 
+    commission: number;
+    accountingTotal: number;
+    netFareHT: number;
+  }>;
+  paymentMethodDistribution: Record<string, number>;
+  totalTaxByCurrency: Record<string, number>;
+  commissionsByStation: Record<string, number>; // Station Name -> Total Commission in primary currency or native
+  commissionsByDay: Record<string, number>;     // Date -> Total Commission
+  errorCount: number;
 }

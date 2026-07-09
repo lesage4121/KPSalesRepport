@@ -1,7 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 
 import React from "react";
 import { 
@@ -16,14 +12,14 @@ import {
 } from "lucide-react";
 
 export interface FilterState {
-  dateStr: string; // "ALL" or specific date string "01JUN"
-  startDate: string; // "YYYY-MM-DD" or ""
-  endDate: string; // "YYYY-MM-DD" or ""
-  stationNumber: string; // "ALL" or specific number "03222811"
-  cityName: string; // "ALL" or specific city
-  currency: string; // "ALL" or specific currency
-  stationType: string; // "ALL", "CT" (Ville), "AP" (Aéroport), "CC" (Call Center)
-  hasErrorsOnly: boolean; // boolean
+  dateStr: string; 
+  startDate: string;
+  endDate: string; 
+  stationNumber: string;
+  cityName: string; 
+  currency: string;
+  stationType: string; 
+  hasErrorsOnly: boolean; 
 }
 
 interface InteractiveFiltersProps {
@@ -166,10 +162,9 @@ export const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
             id="input-filter-city"
             list="cities-list"
             value={filters.cityName === "ALL" ? "" : filters.cityName}
-            onChange={(e) => handleChange("cityName", e.target.value || "ALL")}
+             onChange={(e) => handleChange("cityName", (e.target.value || "ALL").toUpperCase())}
             placeholder="All cities"
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase"          />
           <datalist id="cities-list">
             <option value="ALL">All cities</option>
             {availableCities.map(city => (

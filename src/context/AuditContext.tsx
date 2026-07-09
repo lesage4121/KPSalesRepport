@@ -123,8 +123,9 @@ export const AuditProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const availableCities = useMemo(() => {
     const cities = new Set<string>();
     reports.forEach(r => {
-      const db = STATION_DB[r.stationNumber];
-      if (db) cities.add(db.city);
+      if (r.cityCode) {
+        cities.add(r.cityCode.toUpperCase());
+      }
     });
     return Array.from(cities).sort();
   }, [reports]);
@@ -156,10 +157,7 @@ export const AuditProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         }
       }
       if (f.stationNumber !== "ALL" && rep.stationNumber !== f.stationNumber) return false;
-      if (f.cityName !== "ALL") {
-        const db = STATION_DB[rep.stationNumber];
-        if (!db || db.city !== f.cityName) return false;
-      }
+      if (f.cityName !== "ALL" && rep.cityCode !== f.cityName) return false;
       if (f.stationType !== "ALL" && rep.stationType !== f.stationType) return false;
       if (f.currency !== "ALL") {
         if (!rep.currencyBlocks.some(b => b.currency === f.currency)) return false;

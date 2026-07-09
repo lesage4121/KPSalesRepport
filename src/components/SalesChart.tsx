@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { Calendar, TrendingUp, BarChart3, Activity } from 'lucide-react';
-import { SalesData, ChartData } from '../types';
+import { SalesData } from '../types';
 import { CurrencyService } from '../services/CurrencyService';
 
 interface SalesChartProps {
