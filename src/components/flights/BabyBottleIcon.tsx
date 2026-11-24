@@ -1,7 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 
 import React from "react";
 import { useLanguage } from "../../context/LanguageContext";
@@ -11,9 +7,6 @@ interface BabyBottleIconProps {
   title?: string;
 }
 
-/**
- * Custom illustrated baby bottle ("biberon") SVG icon for INF passengers.
- */
 export const BabyBottleIcon: React.FC<BabyBottleIconProps> = ({
   className = "w-4 h-4",
   title,

@@ -1,8 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Upload,
@@ -976,8 +971,8 @@ export const FlightManifestUploader: React.FC<FlightManifestUploaderProps> = ({
             </h3>
             <p className="text-xs text-[#6E472B] dark:text-[#DECAB1] max-w-lg mx-auto">
               {pick(
-                "Importez un ou plusieurs fichiers manifestes (format G*L...).",
-                "Import one or more DCS manifest files (format G*L...)."
+                "Importez un ou plusieurs fichiers manifestes.",
+                "Import one or more DCS manifest files."
               )}
             </p>
           </div>
@@ -1228,7 +1223,7 @@ export const FlightManifestUploader: React.FC<FlightManifestUploaderProps> = ({
             type="button"
             onClick={() =>
               setModalConfig({
-                isOpen: true,
+                isOpen: false,
                 scope: "ALL",
                 flight: activeFlight,
               })
