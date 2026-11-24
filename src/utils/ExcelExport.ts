@@ -1,22 +1,13 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 
 import * as XLSX from "xlsx";
 import { AuditSummary, StationReport } from "../types";
 import { FilterState } from "../components/InteractiveFilters";
 
-/**
- * Common helper to download an Excel workbook
- */
 const downloadWorkbook = (wb: XLSX.WorkBook, fileName: string) => {
   XLSX.writeFile(wb, fileName);
 };
 
-/**
- * Builds metadata rows for the top of sheets
- */
+
 const buildMetadataRows = (title: string, filters: FilterState) => {
   return [
     [title],
@@ -26,9 +17,6 @@ const buildMetadataRows = (title: string, filters: FilterState) => {
   ];
 };
 
-/**
- * Generates the data array for the Currency Summary sheet
- */
 export const getSummarySheetData = (summary: AuditSummary) => {
   const headers = [
     "Devise",
@@ -49,9 +37,6 @@ export const getSummarySheetData = (summary: AuditSummary) => {
   return [headers, ...rows];
 };
 
-/**
- * Generates the data array for the Detailed Station Reports sheet
- */
 export const getDetailedReportsSheetData = (reports: StationReport[]) => {
   const headers = [
     "Nom Station",
@@ -251,9 +236,7 @@ export const exportSummaryToExcel = (summary: AuditSummary, filters: FilterState
   downloadWorkbook(wb, `Audit_Synthèse_Devises_${today}.xlsx`);
 };
 
-/**
- * Export only the detailed station reports sheet to Excel
- */
+
 export const exportDetailedReportsToExcel = (reports: StationReport[], filters: FilterState) => {
   const wb = XLSX.utils.book_new();
   const meta = buildMetadataRows("RAPPORT D'AUDIT DÉTAILLÉ DES STATIONS", filters);
@@ -265,9 +248,6 @@ export const exportDetailedReportsToExcel = (reports: StationReport[], filters: 
   downloadWorkbook(wb, `Audit_Rapports_Détails_${today}.xlsx`);
 };
 
-/**
- * Export only the daily payment transactions journal sheet to Excel
- */
 export const exportTransactionsToExcel = (reports: StationReport[], filters: FilterState) => {
   const wb = XLSX.utils.book_new();
   const meta = buildMetadataRows("JOURNAL DÉTAILLÉ DES TRANSACTIONS PAR MODE DE PAIEMENT", filters);
