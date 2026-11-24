@@ -1,7 +1,11 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Upload, Database, ChevronLeft } from "lucide-react";
+import { Upload, ChevronLeft } from "lucide-react";
 import { motion } from "motion/react";
 import { LogImporter } from "../components/LogImporter";
 import { useAudit } from "../context/AuditContext";
@@ -49,7 +53,7 @@ export const StationImporterPage: React.FC = () => {
             </div>
           </div>
 
-          <LogImporter onImport={handleImportLogs}/>
+          <LogImporter onImport={handleImportLogs} />
         </div>
       </motion.div>
     </PageWrapper>

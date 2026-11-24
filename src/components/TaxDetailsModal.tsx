@@ -1,3 +1,8 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React, { useState } from "react";
 import { StationReport } from "../types";
 import { getIataTaxDefinition, IataTaxDefinition } from "../iata_taxes";

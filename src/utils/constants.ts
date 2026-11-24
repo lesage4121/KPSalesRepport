@@ -1,4 +1,7 @@
-
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 // Exchange rates for dashboard estimations (Simplified for demo)
 export const EXCHANGE_RATES_TO_XOF: Record<string, number> = {
@@ -13,5 +16,4 @@ export const EXCHANGE_RATES_TO_XOF: Record<string, number> = {
   MAD: 60.2,
   XAF: 1,
   CVE: 5.95,
-  "***": 1,
 };

@@ -1,3 +1,7 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import React, { useMemo, useState } from "react";
 import { StationReport } from "../types";
@@ -9,25 +13,19 @@ import {
   YAxis, 
   Tooltip, 
   ResponsiveContainer, 
-  PieChart, 
-  Pie, 
   Cell, 
-  Legend, 
   LineChart, 
   Line, 
   CartesianGrid 
 } from "recharts";
 import { 
-  BarChart3, 
-  TrendingUp, 
-  PieChart as PieIcon, 
   Landmark,
   LayoutGrid,
   Activity,
-  ArrowUpRight,
   MonitorCheck
 } from "lucide-react";
 import { Skeleton } from "./ui/Skeleton";
+import { Donut3DChart } from "./ui/Donut3DChart";
 
 interface SalesChartsProps {
   reports: StationReport[];
@@ -183,26 +181,6 @@ export const SalesCharts: React.FC<SalesChartsProps> = ({ reports, selectedCurre
     );
   }
 
-  const CustomPieTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const totalValue = paymentChartData.reduce((sum, item) => sum + item.value, 0);
-      return (
-        <div className="bg-slate-900 text-white p-3 rounded-xl shadow-xl border border-slate-800 text-xs">
-          <p className="font-bold mb-1 text-indigo-400">{payload[0].name}</p>
-          <p className="flex justify-between gap-4 font-mono">
-            <span>Volume:</span>
-            <span>{payload[0].value.toLocaleString()} FCFA</span>
-          </p>
-          <p className="flex justify-between gap-4 font-mono text-slate-400 border-t border-slate-800 mt-1 pt-1">
-            <span>Share:</span>
-            <span>{((payload[0].value / totalValue) * 100).toFixed(1)}%</span>
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   const CustomBarTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const totalSales = stationChartData.reduce((sum, item) => sum + item.Ventes, 0);
@@ -292,55 +270,29 @@ export const SalesCharts: React.FC<SalesChartsProps> = ({ reports, selectedCurre
         </div>
       </div>
 
-      <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="bg-white dark:bg-[#1F1209] p-5 rounded-2xl border border-slate-100 dark:border-[#4C2812] shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <MonitorCheck className="w-5 h-5 text-amber-600" />
-            <h4 className="font-semibold text-slate-800 text-sm">Payment Modes (Consolidated XOF)</h4>
+            <h4 className="font-semibold text-slate-800 dark:text-[#FAF7F2] text-sm">Payment Modes (Consolidated XOF)</h4>
           </div>
-          <p className="text-slate-400 text-xs font-mono">Global Revenue Distribution</p>
+          <p className="text-slate-400 dark:text-[#DECAB1] text-xs font-mono">Global Revenue Distribution</p>
         </div>
-        <div className="h-64 grid grid-cols-1 md:grid-cols-5 items-center gap-4">
-          <div className="col-span-3 h-full">
-            {paymentChartData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={paymentChartData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={55}
-                    outerRadius={80}
-                    paddingAngle={3}
-                    dataKey="value"
-                  >
-                    {paymentChartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomPieTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="h-full flex items-center justify-center text-slate-400 text-xs">
-                No recorded sales.
-              </div>
-            )}
-          </div>
-          <div className="col-span-2 space-y-2 overflow-y-auto max-h-full pr-1">
-            {paymentChartData.map((item, index) => (
-              <div key={item.name} className="flex flex-col">
-                <div className="flex items-center gap-1.5 text-[11px] text-slate-600">
-                  <span className="w-2.5 h-2.5 rounded-full inline-block flex-shrink-0" style={{ backgroundColor: COLORS[index % COLORS.length] }}></span>
-                  <span className="truncate font-bold">{item.name}</span>
-                </div>
-                <span className="text-[10px] text-slate-400 font-mono ml-4">
-                  {item.value.toLocaleString()} FCFA
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <Donut3DChart
+          data={paymentChartData.map((item, idx) => ({
+            name: item.name,
+            value: item.value,
+            color: COLORS[idx % COLORS.length],
+          }))}
+          valueFormatter={(v) => `${v.toLocaleString()} FCFA`}
+          centerLabel="Total XOF"
+          centerValue={formatYAxis(
+            paymentChartData.reduce((sum, item) => sum + item.value, 0)
+          )}
+          emptyText="No recorded sales."
+          heightClass="h-64"
+          legendLayout="right"
+        />
       </div>
 
       <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">

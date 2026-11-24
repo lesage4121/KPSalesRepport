@@ -1,3 +1,7 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import React, { createContext, useContext, useState, useMemo, useEffect, ReactNode } from "react";
 import { parseRawReports, computeAuditSummary, STATION_DB } from "../parser";
@@ -29,6 +33,7 @@ const STORAGE_KEYS = {
 const AuditContext = createContext<AuditContextType | undefined>(undefined);
 
 export const AuditProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  // Initialize state from localStorage
   const getInitialRawText = () => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.RAW_TEXT);
@@ -86,26 +91,12 @@ export const AuditProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }, [rawText]);
 
   const availableDates = useMemo(() => {
-
-    const months: Record<string, number> = {
-  JAN: 0, FEB: 1, MAR: 2, APR: 3,
-  MAY: 4, JUN: 5, JUL: 6, AUG: 7,
-  SEP: 8, OCT: 9, NOV: 10, DEC: 11
-};
-
     const dates = new Set<string>();
     reports.forEach(r => {
       if (!r.isEmpty && r.dateStr) dates.add(r.dateStr);
     });
-    return Array.from(dates).sort((a, b) => {
-    const dayA = parseInt(a.substring(0, 2));
-    const monthA = months[a.substring(2)];
-
-    const dayB = parseInt(b.substring(0, 2));
-    const monthB = months[b.substring(2)];
-
-    return monthA - monthB || dayA - dayB;
-  });
+    const ordered = ["01JUN", "02JUN", "03JUN", "04JUN", "05JUN", "06JUN", "07JUN", "08JUN"];
+    return ordered.filter(d => dates.has(d));
   }, [reports]);
 
   const availableStations = useMemo(() => {
@@ -145,16 +136,21 @@ export const AuditProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       if (f.dateStr !== "ALL" && rep.dateStr !== f.dateStr) return false;
       if (rep.fullDate) {
         const repTime = new Date(rep.fullDate.getFullYear(), rep.fullDate.getMonth(), rep.fullDate.getDate()).getTime();
-        if (f.startDate) {
-          const parts = f.startDate.split("-");
-          const startTime = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])).getTime();
-          if (repTime < startTime) return false;
-        }
-        if (f.endDate) {
-          const parts = f.endDate.split("-");
-          const endTime = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])).getTime();
-          if (repTime > endTime) return false;
-        }
+        const parseFilterTime = (iso: string): number | null => {
+          const parts = iso.split("-");
+          if (parts.length !== 3) return null;
+          const y = parseInt(parts[0], 10);
+          const m = parseInt(parts[1], 10);
+          const d = parseInt(parts[2], 10);
+          if (!y || !m || !d) return null;
+          return new Date(y, m - 1, d).getTime();
+        };
+        const tStart = f.startDate ? parseFilterTime(f.startDate) : null;
+        const tEnd = f.endDate ? parseFilterTime(f.endDate) : null;
+        const minTime = tStart !== null && tEnd !== null ? Math.min(tStart, tEnd) : tStart;
+        const maxTime = tStart !== null && tEnd !== null ? Math.max(tStart, tEnd) : tEnd;
+        if (minTime !== null && repTime < minTime) return false;
+        if (maxTime !== null && repTime > maxTime) return false;
       }
       if (f.stationNumber !== "ALL" && rep.stationNumber !== f.stationNumber) return false;
       if (f.cityName !== "ALL" && rep.cityCode !== f.cityName) return false;

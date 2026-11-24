@@ -1,68 +1,72 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import { StationReport, CurrencyBlock, SalesRow, TaxItem, ClosureInfo, AuditSummary } from "./types";
 import { EXCHANGE_RATES_TO_XOF } from "./utils/constants";
 
 // master station database to fetch city info and full names
 export const STATION_DB: Record<string, { name: string; city: string; country: string }> = {
-  "03222811": { name: "LFWCT", city: "LFW CTO", country: "Togo" },
-  "03222822": { name: "LFWAP", city: "LFW APT", country: "Togo" },
-  "32228173": { name: "LFWCC", city: "LFW Call Center", country: "Togo" },
-  "03222516": { name: "ABJCT", city: "ABJ CTO", country: "Côte d'Ivoire" },
-  "03222520": { name: "ABJAP", city: "ABJ APT", country: "Côte d'Ivoire" },
-  "03223441": { name: "ABVAP", city: "ABV APT", country: "Nigéria" },
-  "03223452": { name: "ABVCT", city: "ABV CTO", country: "Nigéria" },
-  "03223474": { name: "ABVCT2", city: "ABV CTO2", country: "Nigéria" },
-  "03223312": { name: "ACCCT", city: "ACC CTO", country: "Ghana" },
-  "03223323": { name: "ACCCT2", city: "Acc CT2", country: "Ghana" },
-  "99990015": { name: "BGFCT", city: "BGF CTO", country: "République Centrafricaine" },
-  "32236035": { name: "BGFAP", city: "BGF APT", country: "République Centrafricaine" },
-  "03222004": { name: "BJLAP", city: "BJL APT", country: "Gambie" },
-  "22209961": { name: "BJLCT", city: "BJL CTO", country: "Gambie" },
-  "03222306": { name: "BKOAP", city: "BKO APT", country: "Mali" },
-  "03222310": { name: "BKOCT", city: "BKO CTO", country: "Mali" },
-  "03224222": { name: "BZVCT", city: "BZV CTO", country: "Congo" },
-  "32242022": { name: "BZVAP", city: "BZV APT", country: "Congo" },
-  "03222450": { name: "CKYCT", city: "CKY CTO", country: "Guinée" },
-  "32224006": { name: "CKYAP", city: "CKY APT", country: "Guinée" },
-  "03222914": { name: "COOCT", city: "COO CTO", country: "Bénin" },
-  "03222962": { name: "COOAP", city: "COO APT", country: "Bénin" },
-  "03223710": { name: "DLACT", city: "DLA CTO", country: "Cameroun" },
-  "32237144": { name: "DLAAP", city: "DLA APT", country: "Cameroun" },
-  "03222111": { name: "DKRCT", city: "DKR CTO", country: "Sénégal" },
-  "32221000": { name: "DSSAP", city: "DSS APT", country: "Sénégal" },
-  "03224314": { name: "FIHCT", city: "FIH CTO", country: "RD Congo" },
-  "32243002": { name: "FIHAP", city: "FIH APT", country: "RD Congo" },
-  "03223220": { name: "FNACT", city: "FNA CTO", country: "Sierra Leone" },
-  "03223253": { name: "FNACT", city: "FNA CTO2", country: "Sierra Leone" },
-  "03202710": { name: "JNBAP", city: "JNB APT", country: "Afrique du Sud" },
-  "03202721": { name: "JNBCC", city: "JNB CC", country: "Afrique du Sud" },
-  "03202732": { name: "JNBCT", city: "JNB CTO", country: "Afrique du Sud" },
-  "03224115": { name: "LBVCT", city: "LBV CTO", country: "Gabon" },
-  "32241005": { name: "LBVAP", city: "LBV APT", country: "Gabon" },
-  "03223426": { name: "LOSCT", city: "LOS CTO", country: "Nigéria" },
-  "03223430": { name: "LOSAP", city: "LOS APT", country: "Nigéria" },
-  "03223511": { name: "NDJCT", city: "NDJ CTO", country: "Tchad" },
-  "03223522": { name: "NDJAP", city: "NDJ APT", country: "Tchad" },
-  "03222715": { name: "NIMCT", city: "NIM CTO", country: "Niger" },
-  "32227075": { name: "NIMAP", city: "NIM APT", country: "Niger" },
-  "03223721": { name: "YAOCT", city: "NSI CTO", country: "Cameroun" },
-  "32237122": { name: "NSIAP", city: "NSI APT", country: "Cameroun" },
-  "03222612": { name: "OUACT", city: "OuA CTO", country: "Burkina Faso" },
-  "32226003": { name: "OUAAP", city: "OUA APT", country: "Burkina Faso" },
-  "03224594": { name: "OXBAP", city: "OXB APT", country: "Guinée-Bissau" },
-  "28209882": { name: "OXBCT", city: "OXB CTO", country: "Guinée-Bissau" },
-  "03224281": { name: "PNRCT", city: "PNR CTO", country: "Congo" },
-  "32242011": { name: "PNRAP", city: "PNR APT", country: "Congo" },
-  "03223113": { name: "MLWCT", city: "MLW CTO", country: "Liberia" },
-  "03223146": { name: "ROBAP", city: "ROB APT", country: "Liberia" },
-  "03223802": { name: "RAICT", city: "RIA CTO", country: "Cap-Vert" },
-  "03223813": { name: "RAIAP", city: "RIA APT", country: "Cap-Vert" },
-  "03224410": { name: "LADCT", city: "LAD CTO", country: "Angola" },
-  "03224406": { name: "LADCT", city: "LAD CTO2", country: "Angola" },
-  "03225401": { name: "NBOCT", city: "NBO CTO", country: "Kenya" },
-  "03225412": { name: "NBOAP", city: "NBO APT", country: "Kenya" },
-  "03222214": { name: "NKCCT", city: "NKC CTO", country: "Mauritanie" },
-  "03222203": { name: "NKCAP", city: "NKC APT", country: "Mauritanie" }
+  "03222811": { name: "LFWCT", city: "Lomé Ville", country: "Togo" },
+  "03222822": { name: "LFWAP", city: "Lomé Aéroport", country: "Togo" },
+  "32228173": { name: "LFWCC", city: "Lomé Call Center", country: "Togo" },
+  "03222516": { name: "ABJCT", city: "Abidjan Ville", country: "Côte d'Ivoire" },
+  "03222520": { name: "ABJAP", city: "Abidjan Aéroport", country: "Côte d'Ivoire" },
+  "03223441": { name: "ABVAP", city: "Abuja Aéroport", country: "Nigéria" },
+  "03223452": { name: "ABVCT", city: "Abuja Ville", country: "Nigéria" },
+  "03223474": { name: "ABV_AUX", city: "Abuja Agence", country: "Nigéria" },
+  "03223312": { name: "ACCCT", city: "Accra Ville", country: "Ghana" },
+  "03223323": { name: "ACC_AUX", city: "Accra Agence", country: "Ghana" },
+  "99990015": { name: "BGFCT", city: "Bangui Ville", country: "République Centrafricaine" },
+  "32236035": { name: "BGFAP", city: "Bangui Aéroport", country: "République Centrafricaine" },
+  "03222004": { name: "BJLAP", city: "Banjul Aéroport", country: "Gambie" },
+  "22209961": { name: "BJLCT", city: "Banjul Ville", country: "Gambie" },
+  "03222306": { name: "BKOAP", city: "Bamako Aéroport", country: "Mali" },
+  "03222310": { name: "BKOCT", city: "Bamako Ville", country: "Mali" },
+  "03224222": { name: "BZVCT", city: "Brazzaville Ville", country: "Congo" },
+  "32242022": { name: "BZVAP", city: "Brazzaville Aéroport", country: "Congo" },
+  "03222450": { name: "CKYCT", city: "Conakry Ville", country: "Guinée" },
+  "32224006": { name: "CKYAP", city: "Conakry Aéroport", country: "Guinée" },
+  "03222914": { name: "COOCT", city: "Cotonou Ville", country: "Bénin" },
+  "03222962": { name: "COOAP", city: "Cotonou Aéroport", country: "Bénin" },
+  "03223710": { name: "DLACT", city: "Douala Ville", country: "Cameroun" },
+  "32237144": { name: "DLAAP", city: "Douala Aéroport", country: "Cameroun" },
+  "03222111": { name: "DKRCT", city: "Dakar Ville", country: "Sénégal" },
+  "32221000": { name: "DSSAP", city: "Diass Aéroport", country: "Sénégal" },
+  "03224314": { name: "FIHCT", city: "Kinshasa Ville", country: "RD Congo" },
+  "32243002": { name: "FIHAP", city: "Kinshasa Aéroport", country: "RD Congo" },
+  "03223220": { name: "FNACT", city: "Freetown Ville", country: "Sierra Leone" },
+  "03223253": { name: "FNA_AUX", city: "Freetown Agence", country: "Sierra Leone" },
+  "03202710": { name: "JNBAP", city: "Johannesburg Aéroport", country: "Afrique du Sud" },
+  "03202721": { name: "JNBCC", city: "Johannesburg Call Center", country: "Afrique du Sud" },
+  "03202732": { name: "JNBCT", city: "Johannesburg Ville", country: "Afrique du Sud" },
+  "03224115": { name: "LBVCT", city: "Libreville Ville", country: "Gabon" },
+  "32241005": { name: "LBVAP", city: "Libreville Aéroport", country: "Gabon" },
+  "03223426": { name: "LOSCT", city: "Lagos Ville", country: "Nigéria" },
+  "03223430": { name: "LOSAP", city: "Lagos Aéroport", country: "Nigéria" },
+  "03223511": { name: "NDJCT", city: "N'Djamena Ville", country: "Tchad" },
+  "03223522": { name: "NDJAP", city: "N'Djamena Aéroport", country: "Tchad" },
+  "03222715": { name: "NIMCT", city: "Niamey Ville", country: "Niger" },
+  "32227075": { name: "NIMAP", city: "Niamey Aéroport", country: "Niger" },
+  "03223721": { name: "YAOCT", city: "Yaoundé Ville", country: "Cameroun" },
+  "32237122": { name: "NSIAP", city: "Yaoundé Nsimalen", country: "Cameroun" },
+  "03222612": { name: "OUACT", city: "Ouagadougou Ville", country: "Burkina Faso" },
+  "32226003": { name: "OUAAP", city: "Ouagadougou Aéroport", country: "Burkina Faso" },
+  "03224594": { name: "OXBAP", city: "Bissau Aéroport", country: "Guinée-Bissau" },
+  "28209882": { name: "OXBCT", city: "Bissau Ville", country: "Guinée-Bissau" },
+  "03224281": { name: "PNRCT", city: "Pointe-Noire Ville", country: "Congo" },
+  "32242011": { name: "PNRAP", city: "Pointe-Noire Aéroport", country: "Congo" },
+  "03223113": { name: "MLWCT", city: "Monrovia Ville", country: "Liberia" },
+  "03223146": { name: "ROBAP", city: "Robertsfield Aéroport", country: "Liberia" },
+  "03223802": { name: "RAICT", city: "Praia Ville", country: "Cap-Vert" },
+  "03223813": { name: "RAIAP", city: "Praia Aéroport", country: "Cap-Vert" },
+  "03224410": { name: "LADCT", city: "Luanda Ville", country: "Angola" },
+  "03224406": { name: "LAD_AUX", city: "Luanda Agence", country: "Angola" },
+  "03225401": { name: "NBOCT", city: "Nairobi Ville", country: "Kenya" },
+  "03225412": { name: "NBOAP", city: "Nairobi Aéroport", country: "Kenya" },
+  "03222214": { name: "NKCCT", city: "Nouakchott Ville", country: "Mauritanie" },
+  "03222203": { name: "NKCAP", city: "Nouakchott Aéroport", country: "Mauritanie" }
 };
 
 // Map months to index
@@ -83,6 +87,8 @@ export function parseDateString(dayMonth: string): Date {
 export function parseRawReports(rawText: string): StationReport[] {
   const reports: StationReport[] = [];
   
+  // Split reports by the page form-feed or header indicators
+  // WY*T#STA starts a new station report
   const rawBlocks = rawText.split(/(?=WY\*T#STA)/);
 
   rawBlocks.forEach((block, index) => {
@@ -515,7 +521,9 @@ export function computeAuditSummary(reports: StationReport[]): AuditSummary {
   const activeReports = reports.filter(r => !r.isEmpty);
   const totalSalesCount = activeReports.length;
   const emptyReportsCount = reports.length - totalSalesCount;
+  
   const activeStations = new Set(reports.map(r => r.stationNumber));
+  
   const totalSalesByCurrency: AuditSummary["totalSalesByCurrency"] = {};
   const paymentMethodDistribution: Record<string, number> = {};
   const totalTaxByCurrency: Record<string, number> = {};
@@ -570,6 +578,7 @@ export function computeAuditSummary(reports: StationReport[]): AuditSummary {
       totalTaxByCurrency[cur] += block.taxTotal;
     });
   });
+
   return {
     totalSalesCount,
     emptyReportsCount,

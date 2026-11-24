@@ -1,0 +1,6 @@
+{
+  "name": "Station Sales Audit Dashboard",
+  "description": "Tableau de bord dynamique d'audit des ventes par station, période, devises, taxes, modes de paiement et indicateurs de fermeture.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

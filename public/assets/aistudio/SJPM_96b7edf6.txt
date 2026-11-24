@@ -1,0 +1,2759 @@
+G*L69/11NOVNSI#BT/ET/IB/OB/ON/SS/FF/FQTV/AE
+ KP    69 11NOV   NSI       830   738 BT ET IB OB    C6Y34
+  1  AMA MOOR    VICKY      H   LFW 16L-F  2 F  OB ET ETI
+         KP BGF    3032019163.13,3032019164.14
+                   2 / 27 KG
+         KP 34   H  LFW   BGF   11NOV ETD1320 1
+         0323997602832  C01 11NOV H NSILFW USED
+  2  AMBOMO OND  TIMOT AE2  E   LFW 29A-F  1 M  ET ETI
+         KP LFW    5032058598.15
+                   1 / 15 KG
+         0322102149839  C01 11NOV E NSILFW USED
+  3  BAHOGWERHE  MATAB      H   LFW 17A-F  1 M  OB ET ETI
+         KP BGF    3032019152.8
+                   1 / 8  KG
+         KP 34   H  LFW   BGF   11NOV ETD1320 1
+         0322102123446  C03 11NOV H NSILFW USED
+  4  BENN        DIEUD      Q   SSG 21A-F  1 M  ET ETI
+         KP SSG    6032773317.9
+                   1 / 9  KG
+         0329408657578  C01 11NOV Q NSISSG USED
+  5  BIETEKE     CHRIS      U   LFW 24L-F  1 F  OB ET ETI
+         KP DSS    4032220445.10
+                   1 / 10 KG
+         KP 52   U  LFW   DSS   11NOV ETD1240 7
+         0323940480087  C01 11NOV U NSILFW USED
+  6  DIOUF       MOUST      H   LFW 32A-F  1 M  OB ET ETI
+         KP TMS    9032257816.19
+                   1 / 19 KG
+         KP 60   H  LFW   TMS   11NOV ETD1350 5
+         0325869537114  C01 11NOV H NSILFW USED
+  7  DJOUGANG    MAURI      Q   LFW 28C-F  2 M  OB ET ETI
+         KP ABJ    3032019149.24,3032019150.20
+                   2 / 44 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0325033981799  C01 11NOV Q NSILFW USED
+  8  DU          XIAOH      D   SSG  1A-F NB M  CS ET DOCS
+                                             ETI
+         0719486258376  C01 11NOV D NSISSG USED
+  9  EDOA        GILBE      J   LFW  2J-F NB M  OB ET DOCV
+                                             DOCS ETI
+         KP 22   J  LFW   ACC   11NOV ETD1230 6
+         0329488891176  C01 11NOV J NSILFW USED
+ 10  ESONOEYENG  PERGE      Q   SSG 18A-F NB M  ET ETI
+         0322300332445  C02 11NOV Q NSISSG USED
+ 11  EWANDJENTO  PAUL  AF2  H   LFW 18J-F  1 M  OB ET ETI
+         KP CKY    3032019255.17
+                   1 / 17 KG
+         KP 10   H  LFW   CKY   11NOV ETD1410 3
+         0323940474459  C01 11NOV H NSILFW USED
+ 12  GASSACKYS   SERGE      D   LFW  2C-F NB M  OB ET DOCV
+                                             DOCS ETI
+         KP 44   D  LFW   BZV   11NOV ETD1355 9
+         0329408652320  C03 11NOV D NSILFW USED
+ 13  ISSABEDENG  NARCI      H   SSG 19A-F NB M  IB EIB CS
+                                             ET DOCS ETI
+         ET 949  U  ADD  10NOV SKD0100
+         0719019703289  C03 11NOV H NSISSG USED
+ 14  KENHOUNG    YANIC      V   LFW 31A-F NB M  OB ET DOCV
+                                             DOCS ETI FQTV
+         ET10018864310
+         KP 22   V  LFW   ACC   11NOV ETD1230 6
+         0329488891177  C01 11NOV V NSILFW USED
+ 15  LIU         JUNSH AD3  H   SSG 16A-F  2 M  CS ET DOCS
+                                             ETI
+         KP SSG    6032773313.12,6032773315.10
+                   2 / 22 KG
+         0719486258860  C01 11NOV H NSISSG USED
+ 16  LIYDZEKA B  MBINK AC2  Q   LFW 31L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019309.22,3032019310.22
+                   2 / 44 KG
+         KP 62   Q  LFW   LOS   11NOV ETD1515 3
+         0323927448740  C01 11NOV Q NSILFW USED
+ 17  MAKANTEMBE  ADYAN      Q   LFW 20A-F  2 F  OB WB ET
+                                             ETI
+         KP CKY    3032019182.23,3032019183.28
+                   2 / 51 KG
+         KP 10   Q  LFW   CKY   11NOV ETD1410 3
+         0323940475346  C01 11NOV Q NSILFW USED
+ 18  MBA ADA     RIGOB      Q   SSG 21L-F  1 M  ET ETI
+         KP SSG    6032773318.22
+                   1 / 22 KG
+         0322102155511  C02 11NOV Q NSISSG USED
+ 19  MBINKAR     BASIL AC2  Q   LFW 31K-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019316.8
+                   1 / 8  KG
+         KP 62   Q  LFW   LOS   11NOV ETD1515 3
+         0323927448739  C01 11NOV Q NSILFW USED
+ 20  MBOCKMBOCK  EMMAN      U   LFW 29L-F  1 M  OB ET ETI
+         KP OUA    9032257789.20
+                   1 / 20 KG
+         KP 46   U  LFW   OUA   11NOV ETD1405 6
+         0322941199417  C01 11NOV U NSILFW USED
+ 21  MENGUEDE    SIMON      H   LFW 28A-F  1 M  OB WB ET
+                                             ETI
+         KP ABJ    3032019243.23
+                   1 / 23 KG
+         KP 10   H  LFW   ABJ   11NOV ETD1410 3
+         2754820397861  C01 11NOV H NSILFW USED
+ 22  MESSIMBOUD  CAMIL      Q   LFW     F  0 M  OB DOCS
+ 23  MPALLA MAS  GHISL      Q   LFW 17C-F  2 M  PX OB ET
+                                             DOCS ETI
+         KP ABJ    3032019352.19,3032019353.18
+                   2 / 37 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0322102155556  C01 11NOV Q NSILFW USED
+ 24  NCHARE      ISSOF      D   LFW  1L-F NB M  OB ET DOCS
+                                             ETI
+         KP 10   D  LFW   ABJ   11NOV ETD1410 3
+         0325033981680  C01 11NOV D NSILFW USED
+ 25  NEKEM TAGA  DILAN AE2  E   LFW 30A-F  1 M  ET ETI
+         KP LFW    5032058609.21
+                   1 / 21 KG
+         0322102149840  C01 11NOV E NSILFW USED
+ 26  NGAMBIDA    JOSEP      Q   LFW 27L-F  2 F  OB ET ETI
+         KP ABJ    3032019178.19,3032019179.22
+                   2 / 41 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0323940476513  C01 11NOV Q NSILFW USED
+ 27  NGOUYAMSAL  JEAN  AF2  H   LFW 18K-F  1 M  OB ET ETI
+         KP CKY    3032019202.18
+                   1 / 18 KG
+         KP 10   H  LFW   CKY   11NOV ETD1410 3
+         0323940474460  C01 11NOV H NSILFW USED
+ 28  NGUNYAM     NOELL      V   LFW 17L-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP ROB    7032678649.21
+                   1 / 21 KG
+         KP 20   V  LFW   ROB   11NOV ETD1415 8
+         0323940760760  C01 11NOV V NSILFW USED
+ 29  NGWA        LOUIS      C   LFW  1C-F  1 M  OB FF BRW
+                                             ET DOCV DOCS ETI
+         KP LOS    3032019267P.13
+                   1 / 13 KG
+         KP997480584            BROWN
+         KP 62   C  LFW   LOS   11NOV ETD1515 3
+         0322102149437  C02 11NOV C NSILFW USED
+ 30  NKOAMALA    SIDON AK2  Q   SSG 24A-F  1 M  ET ETI
+         KP SSG    6032773319.13
+                   1 / 13 KG
+         0322300332139  C01 11NOV Q NSISSG USED
+ 31  NKOLO ABEN  MACAI      Q   SSG 20L-F  1 M  ET ETI
+         KP SSG    6032773316.10
+                   1 / 10 KG
+         0322102157112  C02 11NOV Q NSISSG USED
+ 32  OBOUNGATOM  FRANC      Q   LFW 28L-F NB M  OB ET DOCV
+                                             DOCS ETI
+         KP 44   Q  LFW   BZV   11NOV ETD1355 9
+         0329408652319  C03 11NOV Q NSILFW USED
+ 33  SANDIE      ARSEN      U   LFW 27A-F  2 M  OB ET DOCS
+                                             ETI
+         KP BKO    3032019175.11,3032019176.23
+                   2 / 34 KG
+         KP 16   U  LFW   BKO   11NOV ETD1310 4
+         0322102160669  C01 11NOV U NSILFW USED
+ 34  SHANG       WEI M AD3  H   SSG 16B-F  1 M  CS ET DOCS
+                                             ETI
+         KP SSG    6032773314.7
+                   1 / 7  KG
+         0719486258861  C01 11NOV H NSISSG USED
+ 35  TAMEDJOKAM  THIER      Q   SSG 18L-F  1 M  ET ETI
+         KP SSG    6032773308.18
+                   1 / 18 KG
+         0322300332134  C01 11NOV Q NSISSG USED
+ 36  TAOUKREO    HEMWU      D   LFW  1J-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP BZV    3032019294P.32
+                   1 / 32 KG
+         KP 44   D  LFW   BZV   11NOV ETD1355 9
+         0323945972478  C01 11NOV D NSILFW USED
+ 37  TIAMTIAMGN  ALADI AK2  Q   SSG 19L-F  1 M  ET ETI
+         KP SSG    6032773312.9
+                   1 / 9  KG
+         0322300332140  C01 11NOV Q NSISSG USED
+ 38  WU          JINYI AD3  H   SSG 16C-F NB F  CS ET DOCS
+                                             ETI
+         0719486258862  C01 11NOV H NSISSG USED
+ 39  XXXXX EGOU  AUDRE      Q   LFW 36L-F  1 F  PX CM TKT
+         KP LFW    5032058645.15
+                   1 / 15 KG
+       1 PAPER TKT NBR:03200000000000
+ 40  ZHU         YONGX      V   LFW 30L-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019286.9,3032019287.20
+                   2 / 29 KG
+         KP 22   V  LFW   ACC   11NOV ETD1230 6
+         0327587292079  C01 11NOV V NSILFW USED
+ 
+HDQ.HDQ8HEA 1123 12-NOV-2026 1CC450
+ G*L69/11NOVSSG#BT/ET/IB/OB/ON/SS/FF/FQTV/AE
+ KP    69 11NOV   SSG      1010   738 BT ET IB OB    C6Y53
+  1  ADEKUNLE    OLUWO      D   LFW  2L-F  1 M  OB CS ET
+                                             DOCV DOCS ETI FQTV
+         KP LOS    3032019335P.4
+                   1 / 4  KG
+         ET00026031003
+         KP 62   C  LFW   LOS   11NOV ETD1515 3
+         0715864809461  C01 11NOV D SSGLFW USED
+  2  AGBEKPORNU  ERNES      Q   LFW 19L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019463.30,3032019464.16
+                   2 / 46 KG
+         KP 20   Q  LFW   ACC   11NOV ETD1415 8
+         0322102157109  C01 11NOV Q SSGLFW USED
+  3  AMORIGHOYE  JEFFR      H   LFW 18C-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019554.9,3032019556.16
+                   2 / 25 KG
+         KP 62   H  LFW   LOS   11NOV ETD1515 3
+         0323986490542  C02 11NOV H SSGLFW USED
+  4  ASSANIBAH   FATIM      U   LFW 20B-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019625.24,3032019626.19
+                   2 / 43 KG
+         KP 20   U  LFW   ACC   11NOV ETD1415 8
+         0322102153154  C01 11NOV U SSGLFW USED
+  5  ATTI EPSE   AMENA      V   LFW 16C-F  1 F  OB ET ETI
+         KP ABJ    3032019531.17
+                   1 / 17 KG
+         KP 10   V  LFW   ABJ   11NOV ETD1410 3
+         0325884397487  C01 11NOV V SSGLFW USED
+  6  BAH         RACHI      U   LFW 19C-F  2 F  OB ET ETI
+         KP CKY    3032019584.19,3032019590.14
+                   2 / 33 KG
+         KP 10   U  LFW   CKY   11NOV ETD1410 3
+         0322102156956  C01 11NOV U SSGLFW USED
+  7  BINOHARI B  IGOR       U   LFW 32L-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019345.23,3032019346.20
+                   2 / 43 KG
+         KP 20   U  LFW   ACC   11NOV ETD1415 8
+         0322102156618  C01 11NOV U SSGLFW USED
+  8  CISSE       FATOU      U   LFW 18L-F  3 F  OB WB ET
+                                             INF IFET ETI
+         KP BKO    3032019508.32,3032019509.28,
+         KP BKO    3032019513.23
+                   3 / 83 KG
+         KP 16   U  LFW   BKO   11NOV ETD1310 4
+         0322300332128  C01 11NOV U SSGLFW USED
+  9  EGUIN       MECHA      Q   LFW 35L-F  1 M  ET ETI
+         KP LFW    5032058730.18
+                   1 / 18 KG
+         0322102158343  C01 11NOV Q SSGLFW USED
+ 10  ELDUAYENHE  GILBE      H   LFW 19A-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP ABV    3032019328.10
+                   1 / 10 KG
+         KP 32   H  LFW   ABV   11NOV ETD1420 7
+         0322300332137  C01 11NOV H SSGLFW USED
+ 11  FORDY       THOMA      H   LFW 17J-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019336.15
+                   1 / 15 KG
+         KP 62   H  LFW   LOS   11NOV ETD1515 3
+         0322102159345  C01 11NOV H SSGLFW USED
+ 12  GENESIS     EMMAN      S   LFW 25A-F  1 M  OB CS ET
+                                             DOCV DOCS OTHS ETI
+         KP ABV    3032019417.7
+                   1 / 7  KG
+         KP 32   S  LFW   ABV   11NOV ETD1420 7
+         OTHS-/ET1009S11NOV ET1009S11NOV
+         0717559004799  C03 11NOV S SSGLFW USED
+ 13  INKUNIMYEN  GAIL       H   LFW 20C-F  2 CHD OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019611.26,3032019612.19
+                   2 / 45 KG
+         KP 20   H  LFW   ACC   11NOV ETD1415 8
+         0322102159346  C01 11NOV H SSGLFW USED
+ 14  JOHNSON     MESSA      Q   LFW 34L-F  2 M  ET ETI
+         KP LFW    5032058778.19,5032058780.13
+                   2 / 32 KG
+         0322300332918  C01 11NOV Q SSGLFW USED
+ 15  KOYALISSE   SIDNE      V   LFW 16J-F  2 M  OB WB ET
+                                             DOCS ETI
+         KP BGF    3032019540.16,3032019544.11
+                   2 / 27 KG
+         KP 34   V  LFW   BGF   11NOV ETD1320 1
+         0325869454885  C03 11NOV V SSGLFW USED
+ 16  LARANJEIRA  TEODO      Q   LFW 33A-F  1 M  ET ETI
+         KP LFW    5032058659.26
+                   1 / 26 KG
+         0322102159290  C01 11NOV Q SSGLFW USED
+ 17  LARSEN      THOMA      U   LFW 34A-F  1 M  PX OB ET
+                                             DOCV DOCS ETI
+         KP FNA    4032220540.10
+                   1 / 10 KG
+         KP 22   U  LFW   FNA   11NOV ETD1230 6
+         0322102142454  C01 11NOV U SSGLFW USED
+ 18  MOGUET DIT  GESS       V   LFW     F  0 M  OB DOCS
+ 19  MORGADEZ    RICAR      V   LFW 19J-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019371.19
+                   1 / 19 KG
+         KP 62   V  LFW   LOS   11NOV ETD1515 3
+         0322102159621  C01 11NOV V SSGLFW USED
+ 20  MVUMONGNSI  ANTON      Y   LFW 25L-F  1 M  OB ET ETI
+         KP ABJ    3032019598.13
+                   1 / 13 KG
+         KP 10   Y  LFW   ABJ   11NOV ETD1410 3
+         0329408661796  C01 11NOV Y SSGLFW USED
+ 21  NDJENG NCA  PEDRO      L   LFW 26A-F NB M  OB ET DOCV
+                                             DOCS ETI
+         KP 52   L  LFW   DSS   11NOV ETD1240 7
+         0712164357185  C01 11NOV L SSGLFW USED
+ 22  NDONG AKEL  FRANC      L   LFW 24A-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP DSS    4032220615.24
+                   1 / 24 KG
+         KP 52   L  LFW   DSS   11NOV ETD1240 7
+         0712164358724  C01 11NOV L SSGLFW USED
+ 23  NGUANZENE   SEFOR      U   LFW 21L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019476.23,3032019477.23
+                   2 / 46 KG
+         KP 20   U  LFW   ACC   11NOV ETD1415 8
+         0322102152912  C01 11NOV U SSGLFW USED
+ 24  NVE NTONGO  INES       Q   LFW 26L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019354.14,3032019362.28
+                   2 / 42 KG
+         KP 20   Q  LFW   ACC   11NOV ETD1415 8
+         0322102154514  C01 11NOV Q SSGLFW USED
+ 25  NZANG NGU   INES       V   LFW 20L-F  3 F  OB ET INF
+                                             IFET ETI
+         KP DSS    4032220608.23,4032220616.23,
+         KP DSS    4032220619.24
+                   3 / 70 KG
+         KP 52   V  LFW   DSS   11NOV ETD1240 7
+         0323927470284  C01 11NOV V SSGLFW USED
+ 26  PECHOIDJAB  MARIA      U   LFW 21A-F  1 F  ET ETI
+         KP LFW    5032058786.9
+                   1 / 9  KG
+         0323940750095  C01 11NOV U SSGLFW USED
+ 27  PERINKULAM  SRIKA AB3  T   LFW 18A-F  2 M  OB ET ETI
+         KP NSI    6032773343.14,6032773346.10
+                   2 / 24 KG
+         KP 64   T  LFW   NSI   11NOV ETD1330 8
+         0322102148727  C03 11NOV T SSGLFW USED
+ 28  ROMERO      HENRY AB3  T   LFW 18B-F  2 M  OB ET ETI
+         KP NSI    6032773347.10,6032773348.13
+                   2 / 23 KG
+         KP 64   T  LFW   NSI   11NOV ETD1330 8
+         0322102148726  C03 11NOV T SSGLFW USED
+ 29  SALIA       FOFAN      U   LFW 35A-F  1 M  OB ET ETI
+         KP ABJ    3032019441.10
+                   1 / 10 KG
+         KP 10   U  LFW   ABJ   11NOV ETD1410 3
+         0322102158349  C01 11NOV U SSGLFW USED
+ 30  SARRE       BABA       U   LFW 36A-F  2 M  OB ET ETI
+         KP BKO    3032019489.18,3032019491.19
+                   2 / 37 KG
+         KP 16   U  LFW   BKO   11NOV ETD1310 4
+         0322102156962  C01 11NOV U SSGLFW USED
+ 31  TAGUI       GALI  AB3  T   LFW 16A-F  2 M  OB WB ET
+                                             ETI
+         KP NSI    6032773341.16,6032773342.13
+                   2 / 29 KG
+         KP 64   T  LFW   NSI   11NOV ETD1330 8
+         0322102148728  C03 11NOV T SSGLFW USED
+ 32  YANKEY      KELVI      U   LFW 33L-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019391.24,3032019392.22
+                   2 / 46 KG
+         KP 20   U  LFW   ACC   11NOV ETD1415 8
+         0322102138320  C01 11NOV U SSGLFW USED
+ 33# AMA MOOR    VICKY      H   LFW 16L-F  2 F  OB ET ETI
+         KP BGF    3032019163.13,3032019164.14
+                   2 / 27 KG
+         KP 34   H  LFW   BGF   11NOV ETD1320 1
+         0323997602832  C01 11NOV H NSILFW USED
+ 34# AMBOMO OND  TIMOT AE2  E   LFW 29A-F  1 M  ET ETI
+         KP LFW    5032058598.15
+                   1 / 15 KG
+         0322102149839  C01 11NOV E NSILFW USED
+ 35# BAHOGWERHE  MATAB      H   LFW 17A-F  1 M  OB ET ETI
+         KP BGF    3032019152.8
+                   1 / 8  KG
+         KP 34   H  LFW   BGF   11NOV ETD1320 1
+         0322102123446  C03 11NOV H NSILFW USED
+ 36# BIETEKE     CHRIS      U   LFW 24L-F  1 F  OB ET ETI
+         KP DSS    4032220445.10
+                   1 / 10 KG
+         KP 52   U  LFW   DSS   11NOV ETD1240 7
+         0323940480087  C01 11NOV U NSILFW USED
+ 37# DIOUF       MOUST      H   LFW 32A-F  1 M  OB ET ETI
+         KP TMS    9032257816.19
+                   1 / 19 KG
+         KP 60   H  LFW   TMS   11NOV ETD1350 5
+         0325869537114  C01 11NOV H NSILFW USED
+ 38# DJOUGANG    MAURI      Q   LFW 28C-F  2 M  OB ET ETI
+         KP ABJ    3032019149.24,3032019150.20
+                   2 / 44 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0325033981799  C01 11NOV Q NSILFW USED
+ 39# EDOA        GILBE      J   LFW  2J-F NB M  OB ET DOCV
+                                             DOCS ETI
+         KP 22   J  LFW   ACC   11NOV ETD1230 6
+         0329488891176  C01 11NOV J NSILFW USED
+ 40# EWANDJENTO  PAUL  AF2  H   LFW 18J-F  1 M  OB ET ETI
+         KP CKY    3032019255.17
+                   1 / 17 KG
+         KP 10   H  LFW   CKY   11NOV ETD1410 3
+         0323940474459  C01 11NOV H NSILFW USED
+ 41# GASSACKYS   SERGE      D   LFW  2C-F NB M  OB ET DOCV
+                                             DOCS ETI
+         KP 44   D  LFW   BZV   11NOV ETD1355 9
+         0329408652320  C03 11NOV D NSILFW USED
+ 42# KENHOUNG    YANIC      V   LFW 31A-F NB M  OB ET DOCV
+                                             DOCS ETI FQTV
+         ET10018864310
+         KP 22   V  LFW   ACC   11NOV ETD1230 6
+         0329488891177  C01 11NOV V NSILFW USED
+ 43# LIYDZEKA B  MBINK AC2  Q   LFW 31L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019309.22,3032019310.22
+                   2 / 44 KG
+         KP 62   Q  LFW   LOS   11NOV ETD1515 3
+         0323927448740  C01 11NOV Q NSILFW USED
+ 44# MAKANTEMBE  ADYAN      Q   LFW 20A-F  2 F  OB WB ET
+                                             ETI
+         KP CKY    3032019182.23,3032019183.28
+                   2 / 51 KG
+         KP 10   Q  LFW   CKY   11NOV ETD1410 3
+         0323940475346  C01 11NOV Q NSILFW USED
+ 45# MBINKAR     BASIL AC2  Q   LFW 31K-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019316.8
+                   1 / 8  KG
+         KP 62   Q  LFW   LOS   11NOV ETD1515 3
+         0323927448739  C01 11NOV Q NSILFW USED
+ 46# MBOCKMBOCK  EMMAN      U   LFW 29L-F  1 M  OB ET ETI
+         KP OUA    9032257789.20
+                   1 / 20 KG
+         KP 46   U  LFW   OUA   11NOV ETD1405 6
+         0322941199417  C01 11NOV U NSILFW USED
+ 47# MENGUEDE    SIMON      H   LFW 28A-F  1 M  OB WB ET
+                                             ETI
+         KP ABJ    3032019243.23
+                   1 / 23 KG
+         KP 10   H  LFW   ABJ   11NOV ETD1410 3
+         2754820397861  C01 11NOV H NSILFW USED
+ 48# MPALLA MAS  GHISL      Q   LFW 17C-F  2 M  PX OB ET
+                                             DOCS ETI
+         KP ABJ    3032019352.19,3032019353.18
+                   2 / 37 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0322102155556  C01 11NOV Q NSILFW USED
+ 49# NCHARE      ISSOF      D   LFW  1L-F NB M  OB ET DOCS
+                                             ETI
+         KP 10   D  LFW   ABJ   11NOV ETD1410 3
+         0325033981680  C01 11NOV D NSILFW USED
+ 50# NEKEM TAGA  DILAN AE2  E   LFW 30A-F  1 M  ET ETI
+         KP LFW    5032058609.21
+                   1 / 21 KG
+         0322102149840  C01 11NOV E NSILFW USED
+ 51# NGAMBIDA    JOSEP      Q   LFW 27L-F  2 F  OB ET ETI
+         KP ABJ    3032019178.19,3032019179.22
+                   2 / 41 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0323940476513  C01 11NOV Q NSILFW USED
+ 52# NGOUYAMSAL  JEAN  AF2  H   LFW 18K-F  1 M  OB ET ETI
+         KP CKY    3032019202.18
+                   1 / 18 KG
+         KP 10   H  LFW   CKY   11NOV ETD1410 3
+         0323940474460  C01 11NOV H NSILFW USED
+ 53# NGUNYAM     NOELL      V   LFW 17L-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP ROB    7032678649.21
+                   1 / 21 KG
+         KP 20   V  LFW   ROB   11NOV ETD1415 8
+         0323940760760  C01 11NOV V NSILFW USED
+ 54# NGWA        LOUIS      C   LFW  1C-F  1 M  OB FF BRW
+                                             ET DOCV DOCS ETI
+         KP LOS    3032019267P.13
+                   1 / 13 KG
+         KP997480584            BROWN
+         KP 62   C  LFW   LOS   11NOV ETD1515 3
+         0322102149437  C02 11NOV C NSILFW USED
+ 55# OBOUNGATOM  FRANC      Q   LFW 28L-F NB M  OB ET DOCV
+                                             DOCS ETI
+         KP 44   Q  LFW   BZV   11NOV ETD1355 9
+         0329408652319  C03 11NOV Q NSILFW USED
+ 56# SANDIE      ARSEN      U   LFW 27A-F  2 M  OB ET DOCS
+                                             ETI
+         KP BKO    3032019175.11,3032019176.23
+                   2 / 34 KG
+         KP 16   U  LFW   BKO   11NOV ETD1310 4
+         0322102160669  C01 11NOV U NSILFW USED
+ 57# TAOUKREO    HEMWU      D   LFW  1J-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP BZV    3032019294P.32
+                   1 / 32 KG
+         KP 44   D  LFW   BZV   11NOV ETD1355 9
+         0323945972478  C01 11NOV D NSILFW USED
+ 58# XXXXX EGOU  AUDRE      Q   LFW 36L-F  1 F  PX CM TKT
+         KP LFW    5032058645.15
+                   1 / 15 KG
+       1 PAPER TKT NBR:03200000000000
+ 59# ZHU         YONGX      V   LFW 30L-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019286.9,3032019287.20
+                   2 / 29 KG
+         KP 22   V  LFW   ACC   11NOV ETD1230 6
+         0327587292079  C01 11NOV V NSILFW USED
+ 
+HDQ.HDQ8HEA 1123 12-NOV-2026 1CC450
+ G*L71/11NOVJNB#BT/ET/IB/OB/ON/SS/FF/FQTV/AE
+ KP    71 11NOV   JNB A3    500   738 BT ET IB OB    C1Y60
+  1  AGBO        KOFI       H   LFW 20L-F  1 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP ACC    3032019033.9
+                   1 / 9  KG
+         KP 20   H  LFW   ACC   11NOV ETD1415 8
+         0322102159494  C01 11NOV H JNBLFW USED
+  2  ANSONG      ENOCH      H   LFW 17A-F  1 M  OB WB ET
+                                             DOCV DOCS ETI APP
+         KP ACC    3032019052.14
+                   1 / 14 KG
+         KP 20   H  LFW   ACC   11NOV ETD1415 8
+         0325270151936  C01 11NOV H JNBLFW USED
+  3  BLAISE      KISIM AV2  U   FIH 21L-F  6 M  PX WB ET
+                                             DOCV DOCS ETI AE
+                                             APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/4 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114134 C01
+         KP FIH    4032220322.23,4032220323.24,
+         KP FIH    4032220357.23,4032220358.23,
+         KP FIH    4032220359.23,4032220360.22
+                   6 / 138KG
+         0322102160822  C01 11NOV U JNBFIH USED
+  4  CHRISTIAN   KABEY AV2  U   FIH 14C-F  5 M  PX WB ET
+                                             DOCV DOCS ETI AE
+                                             APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/3 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114136 C01
+         KP FIH    4032220326.18,4032220329.21,
+         KP FIH    4032220352.22,4032220353.23,
+         KP FIH    4032220354.23
+                   5 / 107KG
+         0322102160821  C01 11NOV U JNBFIH USED
+  5  ERASMUS     RIAAN      L   LFW 21B-F  1 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP ABV    3032019030.23
+                   1 / 23 KG
+         KP 32   L  LFW   ABV   11NOV ETD1420 7
+         0325033930534  C01 11NOV L JNBLFW USED
+  6  ERASMUS     PIETE      K   LFW 21A-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP ABV    3032019028.23,3032019029.22
+                   2 / 45 KG
+         KP 32   K  LFW   ABV   11NOV ETD1420 7
+         0325033930533  C01 11NOV K JNBLFW USED
+  7  ESSENGUEEW  PAUL       H   LFW 21J-F  1 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP BKO    3032019045.13
+                   1 / 13 KG
+         KP 16   H  LFW   BKO   11NOV ETD1310 4
+         0325860739224  C01 11NOV H JNBLFW USED
+  8  GNACADJA    VIDJA      U   LFW 15A-F  1 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP COO    9032257672.23
+                   1 / 23 KG
+         KP 36   U  LFW   COO   11NOV ETD1245 9
+         0323940395452  C01 11NOV U JNBLFW USED
+  9  HALL        STEVE      U   LFW 16C-F  1 M  OB WB ET
+                                             DOCV DOCS ETI APP
+         KP FNA    4032220243.18
+                   1 / 18 KG
+         KP 22   U  LFW   FNA   11NOV ETD1230 6
+         0324864381215  C01 11NOV U JNBLFW USED
+ 10  HARTZENBER  HARGE      V   LFW 25L-F  1 M  OB WB ET
+                                             DOCV DOCS ETI FQTV
+                                             APP
+         KP BKO    3032019040.21
+                   1 / 21 KG
+         ET10010352170
+         KP 16   V  LFW   BKO   11NOV ETD1310 4
+         0323985357744  C01 11NOV V JNBLFW USED
+ 11  HISAMBISHO  LUSAM      U   FIH 19A-F  2 M  PX FF BRW
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP FIH    4032220257.20,4032220258.15
+                   2 / 35 KG
+         KP734866742            BROWN
+         0322102148785  C02 11NOV U JNBFIH USED
+ 12  HUANG       LIGUA      U   LFW     F  0 M  OB DOCS
+ 13  ILIMA       BIN A      U   LFW 22A-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP COO    9032257670.15,9032257671.7
+                   2 / 22 KG
+         KP 36   U  LFW   COO   11NOV ETD1245 9
+         0324869358523  C01 11NOV U JNBLFW USED
+ 14  KABENGELE   KALON      U   LFW     F  0 M  OB
+ 15  KAMA        NDUNG      H   FIH 19C-F NB F  CS ET DOCV
+                                             DOCS ETI APP
+         0712164628953  C01 11NOV H JNBFIH USED
+ 16  KANYINDA    DAVID      U   FIH 12J-F  3 M  PX WB ET
+                                             DOCV DOCS ETI AE
+                                             APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/1 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114132 C01
+         KP FIH    4032220273.16,4032220274.27,
+         KP FIH    4032220296.23
+                   3 / 66 KG
+         0322102160021  C01 11NOV U JNBFIH USED
+ 17  KAPOPWE     CHRIS      U   FIH 14J-F 17 M  PX WB ET
+                                             DOCV DOCS ETI AE
+                                             APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/15/0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114133 C01
+         KP FIH    4032220289.23,4032220290.28,
+         KP FIH    4032220324.23,4032220328.23,
+         KP FIH    4032220330.23,4032220331.23,
+         KP FIH    4032220332.23,4032220334.23,
+         KP FIH    4032220335.23,4032220336.23,
+         KP FIH    4032220337.23,4032220340.23,
+         KP FIH    4032220341.23,4032220342.23,
+         KP FIH    4032220344.23,4032220345.23,
+         KP FIH    4032220347.23
+                   17 / 396KG
+         0322102160819  C01 11NOV U JNBFIH USED
+ 18  KELOUAZE    RIM M      U   LFW 24A-F  2 F  OB WB ET
+                                             DOCV DOCS ETI APP
+         KP DSS    4032220348.15,4032220349.17
+                   2 / 32 KG
+         KP 52   U  LFW   DSS   11NOV ETD1240 7
+         0325860742683  C01 11NOV U JNBLFW USED
+ 19  KILUBA      EBENE AR2  U   FIH 26A-F  2 M  PX WB ET
+                                             DOCV DOCS ETI APP
+         KP FIH    4032220307.25,4032220308.26
+                   2 / 51 KG
+         0322102160788  C01 11NOV U JNBFIH USED
+ 20  KILUBA      JOSHU AR2  U   FIH 26B-F  1 M  PX ET DOCV
+                                             DOCS ETI APP
+         KP FIH    4032220288.18
+                   1 / 18 KG
+         0322102160789  C01 11NOV U JNBFIH USED
+ 21  KIM         DOHYU      S   LFW 19J-F NB M  OB CS ET
+                                             DOCV DOCS ETI APP
+         KP 52   S  LFW   DSS   11NOV ETD1240 7
+         0712164601604  C01 11NOV S JNBLFW USED
+ 22  KONATE      DOSSO AL2  U   LFW 13K-F  2 M  OB WB ET
+                                             DOCV DOCS ETI APP
+         KP ABJ    3032019038.21,3032019039.23
+                   2 / 44 KG
+         KP 10   U  LFW   ABJ   11NOV ETD1410 3
+         0323940479342  C01 11NOV U JNBLFW USED
+ 23  LAMOLA      MMAMP      M   LFW 30L-F  2 F  OB WB ET
+                                             DOCV DOCS ETI APP
+         KP BJL    3032019046.24,3032019047.25
+                   2 / 49 KG
+         KP 22   M  LFW   BJL   11NOV ETD1230 6
+         0327512177544  C01 11NOV M JNBLFW USED
+ 24  LUBAMBA     MUYOY      U   FIH 24L-F  2 M  PX WB ET
+                                             DOCV DOCS ETI APP
+         KP FIH    4032220250.17,4032220251.22
+                   2 / 39 KG
+         0322102140450  C02 11NOV U JNBFIH USED
+ 25  LUTHULI     THEMB      V   LFW 22L-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP BKO    3032019053.23,3032019054.23
+                   2 / 46 KG
+         KP 16   V  LFW   BKO   11NOV ETD1310 4
+         0323982989301  C01 11NOV V JNBLFW USED
+ 26  MAKASHI     MINGA      H   FIH 12A-F 12 M  FF WB ET
+                                             DOCV DOCS ETI AE
+                                             APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/10/0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114107 C01
+         KP FIH    4032220299.18,4032220300.23,
+         KP FIH    4032220303.23,4032220304.23,
+         KP FIH    4032220309.23,4032220310.23,
+         KP FIH    4032220311.23,4032220312.22,
+         KP FIH    4032220314.28,4032220319.23,
+         KP FIH    4032220320.22,4032220321.22
+                   12 / 273KG
+         KP715427646
+         0322102156833  C01 11NOV H JNBFIH USED
+ 27  MAKOLOI     QHAWE      L   LFW 27A-F  1 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP DLA    4032220333.10
+                   1 / 10 KG
+         KP 34   L  LFW   DLA   11NOV ETD1320 1
+         0325860749515  C01 11NOV L JNBLFW USED
+ 28  MALOKA      EDWAR      V   LFW 13J-F  1 M  OB WB ET
+                                             DOCV DOCS ETI APP
+         KP CKY    3032019048.19
+                   1 / 19 KG
+         KP 10   V  LFW   CKY   11NOV ETD1410 3
+         0325860744752  C01 11NOV V JNBLFW USED
+ 29  MAPESSA     MOTER      U   FIH 11A-F 12 M  PX FF WB
+                                             ET DOCV DOCS ETI
+                                             AE APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/10/0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114130 C01
+         KP FIH    4032220247.28,4032220248.23,
+         KP FIH    4032220283.23,4032220284.23,
+         KP FIH    4032220285.23,4032220286.23,
+         KP FIH    4032220287.23,4032220291.23,
+         KP FIH    4032220292.23,4032220293.23,
+         KP FIH    4032220294.23,4032220295.23
+                   12 / 281KG
+         KP725237052
+         0322102141606  C02 11NOV U JNBFIH USED
+ 30  MARCEL      MUTEB      U   FIH 14L-F  5 M  PX WB ET
+                                             DOCV DOCS ETI AE
+                                             APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/3 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114135 C01
+         KP FIH    4032220315.23,4032220316.28,
+         KP FIH    4032220361.23,4032220362.23,
+         KP FIH    4032220363.23
+                   5 / 120KG
+         0322102160685  C01 11NOV U JNBFIH USED
+ 31  MBOMBO      DANIE      U   FIH 26C-F  2 M  WB ET DOCV
+                                             DOCS ETI APP
+         KP FIH    4032220355.23,4032220356.10
+                   2 / 33 KG
+         0324869407131  C01 11NOV U JNBFIH USED
+ 32  MELUMA      MUTEM      U   FIH 11C-F  2 M  PX ET DOCV
+                                             DOCS ETI APP
+         KP FIH    4032220266.23,4032220267.19
+                   2 / 42 KG
+         0322102160039  C01 11NOV U JNBFIH USED
+ 33  MENTZ       XANDE      S   LFW 13A-F  1 M  OB WB CS
+                                             ET DOCV DOCS ETI
+                                             FQTV APP
+         KP NSI    6032773300.20
+                   1 / 20 KG
+         ET10115007641
+         KP 64   S  LFW   NSI   11NOV ETD1330 8
+         0714895415843  C01 11NOV S JNBLFW USED
+ 34  MITANTU     BATET      U   FIH 28A-F 17 M  PX FF BRW
+                                             WB ET DOCV DOCS
+                                             ETI AE APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/15/0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114116 C01
+         KP FIH    4032220259.27,4032220260.23,
+         KP FIH    4032220261.23,4032220262.23,
+         KP FIH    4032220263.23,4032220264.23,
+         KP FIH    4032220265.23,4032220268.23,
+         KP FIH    4032220269.23,4032220270.23,
+         KP FIH    4032220271.23,4032220272.23,
+         KP FIH    4032220277.23,4032220278.23,
+         KP FIH    4032220279.23,4032220280.23,
+         KP FIH    4032220281.23
+                   17 / 395KG
+         KP988304096            BROWN
+         0322102158103  C02 11NOV U JNBFIH USED
+ 35  MITONGA     KALON      U   FIH 15L-F  2 F  PX ET DOCV
+                                             DOCS ETI APP
+         KP FIH    4032220301.23,4032220302.23
+                   2 / 46 KG
+         0322102159467  C01 11NOV U JNBFIH USED
+ 36  MPETLA      SEBOY      V   LFW 25A-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP BKO    3032019036.16,3032019037.10
+                   2 / 26 KG
+         KP 16   V  LFW   BKO   11NOV ETD1310 4
+         0323985357745  C01 11NOV V JNBLFW USED
+ 37  MUANZA      KASON      L   FIH 17L-F  4 M  WB ET DOCV
+                                             DOCS ETI AE APP
+         AE-KP 0071/JNBFIH/BG  BG /HI/2 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114131 C01
+         KP FIH    4032220255.21,4032220256.21,
+         KP FIH    4032220297.23,4032220298.23
+                   4 / 88 KG
+         0323927893425  C03 11NOV L JNBFIH USED
+ 38  NAMONDO     SOLAN      U   LFW     F NB F  OB OFL WB
+                                             DOCS APP
+ 39  NCHO        NICAI AL2  U   LFW 20A-F  2 M  OB WB ET
+                                             DOCV DOCS ETI APP
+         KP ABJ    3032019034.23,3032019035.23
+                   2 / 46 KG
+         KP 10   U  LFW   ABJ   11NOV ETD1410 3
+         0323940479343  C01 11NOV U JNBLFW USED
+ 40  NDOMBOU NG  PATRI      U   LFW 23C-F  2 M  OB ET DOCV
+                                             DOCS OTHS ETI APP
+         KP DLA    4032220338.23,4032220339.23
+                   2 / 46 KG
+         KP 34   U  LFW   DLA   11NOV ETD1320 1
+         OTHS-PATRICE/AYRTON ADT
+         0327561969060  C01 11NOV U JNBLFW USED
+ 41  NGANG       POLIC      U   LFW 11K-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP DLA    4032220244.22,4032220246.23
+                   2 / 45 KG
+         KP 34   U  LFW   DLA   11NOV ETD1320 1
+         0325882614842  C01 11NOV U JNBLFW USED
+ 42  NGOH EYIND  RAISS      L   LFW 26L-F  2 F  OB WB ET
+                                             DOCV DOCS ETI APP
+         KP DLA    4032220317.25,4032220318.26
+                   2 / 51 KG
+         KP 34   L  LFW   DLA   11NOV ETD1320 1
+         0323927444335  C01 11NOV L JNBLFW USED
+ 43  NGOIE       MAXIM      U   FIH 23L-F  2 M  PX WB ET
+                                             DOCV DOCS ETI APP
+         KP FIH    4032220364.23,4032220365.23
+                   2 / 46 KG
+         0322102159297  C01 11NOV U JNBFIH USED
+ 44  NJIONKEOUA  IDRIC      L   LFW 12K-F  2 M  EE OB ET
+                                             DOCV DOCS ETI APP
+         KP DLA    4032220253.21,4032220282.23
+                   2 / 44 KG
+         KP 34   L  LFW   DLA   11NOV ETD1320 1
+         0322102160249  C01 11NOV L JNBLFW USED
+ 45  NUMBU       CLARI      U   LFW 13B-F  2 F  OB ET DOCV
+                                             DOCS OTHS ETI APP
+         KP DLA    4032220275.23,4032220276.23
+                   2 / 46 KG
+         KP 34   U  LFW   DLA   11NOV ETD1320 1
+         OTHS-CLARISSE/NGWENYI ADT
+         0327569593774  C01 11NOV U JNBLFW USED
+ 46  NYAH ZEBON  ASAAH      U   LFW 19L-F  2 M  PX OB ET
+                                             DOCV DOCS ETI FQTV
+                                             APP
+         KP NSI    6032773297.20,6032773298.26
+                   2 / 46 KG
+         ET00097852790
+         KP 64   U  LFW   NSI   11NOV ETD1330 8
+         0322102157323  C01 11NOV U JNBLFW USED
+ 47  OMOKAN      ISAAC      U   LFW 16B-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP LOS    3032019050.22,3032019051.23
+                   2 / 45 KG
+         KP 62   U  LFW   LOS   11NOV ETD1515 3
+         0323986630630  C01 11NOV U JNBLFW USED
+ 48  POKUAA      AKUSU      U   LFW 19K-F  2 F  OB WB ET
+                                             DOCV DOCS OTHS ETI
+                                             APP
+         KP ACC    3032019043.28,3032019044.23
+                   2 / 51 KG
+         KP 20   U  LFW   ACC   11NOV ETD1415 8
+         OTHS-AKUSUA ADT
+         0327571418565  C01 11NOV U JNBLFW USED
+ 49  RADEBE      WANDI      H   LFW 11L-F NB M  OB ET DOCV
+                                             DOCS OTHS ETI APP
+         KP 36   H  LFW   COO   11NOV ETD1245 9
+         OTHS-WANDILE/GREGORY ADT
+         0325225986731  C01 11NOV H JNBLFW USED
+ 50  SEMI        BIBA       U   FIH 16L-F  2 M  PX ET DOCV
+                                             DOCS ETI APP
+         KP FIH    4032220325.22,4032220327.20
+                   2 / 42 KG
+         0322102159738  C01 11NOV U JNBFIH USED
+ 51  SOM         OFORI      U   LFW 23A-F  2 F  OB ET DOCV
+                                             DOCS ETI APP
+         KP ACC    3032019041.23,3032019042.23
+                   2 / 46 KG
+         KP 20   U  LFW   ACC   11NOV ETD1415 8
+         0327517380318  C01 11NOV U JNBLFW USED
+ 52  TCHIKPO     DONAN      U   LFW 15B-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP COO    9032257673.21,9032257674.23
+                   2 / 44 KG
+         KP 36   U  LFW   COO   11NOV ETD1245 9
+         0323940392267  C03 11NOV U JNBLFW USED
+ 53  TECHA       RICHA      L   LFW 22J-F  2 M  OB ET DOCV
+                                             DOCS OTHS ETI APP
+         KP DLA    4032220249.23,4032220254.14
+                   2 / 37 KG
+         KP 34   L  LFW   DLA   11NOV ETD1320 1
+         OTHS-RICHARD/NJUATE ADT
+         0325225985697  C01 11NOV L JNBLFW USED
+ 54  TOGO        HAMMA      L   LFW     F  0 OB DOCS
+ 55  TOWNLEY     MATOD      U   LFW 15J-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP DLA    4032220343.10,4032220346.20
+                   2 / 30 KG
+         KP 34   U  LFW   DLA   11NOV ETD1320 1
+         0329014183354  C01 11NOV U JNBLFW USED
+ 56  TSHIAMALA   TIFAN      D   FIH  1L-F  1 F  BR WB ET
+                                             DOCV DOCS ETI FQTV
+                                             APP
+         KP FIH    4032220313P.22
+                   1 / 22 KG
+         ET10130609462
+         0322102154693  C02 11NOV D JNBFIH USED
+ 57  TSHIKALA T  JEAN       U   FIH 12C-F  2 M  ET DOCV DOCS
+                                             ETI APP
+         KP FIH    4032220305.23,4032220306.18
+                   2 / 41 KG
+         0322102158371  C01 11NOV U JNBFIH USED
+ 58  TSHIUNZA    YANNI      H   FIH 14A-F  2 M  CS ET DOCV
+                                             DOCS ETI APP
+         KP FIH    4032220350.23,4032220351.10
+                   2 / 33 KG
+         0714869413041  C01 11NOV H JNBFIH USED
+ 59  WEHMEYER    DEONE      V   LFW 16A-F  1 F  PX OB WB
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP ABV    3032019049.32
+                   1 / 32 KG
+         KP 32   V  LFW   ABV   11NOV ETD1420 7
+         0322102155606  C01 11NOV V JNBLFW USED
+ 60  YEVI        DODJI      U   LFW 15C-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP COO    9032257675.23,9032257676.23
+                   2 / 46 KG
+         KP 36   U  LFW   COO   11NOV ETD1245 9
+         0323940392210  C03 11NOV U JNBLFW USED
+ 61  ZVOMUYA     PRINC      Q   LFW 13C-F  2 M  OB ET DOCV
+                                             DOCS ETI APP
+         KP ABJ    3032019031.16,3032019032.12
+                   2 / 28 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0325033993172  C01 11NOV Q JNBLFW USED
+ 
+HDQ.HDQ8HEA 1123 12-NOV-2026 1CC450
+ G*L71/11NOVFIH#BT/ET/IB/OB/ON/SS/FF/FQTV/AE
+ KP    71 11NOV   FIH       905   738 BT ET IB OB    C3Y96
+  1  AGGREY FYN  FERDI      K   LFW 11J-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019307.21
+                   1 / 21 KG
+         KP 22   K  LFW   ACC   11NOV ETD1230 6
+         0322102160358  C01 11NOV K FIHLFW USED
+  2  ANGONGMBA   SAMUE      J   LFW  4L-F  1 M  OB ET DOCV
+                                             DOCS ETI FQTV
+         KP LBV    5032058625P.20
+                   1 / 20 KG
+         ET10102247901
+         KP 60   J  LFW   LBV   11NOV ETD1350 5
+         0325034000604  C03 11NOV J FIHLFW USED
+  3  BADJANGA    TITI       Q   LFW 12C-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019329.21,3032019330.21
+                   2 / 42 KG
+         KP 16   Q  LFW   BKO   11NOV ETD1310 4
+         0324860013014  C01 11NOV Q FIHLFW USED
+  4  BAMPILE     KANKU AD2  U   LFW 20J-F  2 M  ET DOCV DOCS
+                                             ETI
+         KP LFW    5032058610.20,5032058611.19
+                   2 / 39 KG
+         0322300328587  C01 11NOV U FIHLFW USED
+  5  BIEMBE      BAILU      U   LFW 24L-F  2 M  PX OB ET
+                                             DOCV DOCS ETI
+         KP DSS    4032220477.22,4032220478.14
+                   2 / 36 KG
+         KP 50   U  LFW   DSS   11NOV ETD1340 7
+         0322102156769  C01 11NOV U FIHLFW USED
+  6  BOCOUM      AISSA AF2  Q   LFW 33K-F  4 F  OB ET DOCV
+                                             DOCS ETI AE
+         AE-KP 0071/FIHLFW/BG  BG /HI/2 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114139 C01
+         AE-KP 0016/LFWBKO/BG  BG /HI/2 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114139 C02
+         KP BKO    3032019212.32,3032019213.14,
+         KP BKO    3032019226.32,3032019227.23
+                   4 / 101KG
+         KP 16   Q  LFW   BKO   11NOV ETD1310 4
+         0322102157805  C01 11NOV Q FIHLFW USED
+  7  BOCOUM      FANTA AF2  Q   LFW 33L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019220.23,3032019221.23
+                   2 / 46 KG
+         KP 16   Q  LFW   BKO   11NOV ETD1310 4
+         0322102157806  C01 11NOV Q FIHLFW USED
+  8  BUHENDWA M  VICTO      Q   LFW 20C-F NB M  OB ET DOCV
+                                             DOCS OTHS ETI
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         OTHS-VICTOR ADT
+         0327569345025  C01 11NOV Q FIHLFW USED
+  9  COMPAORE    SOUTO      V   LFW 31L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP OUA    9032257819.22,9032257820.22
+                   2 / 44 KG
+         KP 46   V  LFW   NIM   11NOV ETD1405 6
+         0322102107775  C03 11NOV V FIHLFW USED
+ 10  DIARRA      FATOU      Q   LFW 29A-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019247.23,3032019248.23
+                   2 / 46 KG
+         KP 16   Q  LFW   BKO   11NOV ETD1310 4
+         0329408659453  C01 11NOV Q FIHLFW USED
+ 11  DIEYE       PAPA       U   LFW 24C-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP DSS    4032220514.26
+                   1 / 26 KG
+         KP 52   U  LFW   DSS   11NOV ETD1240 7
+         0322300328642  C03 11NOV U FIHLFW USED
+ 12  DOUMBIA     MOUST      Q   LFW 21L-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019383.20,3032019384.22
+                   2 / 42 KG
+         KP 16   Q  LFW   BKO   11NOV ETD1310 4
+         0322102155648  C01 11NOV Q FIHLFW USED
+ 13  DOUMBIA     ALY M AH2  Q   LFW 33A-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019394.23,3032019395.23
+                   2 / 46 KG
+         KP 16   Q  LFW   BKO   11NOV ETD1310 4
+         0322102156754  C01 11NOV Q FIHLFW USED
+ 14  DOUMBIA     MADOU AH2  Q   LFW 33B-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019398.16
+                   1 / 16 KG
+         KP 16   Q  LFW   BKO   11NOV ETD1310 4
+         0322102156755  C01 11NOV Q FIHLFW USED
+ 15  ENINGOLA    MISOK      V   LFW 27C-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019365.29,3032019366.10
+                   2 / 39 KG
+         KP 22   V  LFW   ACC   11NOV ETD1230 6
+         0322102150047  C01 11NOV V FIHLFW USED
+ 16  ETOGA ETOG  JOSEP      C   LFW  4A-F  2 M  OB FF BRW
+                                             ET DOCV DOCS ETI
+         KP NSI    6032773309P.14,6032773310P.20
+                   2 / 34 KG
+         KP300012930            BROWN
+         KP 64   C  LFW   NSI   11NOV ETD1330 8
+         0322102159604  C01 11NOV C FIHLFW USED
+ 17  FIKIPO KAS  JOSLI      Q   LFW 23J-F NB M  PX OB ET
+                                             DOCV DOCS ETI FQTV
+         ET10123224731
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322102160074  C01 11NOV Q FIHLFW USED
+ 18  GNONKE      LEOPO      Q   LFW 19C-F  2 M  PX OB ET
+                                             DOCV DOCS ETI
+         KP COO    9032257798.19,9032257799.23
+                   2 / 42 KG
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322102156628  C01 11NOV Q FIHLFW USED
+ 19  HADRAMI     MOHAM      U   LFW 12A-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP LBV    5032058647.18,5032058648.7
+                   2 / 25 KG
+         KP 60   U  LFW   LBV   11NOV ETD1350 5
+         1693943486082  C03 11NOV U FIHLFW USED
+ 20  HAROUNA     ABDOU      V   LFW 26A-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP NIM    9032257762.22
+                   1 / 22 KG
+         KP 46   V  LFW   NIM   11NOV ETD1405 6
+         0329019799931  C01 11NOV V FIHLFW USED
+ 21  IFOMALOFEM  PIERR AC2  U   LFW 19A-F  1 F  OB WB ET
+                                             DOCV DOCS ETI
+         KP ABJ    3032019340.19
+                   1 / 19 KG
+         KP 10   U  LFW   ABJ   11NOV ETD1410 3
+         0327514955080  C01 11NOV U FIHLFW USED
+ 22  IZE         NGASI AP2  Q   LFW 15L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257854.32,9032257855.11
+                   2 / 43 KG
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322300333530  C01 11NOV Q FIHLFW USED
+ 23  IZUOGU      TOCHI      Q   LFW 28A-F  2 F  PX OB ET
+                                             DOCV DOCS ETI
+         KP LOS    3032019234.18,3032019235.18
+                   2 / 36 KG
+         KP 62   Q  LFW   LOS   11NOV ETD1515 3
+         0322102156732  C01 11NOV Q FIHLFW USED
+ 24  IZUOGU      CHIMD      Q   LFW 28B-F  2 CHD OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019245.21,3032019246.23
+                   2 / 44 KG
+         KP 62   Q  LFW   LOS   11NOV ETD1515 3
+         0322102159820  C01 11NOV Q FIHLFW USED
+ 25  KABAMBA     MULAM      V   LFW 25C-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP CKY    3032019324.19
+                   1 / 19 KG
+         KP 10   V  LFW   CKY   11NOV ETD1410 3
+         0324850543369  C03 11NOV V FIHLFW USED
+ 26  KABEDI      ASTRI AB5  Q   LFW 14B-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP ABJ    3032019348.23
+                   1 / 23 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0322102153446  C01 11NOV Q FIHLFW USED
+ 27  KALENGA     MANDE      Q   LFW 12L-F  1 F  PX OB ET
+                                             DOCV DOCS ETI
+         KP COO    9032257851.8
+                   1 / 8  KG
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322102154368  C01 11NOV Q FIHLFW USED
+ 28  KALOMBO     WA KA AJ2  Q   LFW 27K-F  1 F  PX OB FF
+                                             ET DOCV DOCS ETI
+         KP COO    9032257889.16
+                   1 / 16 KG
+         KP887913014
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322102140318  C01 11NOV Q FIHLFW USED
+ 29  KATEMBUE    MALAB      L   LFW 27L-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP BGF    3032019224.23
+                   1 / 23 KG
+         KP 34   L  LFW   BGF   11NOV ETD1320 1
+         0322300333519  C01 11NOV L FIHLFW USED
+ 30  KINYAMBA L  ONA K      H   LFW 22C-F NB M  PX OB FF
+                                             ET DOCV DOCS ETI
+         KP920062706
+         KP 10   H  LFW   CKY   11NOV ETD1410 3
+         0322102159513  C01 11NOV H FIHLFW USED
+ 31  KOISINDAIL  CLAUD      Q   LFW 25J-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257863.20
+                   1 / 20 KG
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322300333455  C01 11NOV Q FIHLFW USED
+ 32  KOJI        KAKUB AP2  Q   LFW 15K-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257843.12
+                   1 / 12 KG
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322300333531  C01 11NOV Q FIHLFW USED
+ 33  KONATE      BAKAR      V   LFW 32L-F  2 M  PX OB ET
+                                             DOCV DOCS ETI
+         KP OUA    9032257836.23,9032257837.22
+                   2 / 45 KG
+         KP 46   V  LFW   NIM   11NOV ETD1405 6
+         0322102107778  C01 11NOV V FIHLFW USED
+ 34  LUKALU      NGAND AO3  Q   LFW 16L-F NB F  OB ET DOCV
+                                             DOCS ETI
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322300333532  C01 11NOV Q FIHLFW USED
+ 35  LUKUTE      TSCHO      X   LFW 28L-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257778.17
+                   1 / 17 KG
+         KP 36   X  LFW   COO   11NOV ETD1245 9
+         0322102155385  C01 11NOV X FIHLFW USED
+ 36  LUZITU      LUBEL      Q   LFW 31A-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257804.23,9032257810.23
+                   2 / 46 KG
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322300332505  C01 11NOV Q FIHLFW USED
+ 37  MADIATATAN  WABEM AD2  U   LFW 20K-F NB F  ET DOCV DOCS
+                                             ETI
+         0322300328588  C01 11NOV U FIHLFW USED
+ 38  MAHORO      STEFF      K   LFW 14A-F  1 F  OB WB ET
+                                             DOCV DOCS ETI
+         KP NBJ    9032257746.17
+                   1 / 17 KG
+         KP 76   K  LFW   NBJ   11NOV ETD1310 6
+         0323940755185  C01 11NOV K FIHLFW USED
+ 39  MAKOBO      CAROL      U   LFW 29L-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257785.24,9032257786.20
+                   2 / 44 KG
+         KP 78   U  LFW   NBO   11NOV ETD1235 8
+         0327508932929  C03 11NOV U FIHLFW USED
+ 40  MASENGO     MIRAD AB5  Q   LFW 14L-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP ABJ    3032019347.23
+                   1 / 23 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0322102153445  C01 11NOV Q FIHLFW USED
+ 41  MBENGA      ALOMO      Q   LFW 28J-F  1 F  PX OB FF
+                                             ET DOCV DOCS ETI
+         KP COO    9032257902.17
+                   1 / 17 KG
+         KP962470246
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322102140521  C01 11NOV Q FIHLFW USED
+ 42  MBENGUE     LAMIN      H   LFW 26J-F  1 M  OB FF SIL
+                                             ET DOCV DOCS ETI
+                                             IR
+         KP DSS    4032220528P.24
+                   1 / 24 KG
+         KP100022834            SILVER
+         KP 50   H  LFW   DSS   11NOV ETD1340 7
+         0322102147505  C03 11NOV U FIHLFW USED
+ 43  MBONO       PAULI AB5  Q   LFW 14C-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP ABJ    3032019344.22
+                   1 / 22 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0322102153447  C01 11NOV Q FIHLFW USED
+ 44  MUAMBA      KILOL AO3  Q   LFW 16K-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257831.12
+                   1 / 12 KG
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322300333533  C01 11NOV Q FIHLFW USED
+ 45  MUENDO      NGOMA      U   LFW 11B-F NB F  ET DOCV DOCS
+                                             ETI
+         0322300333517  C01 11NOV U FIHLFW USED
+ 46  MUKANGU     MANZI AO3  Q   LFW 16J-F NB F  OB ET DOCV
+                                             DOCS ETI
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322300333534  C01 11NOV Q FIHLFW USED
+ 47  MUKWAYANZO  MILAM AJ2  Q   LFW 27J-F  1 F  PX OB FF
+                                             ET DOCV DOCS ETI
+         KP COO    9032257896.19
+                   1 / 19 KG
+         KP970591694
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322102140317  C01 11NOV Q FIHLFW USED
+ 48  NGIMBI      MABIA      U   LFW 30A-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257793.19,9032257794.19
+                   2 / 38 KG
+         KP 78   U  LFW   NBO   11NOV ETD1235 8
+         0322102155210  C03 11NOV U FIHLFW USED
+ 49  NIKIEMA     ABDOU      L   LFW 17J-F  2 M  OB WB ET
+                                             DOCV DOCS ETI FQTV
+                                             IR
+         KP OUA    9032257839.14,9032257840.11
+                   2 / 25 KG
+         ET00044767892
+         KP 46   L  LFW   OUA   11NOV ETD1405 6
+         0323997602031  C03 11NOV L FIHLFW USED
+ 50  NKITA       VERON AB5  Q   LFW 14J-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP ABJ    3032019350.20
+                   1 / 20 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0322102153448  C01 11NOV Q FIHLFW USED
+ 51  NSIMBA      RAISS AB5  Q   LFW 14K-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP ABJ    3032019357.26,3032019358.7
+                   2 / 33 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0322102153449  C01 11NOV Q FIHLFW USED
+ 52  NTONTA      KANZA      J   LFW  1A-F  1 F  BF OB ET
+                                             DOCV DOCS ETI
+         KP LOS    3032019331P.16
+                   1 / 16 KG
+         KP 62   J  LFW   LOS   11NOV ETD1515 3
+         0322102148932  C01 11NOV J FIHLFW USED
+ 53  NWAIKE      KENEC      Q   LFW 11A-F NB M  PX OB ET
+                                             DOCV DOCS ETI
+         KP 62   Q  LFW   LOS   11NOV ETD1515 3
+         0322102158327  C01 11NOV Q FIHLFW USED
+ 54  NYAKIO      JEAN       S   LFW 32A-F  1 M  OB CS ET
+                                             DOCV DOCS ETI
+         KP ABV    3032019299.14
+                   1 / 14 KG
+         KP 32   M  LFW   ABV   11NOV ETD1420 7
+         0714850581394  C03 11NOV S FIHLFW USED
+ 55  NZUNDU      KIESE      Q   LFW 24J-F  2 F  PX OB FF
+                                             ET DOCV DOCS ETI
+         KP COO    9032257858.15,9032257859.7
+                   2 / 22 KG
+         KP802255226
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322102154359  C01 11NOV Q FIHLFW USED
+ 56  OKONKWO     LOTAN      Q   LFW 29C-F  1 M  PX OB ET
+                                             DOCV DOCS ETI
+         KP LOS    3032019416.11
+                   1 / 11 KG
+         KP 62   Q  LFW   LOS   11NOV ETD1515 3
+         0322102156772  C01 11NOV Q FIHLFW USED
+ 57  OLONDA      PATIE      U   LFW 26C-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP CMN    0032204683.15,0032204684.16
+                   2 / 31 KG
+         KP 52   U  LFW   DSS   11NOV ETD1240 7
+         0324850701604  C01 11NOV U FIHLFW USED
+ 58  OWUSU       RANSF      M   LFW 21C-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019311.14
+                   1 / 14 KG
+         KP 22   M  LFW   ACC   11NOV ETD1230 6
+         0322102160360  C01 11NOV M FIHLFW USED
+ 59  PAKA        LUKAN      Q   LFW 28C-F  1 F  OB FF BRW
+                                             ET DOCV DOCS ETI
+         KP COO    9032257904.20
+                   1 / 20 KG
+         KP741635156            BROWN
+         KP 36   Q  LFW   COO   11NOV ETD1245 9
+         0322102160550  C01 11NOV Q FIHLFW USED
+ 60  PEMBE       KWETE      U   LFW 13L-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP ABJ    3032019187.12
+                   1 / 12 KG
+         KP 10   U  LFW   ABJ   11NOV ETD1410 3
+         0322300332519  C01 11NOV U FIHLFW USED
+ 61  SITUAZOLAM  PATHY      U   LFW 11C-F  2 M  ET DOCV DOCS
+                                             ETI
+         KP LFW    5032058679.21,5032058680.23
+                   2 / 44 KG
+         0322300333446  C01 11NOV U FIHLFW USED
+ 62  SOUMANAYAR  SOUMA      L   LFW 12J-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP NIM    9032257811.19
+                   1 / 19 KG
+         KP 46   L  LFW   NIM   11NOV ETD1405 6
+         0325861791670  C01 11NOV L FIHLFW USED
+ 63  TSASAMUAKA  FANNY AC2  U   LFW 19B-F  1 F  OB WB ET
+                                             DOCV DOCS ETI
+         KP ABJ    3032019342.17
+                   1 / 17 KG
+         KP 10   U  LFW   ABJ   11NOV ETD1410 3
+         0327514955081  C01 11NOV U FIHLFW USED
+ 64  WEBER       TATIA      K   LFW 23L-F  1 F  OB ET DOCV
+                                             DOCS ETI
+         KP NBJ    9032257749.14
+                   1 / 14 KG
+         KP 76   K  LFW   NBJ   11NOV ETD1310 6
+         0323940755195  C01 11NOV K FIHLFW USED
+ 65# AGBO        KOFI       H   LFW 20L-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019033.9
+                   1 / 9  KG
+         KP 20   H  LFW   ACC   11NOV ETD1415 8
+         0322102159494  C01 11NOV H JNBLFW USED
+ 66# ANSONG      ENOCH      H   LFW 17A-F  1 M  OB WB ET
+                                             DOCV DOCS ETI
+         KP ACC    3032019052.14
+                   1 / 14 KG
+         KP 20   H  LFW   ACC   11NOV ETD1415 8
+         0325270151936  C01 11NOV H JNBLFW USED
+ 67# ERASMUS     RIAAN      L   LFW 21B-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP ABV    3032019030.23
+                   1 / 23 KG
+         KP 32   L  LFW   ABV   11NOV ETD1420 7
+         0325033930534  C01 11NOV L JNBLFW USED
+ 68# ERASMUS     PIETE      K   LFW 21A-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP ABV    3032019028.23,3032019029.22
+                   2 / 45 KG
+         KP 32   K  LFW   ABV   11NOV ETD1420 7
+         0325033930533  C01 11NOV K JNBLFW USED
+ 69# ESSENGUEEW  PAUL       H   LFW 21J-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019045.13
+                   1 / 13 KG
+         KP 16   H  LFW   BKO   11NOV ETD1310 4
+         0325860739224  C01 11NOV H JNBLFW USED
+ 70# GNACADJA    VIDJA      U   LFW 15A-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257672.23
+                   1 / 23 KG
+         KP 36   U  LFW   COO   11NOV ETD1245 9
+         0323940395452  C01 11NOV U JNBLFW USED
+ 71# HALL        STEVE      U   LFW 16C-F  1 M  OB WB ET
+                                             DOCV DOCS ETI
+         KP FNA    4032220243.18
+                   1 / 18 KG
+         KP 22   U  LFW   FNA   11NOV ETD1230 6
+         0324864381215  C01 11NOV U JNBLFW USED
+ 72# HARTZENBER  HARGE      V   LFW 25L-F  1 M  OB WB ET
+                                             DOCV DOCS ETI FQTV
+         KP BKO    3032019040.21
+                   1 / 21 KG
+         ET10010352170
+         KP 16   V  LFW   BKO   11NOV ETD1310 4
+         0323985357744  C01 11NOV V JNBLFW USED
+ 73# ILIMA       BIN A      U   LFW 22A-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257670.15,9032257671.7
+                   2 / 22 KG
+         KP 36   U  LFW   COO   11NOV ETD1245 9
+         0324869358523  C01 11NOV U JNBLFW USED
+ 74# KELOUAZE    RIM M      U   LFW 24A-F  2 F  OB WB ET
+                                             DOCV DOCS ETI
+         KP DSS    4032220348.15,4032220349.17
+                   2 / 32 KG
+         KP 52   U  LFW   DSS   11NOV ETD1240 7
+         0325860742683  C01 11NOV U JNBLFW USED
+ 75# KIM         DOHYU      S   LFW 19J-F NB M  OB CS ET
+                                             DOCV DOCS ETI
+         KP 52   S  LFW   DSS   11NOV ETD1240 7
+         0712164601604  C01 11NOV S JNBLFW USED
+ 76# KONATE      DOSSO AL2  U   LFW 13K-F  2 M  OB WB ET
+                                             DOCV DOCS ETI
+         KP ABJ    3032019038.21,3032019039.23
+                   2 / 44 KG
+         KP 10   U  LFW   ABJ   11NOV ETD1410 3
+         0323940479342  C01 11NOV U JNBLFW USED
+ 77# LAMOLA      MMAMP      M   LFW 30L-F  2 F  OB WB ET
+                                             DOCV DOCS ETI
+         KP BJL    3032019046.24,3032019047.25
+                   2 / 49 KG
+         KP 22   M  LFW   BJL   11NOV ETD1230 6
+         0327512177544  C01 11NOV M JNBLFW USED
+ 78# LUTHULI     THEMB      V   LFW 22L-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019053.23,3032019054.23
+                   2 / 46 KG
+         KP 16   V  LFW   BKO   11NOV ETD1310 4
+         0323982989301  C01 11NOV V JNBLFW USED
+ 79# MAKOLOI     QHAWE      L   LFW 27A-F  1 M  OB ET DOCV
+                                             DOCS ETI
+         KP DLA    4032220333.10
+                   1 / 10 KG
+         KP 34   L  LFW   DLA   11NOV ETD1320 1
+         0325860749515  C01 11NOV L JNBLFW USED
+ 80# MALOKA      EDWAR      V   LFW 13J-F  1 M  OB WB ET
+                                             DOCV DOCS ETI
+         KP CKY    3032019048.19
+                   1 / 19 KG
+         KP 10   V  LFW   CKY   11NOV ETD1410 3
+         0325860744752  C01 11NOV V JNBLFW USED
+ 81# MENTZ       XANDE      S   LFW 13A-F  1 M  OB WB CS
+                                             ET DOCV DOCS ETI
+                                             FQTV
+         KP NSI    6032773300.20
+                   1 / 20 KG
+         ET10115007641
+         KP 64   S  LFW   NSI   11NOV ETD1330 8
+         0714895415843  C01 11NOV S JNBLFW USED
+ 82# MPETLA      SEBOY      V   LFW 25A-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP BKO    3032019036.16,3032019037.10
+                   2 / 26 KG
+         KP 16   V  LFW   BKO   11NOV ETD1310 4
+         0323985357745  C01 11NOV V JNBLFW USED
+ 83# NCHO        NICAI AL2  U   LFW 20A-F  2 M  OB WB ET
+                                             DOCV DOCS ETI
+         KP ABJ    3032019034.23,3032019035.23
+                   2 / 46 KG
+         KP 10   U  LFW   ABJ   11NOV ETD1410 3
+         0323940479343  C01 11NOV U JNBLFW USED
+ 84# NDOMBOU NG  PATRI      U   LFW 23C-F  2 M  OB ET DOCV
+                                             DOCS OTHS ETI
+         KP DLA    4032220338.23,4032220339.23
+                   2 / 46 KG
+         KP 34   U  LFW   DLA   11NOV ETD1320 1
+         OTHS-PATRICE/AYRTON ADT
+         0327561969060  C01 11NOV U JNBLFW USED
+ 85# NGANG       POLIC      U   LFW 11K-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP DLA    4032220244.22,4032220246.23
+                   2 / 45 KG
+         KP 34   U  LFW   DLA   11NOV ETD1320 1
+         0325882614842  C01 11NOV U JNBLFW USED
+ 86# NGOH EYIND  RAISS      L   LFW 26L-F  2 F  OB WB ET
+                                             DOCV DOCS ETI
+         KP DLA    4032220317.25,4032220318.26
+                   2 / 51 KG
+         KP 34   L  LFW   DLA   11NOV ETD1320 1
+         0323927444335  C01 11NOV L JNBLFW USED
+ 87# NJIONKEOUA  IDRIC      L   LFW 12K-F  2 M  EE OB ET
+                                             DOCV DOCS ETI
+         KP DLA    4032220253.21,4032220282.23
+                   2 / 44 KG
+         KP 34   L  LFW   DLA   11NOV ETD1320 1
+         0322102160249  C01 11NOV L JNBLFW USED
+ 88# NUMBU       CLARI      U   LFW 13B-F  2 F  OB ET DOCV
+                                             DOCS OTHS ETI
+         KP DLA    4032220275.23,4032220276.23
+                   2 / 46 KG
+         KP 34   U  LFW   DLA   11NOV ETD1320 1
+         OTHS-CLARISSE/NGWENYI ADT
+         0327569593774  C01 11NOV U JNBLFW USED
+ 89# NYAH ZEBON  ASAAH      U   LFW 19L-F  2 M  PX OB ET
+                                             DOCV DOCS ETI FQTV
+         KP NSI    6032773297.20,6032773298.26
+                   2 / 46 KG
+         ET00097852790
+         KP 64   U  LFW   NSI   11NOV ETD1330 8
+         0322102157323  C01 11NOV U JNBLFW USED
+ 90# OMOKAN      ISAAC      U   LFW 16B-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP LOS    3032019050.22,3032019051.23
+                   2 / 45 KG
+         KP 62   U  LFW   LOS   11NOV ETD1515 3
+         0323986630630  C01 11NOV U JNBLFW USED
+ 91# POKUAA      AKUSU      U   LFW 19K-F  2 F  OB WB ET
+                                             DOCV DOCS OTHS ETI
+         KP ACC    3032019043.28,3032019044.23
+                   2 / 51 KG
+         KP 20   U  LFW   ACC   11NOV ETD1415 8
+         OTHS-AKUSUA ADT
+         0327571418565  C01 11NOV U JNBLFW USED
+ 92# RADEBE      WANDI      H   LFW 11L-F NB M  OB ET DOCV
+                                             DOCS OTHS ETI
+         KP 36   H  LFW   COO   11NOV ETD1245 9
+         OTHS-WANDILE/GREGORY ADT
+         0325225986731  C01 11NOV H JNBLFW USED
+ 93# SOM         OFORI      U   LFW 23A-F  2 F  OB ET DOCV
+                                             DOCS ETI
+         KP ACC    3032019041.23,3032019042.23
+                   2 / 46 KG
+         KP 20   U  LFW   ACC   11NOV ETD1415 8
+         0327517380318  C01 11NOV U JNBLFW USED
+ 94# TCHIKPO     DONAN      U   LFW 15B-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257673.21,9032257674.23
+                   2 / 44 KG
+         KP 36   U  LFW   COO   11NOV ETD1245 9
+         0323940392267  C03 11NOV U JNBLFW USED
+ 95# TECHA       RICHA      L   LFW 22J-F  2 M  OB ET DOCV
+                                             DOCS OTHS ETI
+         KP DLA    4032220249.23,4032220254.14
+                   2 / 37 KG
+         KP 34   L  LFW   DLA   11NOV ETD1320 1
+         OTHS-RICHARD/NJUATE ADT
+         0325225985697  C01 11NOV L JNBLFW USED
+ 96# TOWNLEY     MATOD      U   LFW 15J-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP DLA    4032220343.10,4032220346.20
+                   2 / 30 KG
+         KP 34   U  LFW   DLA   11NOV ETD1320 1
+         0329014183354  C01 11NOV U JNBLFW USED
+ 97# WEHMEYER    DEONE      V   LFW 16A-F  1 F  PX OB WB
+                                             ET DOCV DOCS ETI
+         KP ABV    3032019049.32
+                   1 / 32 KG
+         KP 32   V  LFW   ABV   11NOV ETD1420 7
+         0322102155606  C01 11NOV V JNBLFW USED
+ 98# YEVI        DODJI      U   LFW 15C-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP COO    9032257675.23,9032257676.23
+                   2 / 46 KG
+         KP 36   U  LFW   COO   11NOV ETD1245 9
+         0323940392210  C03 11NOV U JNBLFW USED
+ 99# ZVOMUYA     PRINC      Q   LFW 13C-F  2 M  OB ET DOCV
+                                             DOCS ETI
+         KP ABJ    3032019031.16,3032019032.12
+                   2 / 28 KG
+         KP 10   Q  LFW   ABJ   11NOV ETD1410 3
+         0325033993172  C01 11NOV Q JNBLFW USED
+ 
+HDQ.HDQ8HEA 1123 12-NOV-2026 1CC450
+ G*L76/11NOVLFW#BT/ET/IB/OB/ON/SS/FF/FQTV/AE
+ KP    76 11NOV   LFW 6    1310   738 BT ET IB OB    C1Y88
+  1  AHMED SIDI  JEMAL      Q   NBJ 32A-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257717.23
+                   1 / 23 KG
+         KP 0015 Q  NKC  11NOV ETA1135
+         0322102154440  C02 11NOV Q LFWNBJ USED
+  2  ALAHO       WASSA      T   PNR 24L-F  2 F  IB WB ET
+                                             DOCV DOCS ETI APP
+         KP PNR    7032678721.26,7032678722.28
+                   2 / 54 KG
+         KP 0037 T  COO  11NOV/ETA1122
+         0322102139573  C02 11NOV T LFWPNR USED
+  3  AMADOU      COULI AD3  U   PNR 15L-F  3 M  IB EIB FF
+                                             ET INF IFET DOCV
+                                             DCVI DOCS ETI APP
+         KP PNR    0032614243.23,0032614245.23,
+         KP PNR    0032614256.23
+                   3 / 69 KG
+         KP714379643
+         KP 0029 U  BKO  11NOV ETA1120
+         0322102155726  C02 11NOV U LFWPNR USED
+  4  AMBIH       AHMED      H   NBJ     F  0 M  IB DOCS
+  5  BADIAGA     TAGAT      V   NBJ 23L-F  2 F  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    0032614186.23,0032614187.23
+                   2 / 46 KG
+         KP 0029 V  BKO  11NOV ETA1120
+         0322102147370  C02 11NOV V LFWNBJ USED
+  6  BAH         SAOUD      L   NBJ 33A-F  2 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257723.23,9032257724.23
+                   2 / 46 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102152647  C02 11NOV L LFWNBJ USED
+  7  BAH         THIER      L   NBJ 30L-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257975.24
+                   1 / 24 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102156807  C02 11NOV L LFWNBJ USED
+  8  BAKALA LEM  JEANN      V   PNR 24J-F NB F  EE IB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP818035002
+         KP 0055 V  DSS  11NOV/ETA1134
+         0322102157072  C02 11NOV V LFWPNR USED
+  9  BALDE       THIER      L   NBJ 30C-S  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257766.23,9032257767.23
+                   2 / 46 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102159318  C02 11NOV L LFWNBJ USED
+ 10  BALDE       OUSMA      U   PNR     F NB M  OFL FF WB
+                                             DOCV DOCS FQTV APP
+ 11  BARRO       IBRAH      U   NBJ 25L-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257682.20,9032257683.20
+                   2 / 40 KG
+         KP 0015 U  NKC  11NOV ETA1135
+         0322102154634  C02 11NOV U LFWNBJ USED
+ 12  BARRY       KADIA AE3  L   NBJ 26A-F  2 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257954.23,9032257955.23
+                   2 / 46 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102152921  C02 11NOV L LFWNBJ USED
+ 13  BARRY       ALPHA AE3  L   NBJ 26B-F  2 CHD IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257956.23,9032257957.23
+                   2 / 46 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102152923  C02 11NOV L LFWNBJ USED
+ 14  BASSISSA    JEAN       V   PNR 21A-F  1 M  IB WB ET
+                                             DOCV DOCS ETI APP
+         KP PNR    7032678728.17
+                   1 / 17 KG
+         KP 0023 V  ACC  11NOV ETA1145
+         0325869448221  C04 11NOV V LFWPNR USED
+ 15  BATHILY     AICHE      Q   PNR 22J-S NB F  IB FF ET
+                                             DOCV DOCS ETI FQTV
+                                             APP
+         KP857840141
+         KP857840141
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102159547  C02 11NOV Q LFWPNR USED
+ 16  BAYO        MOHAM      K   NBJ 37A-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257807.16,9032257974.24
+                   2 / 40 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0322102158064  C02 11NOV K LFWNBJ USED
+ 17  BOCOUM      SAMBA      K   PNR 16A-F  2 M  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614159.23,0032614160.23
+                   2 / 46 KG
+         KP885873542
+         KP 0029 K  BKO  11NOV ETA1120
+         0322102148592  C04 11NOV K LFWPNR USED
+ 18  BOUBACAR    NDIAY      U   PNR 16B-F  2 M  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614258.23,0032614259.23
+                   2 / 46 KG
+         KP834313933
+         KP 0029 U  BKO  11NOV ETA1120
+         0322102154610  C02 11NOV U LFWPNR USED
+ 19  BOUTAR      EL HA      H   PNR 35L-F  2 M  IB FF ET
+                                             DOCV DOCS ETI APP
+         KP PNR    7032678634V.20,7032678635V.21
+                   2 / 41 KG
+         KP854960514
+         KP 0015 H  NKC  11NOV ETA1135
+         0322102153108  C02 11NOV H LFWPNR USED
+ 20  BRAHIMA     OUATT AI2  Y   PNR 27A-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678659.12
+                   1 / 12 KG
+         KP 0011 Y  ABJ  11NOV/ETA1055
+         0325034011160  C02 11NOV Y LFWPNR USED
+ 21  BRITO       MAURA      J   NBJ  2A-F  1 M  IB WB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    9032258019P.13
+                   1 / 13 KG
+         KP 0023 D  ACC  11NOV ETA1145
+         0322102159307  C02 11NOV J LFWNBJ USED
+ 22  CAMACHO     MANUE AB2  L   NBJ 26J-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257988.14
+                   1 / 14 KG
+         KP 0031 L  ABV  11NOV ETA1105
+         0323924182734  C04 11NOV L LFWNBJ USED
+ 23  CAMARA      BONIF      K   NBJ 19J-F  2 M  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    0032614232.23,0032614233.23
+                   2 / 46 KG
+         KP 0029 K  BKO  11NOV ETA1120
+         0322102114005  C04 11NOV K LFWNBJ USED
+ 24  CAPITA      ALEXA      L   NBJ 38A-F NB M  IB ET DOCV
+                                             DOCS ETI APP
+         KP 0041 L  LBV  11NOV/ETA1027
+         0325284285227  C02 11NOV L LFWNBJ USED
+ 25  CISSE       NAFI       L   NBJ 36A-F  3 F  IB ET INF
+                                             IFET DOCV DCVI DOCS
+                                             ETI APP
+         KP NBJ    9032257783.23,9032257784.23,
+         KP NBJ    9032257790.23
+                   3 / 69 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102155549  C02 11NOV L LFWNBJ USED
+ 26  CISSE       HADY       Q   PNR 16C-F  2 M  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614085.23,0032614086.23
+                   2 / 46 KG
+         KP864060072
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102158322  C02 11NOV Q LFWPNR USED
+ 27  COLETTE     NZAOU      V   PNR 33L-F  2 F  EE IB ET
+                                             CM DOCV DOCS ETI
+                                             APP
+         KP PNR    7032678632.28,7032678636.20
+                   2 / 48 KG
+       1 ACC 02KG AMATH
+         KP 0055 V  DSS  11NOV/ETA1134
+         0322102155272  C02 11NOV V LFWPNR USED
+ 28  CONDE       MAMAD      L   NBJ 21J-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257962.23,9032257963.22
+                   2 / 45 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102150121  C02 11NOV L LFWNBJ USED
+ 29  DARAME      NHUMA      K   NBJ 40A-F  2 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257905.23,9032257906.23
+                   2 / 46 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0322102158615  C04 11NOV K LFWNBJ USED
+ 30  DIA         OUSMA      U   PNR 27L-F  6 M  IB FF WB
+                                             ET DOCV DOCS ETI
+                                             AE FQTV APP
+         AE-KP 0076/LFWPNR/BG  BG /HI/4 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114171 C02
+         KP PNR    7032678653.23,7032678654.28,
+         KP PNR    7032678716.23,7032678718.23,
+         KP PNR    7032678719.23,7032678720.23
+                   6 / 143KG
+         KP890974254
+         KP890974254
+         KP 0055 U  DSS  11NOV/ETA1134
+         0322102159313  C02 11NOV U LFWPNR USED
+ 31  DIABY       AMINA      V   PNR 18C-F  2 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678712.22,7032678713.11
+                   2 / 33 KG
+         KP 0055 V  DSS  11NOV/ETA1134
+         0323927854368  C02 11NOV V LFWPNR USED
+ 32  DIAKITE     DIOUM      V   NBJ 23A-F  2 F  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    0032614180.23,0032614183.23
+                   2 / 46 KG
+         KP 0029 V  BKO  11NOV ETA1120
+         0322102147369  C02 11NOV V LFWNBJ USED
+ 33  DIALLO      FATOU      K   NBJ 39A-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257875.23,9032257876.23
+                   2 / 46 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0322102155551  C04 11NOV K LFWNBJ USED
+ 34  DIALLO      FATOU AE3  L   NBJ 26C-F  2 CHD IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257958.23,9032257959.23
+                   2 / 46 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102152922  C02 11NOV L LFWNBJ USED
+ 35  DIALLO      HOULE      Q   PNR 16L-F  4 F  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             AE APP
+         AE-KP 0076/LFWPNR/BG  BG /HI/1 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114149 C02
+         AE-KP 0076/LFWPNR/BG  BG /HI/1 /0
+            UPTO70LB 32KG BAGGAGE
+         EMD-0324400114150 C02
+         KP PNR    0032614273.25,0032614276.25,
+         KP PNR    0032614277.25,0032614281.26
+                   4 / 101KG
+         KP900329356
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102155357  C02 11NOV Q LFWPNR USED
+ 36  DIALLO      KADIA      K   NBJ 31L-F  2 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257712.23,9032257713.23
+                   2 / 46 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0324884878213  C04 11NOV K LFWNBJ USED
+ 37  DIALLO      DIAMI AD3  U   PNR 17A-F  2 F  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614239.23,0032614241.23
+                   2 / 46 KG
+         KP904600476
+         KP 0029 U  BKO  11NOV ETA1120
+         0322102155732  C02 11NOV U LFWPNR USED
+ 38  DIALLO      MAMAD AJ2  K   NBJ     F  0 M  IB DOCS
+ 39  DIARRA      FATOU      Q   PNR 15B-F  2 F  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614138.22,0032614140.23
+                   2 / 45 KG
+         KP859062002
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102152167  C02 11NOV Q LFWPNR USED
+ 40  DIAWARA     KOLLY      K   NBJ 22C-F  2 M  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    0032614307.23,0032614308.23
+                   2 / 46 KG
+         KP 0029 K  BKO  11NOV ETA1120
+         0322102119469  C04 11NOV K LFWNBJ USED
+ 41  DIBAWONSA   GIGAN      Y   PNR 24C-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678725.18
+                   1 / 18 KG
+         KP 0011 Y  ABJ  11NOV/ETA1055
+         0323952342909  C02 11NOV Y LFWPNR USED
+ 42  DJIM        FOULE      Q   PNR 15A-F  2 M  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614223.23,0032614225.23
+                   2 / 46 KG
+         KP945155293
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102158326  C02 11NOV Q LFWPNR USED
+ 43  DJODJO      JUSTI      T   PNR 25A-F  2 F  IB WB ET
+                                             DOCV DOCS ETI APP
+         KP PNR    7032678723.23,7032678724.22
+                   2 / 45 KG
+         KP 0037 T  COO  11NOV/ETA1122
+         0322102145628  C02 11NOV T LFWPNR USED
+ 44  DRAMMEH     SHEIK      V   NBJ 39L-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257890.11
+                   1 / 11 KG
+         KP 0055 V  DSS  11NOV/ETA1134
+         0322102154544  C02 11NOV V LFWNBJ USED
+ 45  DUO         QINGK      K   NBJ 21C-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257967.23,9032257968.23
+                   2 / 46 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0323924188338  C02 11NOV K LFWNBJ USED
+ 46  ELMOKHTAR   CHEIK      U   NBJ 28L-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257693.14,9032257694.16
+                   2 / 30 KG
+         KP 0015 U  NKC  11NOV ETA1135
+         0323924174219  C02 11NOV U LFWNBJ USED
+ 47  ELMOUSTAPH  ABDEL      U   NBJ 28A-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257691.23,9032257692.16
+                   2 / 39 KG
+         KP 0015 U  NKC  11NOV ETA1135
+         0323924183061  C02 11NOV U LFWNBJ USED
+ 48  ELVALLY     BABA       U   NBJ 29L-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257697.17
+                   1 / 17 KG
+         KP 0015 U  NKC  11NOV ETA1135
+         0323924174101  C02 11NOV U LFWNBJ USED
+ 49  FANTA       NIANG AH2  H   PNR 20K-S NB M  IB FF ET
+                                             DOCV DOCS ETI FQTV
+                                             APP
+         KP981756532
+         KP981756532
+         KP 0029 H  BKO  11NOV ETA1120
+         0322102159538  C02 11NOV H LFWPNR USED
+ 50  FATOUMATA   COULI AD3  U   PNR 14L-F  2 F  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614260.23,0032614267.23
+                   2 / 46 KG
+         KP760597493
+         KP 0029 U  BKO  11NOV ETA1120
+         0322102155731  C02 11NOV U LFWPNR USED
+ 51  GASSAMA     YOUSS      V   NBJ 22L-F  2 M  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    0032614173.22,0032614174.23
+                   2 / 45 KG
+         KP 0029 V  BKO  11NOV ETA1120
+         0322102158074  C02 11NOV V LFWNBJ USED
+ 52  GORY        ALMAM      Q   PNR 14A-F NB M  IB FF ET
+                                             DOCV DOCS ETI APP
+         KP752268370
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102142850  C02 11NOV Q LFWPNR USED
+ 53  GUENGO      SATEC      Y   NBJ 24A-F  1 M  IB WB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    9032257936.22
+                   1 / 22 KG
+         KP 0011 Y  ABJ  11NOV/ETA1055
+         0325225982856  C02 11NOV Y LFWNBJ USED
+ 54  IMAM SAF    EL HA      U   NBJ 30A-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257700.20,9032257720.8
+                   2 / 28 KG
+         KP 0015 U  NKC  11NOV ETA1135
+         0322102151715  C02 11NOV U LFWNBJ USED
+ 55  JALLOH      ABDUL      K   NBJ 36L-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257787.13,9032257788.18
+                   2 / 31 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0322102159714  C02 11NOV K LFWNBJ USED
+ 56  KALLE       MAMAD      K   NBJ 20B-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257842.20,9032257948.23
+                   2 / 43 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0322102152227  C04 11NOV K LFWNBJ USED
+ 57  KANE        HAMID      V   PNR 14B-F  2 M  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP PNR    0032614230.23,0032614231.23
+                   2 / 46 KG
+         KP 0029 V  BKO  11NOV ETA1120
+         0323982996226  C02 11NOV V LFWPNR USED
+ 58  KONARE      HOULE      V   NBJ 18J-F  2 F  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    0032614213.23,0032614215.23
+                   2 / 46 KG
+         KP 0029 V  BKO  11NOV ETA1120
+         0322102156806  C02 11NOV V LFWNBJ USED
+ 59  KONE        LASSI      Q   PNR 14C-F  2 M  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614144.23,0032614145.23
+                   2 / 46 KG
+         KP904451192
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102156949  C02 11NOV Q LFWPNR USED
+ 60  KOUASSI     KOUAK AI2  Y   PNR 27B-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678726.12
+                   1 / 12 KG
+         KP 0011 Y  ABJ  11NOV/ETA1055
+         0325034011161  C02 11NOV Y LFWPNR USED
+ 61  KOUROUMA    FATOU      K   NBJ 34L-F  2 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257738.23,9032257739.23
+                   2 / 46 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0324884878325  C04 11NOV K LFWNBJ USED
+ 62  LIU         JICON      K   NBJ 15J-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257971.24,9032257972.24
+                   2 / 48 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0325889991057  C02 11NOV K LFWNBJ USED
+ 63  MAHORO      STEFF      K   NBJ 17L-F  1 F  IB WB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    9032257746.17
+                   1 / 17 KG
+         KP 0071 K  FIH  11NOV ETA1115
+         0323940755185  C02 11NOV K LFWNBJ USED
+ 64  MAYOLA      CECIL      L   PNR 32L-F  2 F  EE IB ET
+                                             DOCV DOCS ETI APP
+         KP PNR    7032678715.23,7032678717.23
+                   2 / 46 KG
+         KP 0055 L  DSS  11NOV/ETA1134
+         0322102159192  C02 11NOV L LFWPNR USED
+ 65  MBAKOU      ROMUA      S   NBJ 18A-F  1 M  IB WB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    9032257997.16
+                   1 / 16 KG
+         KP 0021 S  ACC  11NOV ETA1100
+         0324864440985  C02 11NOV S LFWNBJ USED
+ 66  MOULOUD     MOHAM      H   NBJ 26L-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257689.17,9032257690.19
+                   2 / 36 KG
+         KP 0015 H  NKC  11NOV ETA1135
+         0329493538751  C04 11NOV H LFWNBJ USED
+ 67  NDIAYE      BOUBO AH2  H   PNR 20L-S NB M  IB FF ET
+                                             DOCV DOCS ETI FQTV
+                                             APP
+         KP907845945
+         KP907845945
+         KP 0029 H  BKO  11NOV ETA1120
+         0322102159544  C02 11NOV H LFWPNR USED
+ 68  NGWESE      TEREN      L   PNR 25C-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678727.12
+                   1 / 12 KG
+         KP 0035 L  DLA  11NOV/ETA1059
+         0329408844711  C02 11NOV L LFWPNR USED
+ 69  NIANG       KADIA      H   PNR 18L-F  2 F  IB EIB FF
+                                             WB ET DOCV DOCS
+                                             ETI APP
+         KP PNR    0032614096.21,0032614097.21
+                   2 / 42 KG
+         KP858592232
+         KP 0029 H  BKO  11NOV ETA1120
+         0322102153559  C02 11NOV H LFWPNR USED
+ 70  SAMOURA     BAKAR      L   PNR 22A-F  2 M  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP PNR    0032614155.22,0032614157.23
+                   2 / 45 KG
+         KP 0029 L  BKO  11NOV ETA1120
+         0329408661803  C02 11NOV L LFWPNR USED
+ 71  SANE        AMADO      K   NBJ 38L-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257856.23,9032257857.23
+                   2 / 46 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0322102156991  C02 11NOV K LFWNBJ USED
+ 72  SANTOS      JULIA AB2  L   NBJ 26K-F  1 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257892.20
+                   1 / 20 KG
+         KP 0031 L  ABV  11NOV ETA1105
+         0323924182735  C04 11NOV L LFWNBJ USED
+ 73  SANTOS      SILVA      V   NBJ 19C-F  1 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257941.21
+                   1 / 21 KG
+         KP 0011 V  ABJ  11NOV/ETA1055
+         0325869483313  C04 11NOV V LFWNBJ USED
+ 74  SENE        ABDOU      H   NBJ 14J-F  2 M  IB WB ET
+                                             CM DOCV DOCS ETI
+                                             APP
+         KP NBJ    9032257895.29,9032257898.23
+                   2 / 52 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0322102154542  C02 11NOV H LFWNBJ USED
+ 75  SIDIBE      DANA       L   NBJ 37L-F  2 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257844.17,9032257845.23
+                   2 / 40 KG
+         KP 0015 L  CKY  11NOV ETA1135
+         0322102155693  C02 11NOV L LFWNBJ USED
+ 76  SINERA      ISATO      H   NBJ 29A-F  2 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257695.23,9032257696.23
+                   2 / 46 KG
+         KP 0023 H  BJL  11NOV ETA1145
+         0323924178520  C02 11NOV H LFWNBJ USED
+ 77  SININTA     MAH M      Q   PNR 19A-F  2 F  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP PNR    0032614188.23,0032614189.23
+                   2 / 46 KG
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102141430  C02 11NOV Q LFWPNR USED
+ 78  SOW         DJEIN AJ2  K   NBJ     F  0 F  IB INF DOCS
+ 79  TALEB       MOHAM      H   PNR 31A-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678630.23,7032678631.9
+                   2 / 32 KG
+         KP 0015 H  NKC  11NOV ETA1135
+         0323927447896  C02 11NOV H LFWPNR USED
+ 80  THEODORECH  MONTE      K   NBJ 17J-F NB M  IB ET DOCV
+                                             DOCS OTHS ETI APP
+         KP 0055 K  DSS  11NOV/ETA1134
+         0325270099478  C02 11NOV K LFWNBJ USED
+ 81  TIRERA      BAKAR      Q   PNR 19L-F  2 M  IB EIB FF
+                                             ET DOCV DOCS ETI
+                                             APP
+         KP PNR    0032614067.23,0032614068.23
+                   2 / 46 KG
+         KP845998650
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102149342  C02 11NOV Q LFWPNR USED
+ 82  TOGOLA EP   HAWA       V   NBJ 21L-S NB F  IB ET DOCV
+                                             DOCS ETI APP
+         KP 0029 V  BKO  11NOV ETA1120
+         0322102159283  C02 11NOV V LFWNBJ USED
+ 83  TOUNKARA    ADAMA      K   NBJ 34A-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257735.23,9032257736.23
+                   2 / 46 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0322102151826  C04 11NOV K LFWNBJ USED
+ 84  TOUNKARA    FILY       K   NBJ 17C-F  2 M  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    0032614201.23,0032614242.23
+                   2 / 46 KG
+         KP 0029 K  BKO  11NOV ETA1120
+         0322102158623  C02 11NOV K LFWNBJ USED
+ 85  TRAORE      AMIDO      V   NBJ 20J-F  2 M  IB EIB ET
+                                             DOCV DOCS ETI APP
+         KP NBJ    0032614235.23,0032614236.23
+                   2 / 46 KG
+         KP 0029 V  BKO  11NOV ETA1120
+         0322102147622  C02 11NOV V LFWNBJ USED
+ 86  WEBER       TATIA      K   NBJ 35A-F  1 F  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257749.14
+                   1 / 14 KG
+         KP 0071 K  FIH  11NOV ETA1115
+         0323940755195  C02 11NOV K LFWNBJ USED
+ 87  WU          LIXIA      K   NBJ 15C-F  2 M  IB ET DOCV
+                                             DOCS ETI APP
+         KP NBJ    9032257918.12,9032257973.24
+                   2 / 36 KG
+         KP 0015 K  CKY  11NOV ETA1135
+         0325889990798  C02 11NOV K LFWNBJ USED
+ 88  XXX         CREW       Y   PNR 12C-S NB M  CM DOCV DOCS
+                                             TKT APP
+ 89  ZINGAMIOKO  CAROL      U   PNR 16J-F 20 F  IB ET DOCV
+                                             DOCS ETI AE IR
+                                             APP
+         AE-KP 0076/LFWPNR/BG  BG /HI/18/0
+            UPTO70LB 32KG BAGGAGE
+         EMD-0324400114160 C02
+         KP PNR    7032678729.18,7032678730.24,
+         KP PNR    7032678731.32,7032678732.32,
+         KP PNR    7032678733.32,7032678734.32,
+         KP PNR    7032678735.32,7032678736.32,
+         KP PNR    7032678737.32,7032678738.32,
+         KP PNR    7032678739.32,7032678740.32,
+         KP PNR    7032678741.32,7032678742.32,
+         KP PNR    7032678743.32,7032678744.32,
+         KP PNR    7032678745.32,7032678746.32,
+         KP PNR    7032678747.32,7032678748.32
+                   20 / 618KG
+         KP 0037 U  COO  11NOV/ETA1122
+         0323940396552  C02 11NOV T LFWPNR USED
+ 
+HDQ.HDQ8HEA 1123 12-NOV-2026 1CC450
+ G*L76/11NOVNBJ#BT/ET/IB/OB/ON/SS/FF/FQTV/AE
+ KP    76 11NOV   NBJ A3   1820   738 BT ET IB OB    C0Y39
+  1  ALEXANDRE   JOEL       U   PNR 23A-F  1 M  WB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678790.8
+                   1 / 8  KG
+         0323940455315  C01 11NOV U NBJPNR USED
+  2  CORREIA     BENJA      U   PNR 17L-F  1 M  WB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678792.15
+                   1 / 15 KG
+         0322102159825  C01 11NOV U NBJPNR USED
+  3  KILONGAKOU  RODLI      U   PNR 21L-F  1 M  WB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678791.22
+                   1 / 22 KG
+         0323924181163  C01 11NOV U NBJPNR USED
+  4  KOSSALEBA   RUTH       U   PNR 20A-F  2 F  WB ET DOCV
+                                             DOCS ETI APP
+         KP PNR    7032678793.18,7032678794.14
+                   2 / 32 KG
+         0322102160668  C01 11NOV U NBJPNR USED
+  5# ALAHO       WASSA      T   PNR 24L-F  2 F  IB WB ET
+                                             DOCV DOCS ETI
+         KP PNR    7032678721.26,7032678722.28
+                   2 / 54 KG
+         KP 0037 T  COO  11NOV/ETA1122
+         0322102139573  C02 11NOV T LFWPNR USED
+  6# AMADOU      COULI AD3  U   PNR 15L-F  3 M  IB FF ET
+                                             INF IFET DOCV DCVI
+                                             DOCS ETI
+         KP PNR    0032614243.23,0032614245.23,
+         KP PNR    0032614256.23
+                   3 / 69 KG
+         KP714379643
+         KP 0029 U  BKO  11NOV ETA1120
+         0322102155726  C02 11NOV U LFWPNR USED
+  7# BAKALA LEM  JEANN      V   PNR 24J-F NB F  EE IB FF
+                                             ET DOCV DOCS ETI
+         KP818035002
+         KP 0055 V  DSS  11NOV/ETA1134
+         0322102157072  C02 11NOV V LFWPNR USED
+  8# BASSISSA    JEAN       V   PNR 21A-F  1 M  IB WB ET
+                                             DOCV DOCS ETI
+         KP PNR    7032678728.17
+                   1 / 17 KG
+         KP 0023 V  ACC  11NOV ETA1145
+         0325869448221  C04 11NOV V LFWPNR USED
+  9# BATHILY     AICHE      Q   PNR 22J-S NB F  IB FF ET
+                                             DOCV DOCS ETI FQTV
+         KP857840141
+         KP857840141
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102159547  C02 11NOV Q LFWPNR USED
+ 10# BOCOUM      SAMBA      K   PNR 16A-F  2 M  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614159.23,0032614160.23
+                   2 / 46 KG
+         KP885873542
+         KP 0029 K  BKO  11NOV ETA1120
+         0322102148592  C04 11NOV K LFWPNR USED
+ 11# BOUBACAR    NDIAY      U   PNR 16B-F  2 M  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614258.23,0032614259.23
+                   2 / 46 KG
+         KP834313933
+         KP 0029 U  BKO  11NOV ETA1120
+         0322102154610  C02 11NOV U LFWPNR USED
+ 12# BOUTAR      EL HA      H   PNR 35L-F  2 M  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    7032678634V.20,7032678635V.21
+                   2 / 41 KG
+         KP854960514
+         KP 0015 H  NKC  11NOV ETA1135
+         0322102153108  C02 11NOV H LFWPNR USED
+ 13# BRAHIMA     OUATT AI2  Y   PNR 27A-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    7032678659.12
+                   1 / 12 KG
+         KP 0011 Y  ABJ  11NOV/ETA1055
+         0325034011160  C02 11NOV Y LFWPNR USED
+ 14# CISSE       HADY       Q   PNR 16C-F  2 M  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614085.23,0032614086.23
+                   2 / 46 KG
+         KP864060072
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102158322  C02 11NOV Q LFWPNR USED
+ 15# COLETTE     NZAOU      V   PNR 33L-F  2 F  EE IB ET
+                                             CM DOCV DOCS ETI
+         KP PNR    7032678632.28,7032678636.20
+                   2 / 48 KG
+       1 ACC 02KG AMATH
+         KP 0055 V  DSS  11NOV/ETA1134
+         0322102155272  C02 11NOV V LFWPNR USED
+ 16# DIA         OUSMA      U   PNR 27L-F  6 M  IB FF WB
+                                             ET DOCV DOCS ETI
+                                             AE FQTV
+         AE-KP 0076/NBJPNR/BG  BG /HI/4 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114171 C02
+         KP PNR    7032678653.23,7032678654.28,
+         KP PNR    7032678716.23,7032678718.23,
+         KP PNR    7032678719.23,7032678720.23
+                   6 / 143KG
+         KP890974254
+         KP890974254
+         KP 0055 U  DSS  11NOV/ETA1134
+         0322102159313  C02 11NOV U LFWPNR USED
+ 17# DIABY       AMINA      V   PNR 18C-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    7032678712.22,7032678713.11
+                   2 / 33 KG
+         KP 0055 V  DSS  11NOV/ETA1134
+         0323927854368  C02 11NOV V LFWPNR USED
+ 18# DIALLO      HOULE      Q   PNR 16L-F  4 F  IB FF ET
+                                             DOCV DOCS ETI AE
+         AE-KP 0076/NBJPNR/BG  BG /HI/1 /0
+            UPTO50LB 23KG BAGGAGE
+         EMD-0324400114149 C02
+         AE-KP 0076/NBJPNR/BG  BG /HI/1 /0
+            UPTO70LB 32KG BAGGAGE
+         EMD-0324400114150 C02
+         KP PNR    0032614273.25,0032614276.25,
+         KP PNR    0032614277.25,0032614281.26
+                   4 / 101KG
+         KP900329356
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102155357  C02 11NOV Q LFWPNR USED
+ 19# DIALLO      DIAMI AD3  U   PNR 17A-F  2 F  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614239.23,0032614241.23
+                   2 / 46 KG
+         KP904600476
+         KP 0029 U  BKO  11NOV ETA1120
+         0322102155732  C02 11NOV U LFWPNR USED
+ 20# DIARRA      FATOU      Q   PNR 15B-F  2 F  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614138.22,0032614140.23
+                   2 / 45 KG
+         KP859062002
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102152167  C02 11NOV Q LFWPNR USED
+ 21# DIBAWONSA   GIGAN      Y   PNR 24C-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    7032678725.18
+                   1 / 18 KG
+         KP 0011 Y  ABJ  11NOV/ETA1055
+         0323952342909  C02 11NOV Y LFWPNR USED
+ 22# DJIM        FOULE      Q   PNR 15A-F  2 M  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614223.23,0032614225.23
+                   2 / 46 KG
+         KP945155293
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102158326  C02 11NOV Q LFWPNR USED
+ 23# DJODJO      JUSTI      T   PNR 25A-F  2 F  IB WB ET
+                                             DOCV DOCS ETI
+         KP PNR    7032678723.23,7032678724.22
+                   2 / 45 KG
+         KP 0037 T  COO  11NOV/ETA1122
+         0322102145628  C02 11NOV T LFWPNR USED
+ 24# FANTA       NIANG AH2  H   PNR 20K-S NB M  IB FF ET
+                                             DOCV DOCS ETI FQTV
+         KP981756532
+         KP981756532
+         KP 0029 H  BKO  11NOV ETA1120
+         0322102159538  C02 11NOV H LFWPNR USED
+ 25# FATOUMATA   COULI AD3  U   PNR 14L-F  2 F  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614260.23,0032614267.23
+                   2 / 46 KG
+         KP760597493
+         KP 0029 U  BKO  11NOV ETA1120
+         0322102155731  C02 11NOV U LFWPNR USED
+ 26# GORY        ALMAM      Q   PNR 14A-F NB M  IB FF ET
+                                             DOCV DOCS ETI
+         KP752268370
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102142850  C02 11NOV Q LFWPNR USED
+ 27# KANE        HAMID      V   PNR 14B-F  2 M  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    0032614230.23,0032614231.23
+                   2 / 46 KG
+         KP 0029 V  BKO  11NOV ETA1120
+         0323982996226  C02 11NOV V LFWPNR USED
+ 28# KONE        LASSI      Q   PNR 14C-F  2 M  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614144.23,0032614145.23
+                   2 / 46 KG
+         KP904451192
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102156949  C02 11NOV Q LFWPNR USED
+ 29# KOUASSI     KOUAK AI2  Y   PNR 27B-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    7032678726.12
+                   1 / 12 KG
+         KP 0011 Y  ABJ  11NOV/ETA1055
+         0325034011161  C02 11NOV Y LFWPNR USED
+ 30# MAYOLA      CECIL      L   PNR 32L-F  2 F  EE IB ET
+                                             DOCV DOCS ETI
+         KP PNR    7032678715.23,7032678717.23
+                   2 / 46 KG
+         KP 0055 L  DSS  11NOV/ETA1134
+         0322102159192  C02 11NOV L LFWPNR USED
+ 31# NDIAYE      BOUBO AH2  H   PNR 20L-S NB M  IB FF ET
+                                             DOCV DOCS ETI FQTV
+         KP907845945
+         KP907845945
+         KP 0029 H  BKO  11NOV ETA1120
+         0322102159544  C02 11NOV H LFWPNR USED
+ 32# NGWESE      TEREN      L   PNR 25C-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    7032678727.12
+                   1 / 12 KG
+         KP 0035 L  DLA  11NOV/ETA1059
+         0329408844711  C02 11NOV L LFWPNR USED
+ 33# NIANG       KADIA      H   PNR 18L-F  2 F  IB FF WB
+                                             ET DOCV DOCS ETI
+         KP PNR    0032614096.21,0032614097.21
+                   2 / 42 KG
+         KP858592232
+         KP 0029 H  BKO  11NOV ETA1120
+         0322102153559  C02 11NOV H LFWPNR USED
+ 34# SAMOURA     BAKAR      L   PNR 22A-F  2 M  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    0032614155.22,0032614157.23
+                   2 / 45 KG
+         KP 0029 L  BKO  11NOV ETA1120
+         0329408661803  C02 11NOV L LFWPNR USED
+ 35# SININTA     MAH M      Q   PNR 19A-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    0032614188.23,0032614189.23
+                   2 / 46 KG
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102141430  C02 11NOV Q LFWPNR USED
+ 36# TALEB       MOHAM      H   PNR 31A-F  2 M  IB ET DOCV
+                                             DOCS ETI
+         KP PNR    7032678630.23,7032678631.9
+                   2 / 32 KG
+         KP 0015 H  NKC  11NOV ETA1135
+         0323927447896  C02 11NOV H LFWPNR USED
+ 37# TIRERA      BAKAR      Q   PNR 19L-F  2 M  IB FF ET
+                                             DOCV DOCS ETI
+         KP PNR    0032614067.23,0032614068.23
+                   2 / 46 KG
+         KP845998650
+         KP 0029 Q  BKO  11NOV ETA1120
+         0322102149342  C02 11NOV Q LFWPNR USED
+ 38# XXX         CREW       Y   PNR 12C-S NB M  CM DOCV DOCS
+                                             TKT
+ 39# ZINGAMIOKO  CAROL      U   PNR 16J-F 20 F  IB ET DOCV
+                                             DOCS ETI AE IR
+         AE-KP 0076/NBJPNR/BG  BG /HI/18/0
+            UPTO70LB 32KG BAGGAGE
+         EMD-0324400114160 C02
+         KP PNR    7032678729.18,7032678730.24,
+         KP PNR    7032678731.32,7032678732.32,
+         KP PNR    7032678733.32,7032678734.32,
+         KP PNR    7032678735.32,7032678736.32,
+         KP PNR    7032678737.32,7032678738.32,
+         KP PNR    7032678739.32,7032678740.32,
+         KP PNR    7032678741.32,7032678742.32,
+         KP PNR    7032678743.32,7032678744.32,
+         KP PNR    7032678745.32,7032678746.32,
+         KP PNR    7032678747.32,7032678748.32
+                   20 / 618KG
+         KP 0037 U  COO  11NOV/ETA1122
+         0323940396552  C02 11NOV T LFWPNR USED
+ 
+HDQ.HDQ8HEA 1123 12-NOV-2026 1CC450
+ G*L78/11NOVLFW#BT/ET/IB/OB/ON/SS/FF/FQTV/AE
+ KP    78 11NOV   LFW 8    1235   737 BT ET IB OB    C6Y61
+  1  ADARIPARE   SAFOU      V   NBO 12J-F  2 F  IB FF SIL
+                                             ET DOCV DOCS ETI
+         KP NBO    9032257887.22,9032257888.12
+                   2 / 34 KG
+         KP949226353            SILVER
+         KP 0011 V  ABJ  11NOV/ETA1055
+         0713929120603  C02 11NOV V LFWNBO USED
+  2  AGBOR       EMMAN      H   NBO 19A-F  2 M  PX IB WB
+                                             ET DOCV DOCS ETI
+         KP NBO    9032257852.28,9032257853.23
+                   2 / 51 KG
+         KP 0063 H  LOS  11NOV ETA0915
+         0322102154735  C02 11NOV H LFWNBO USED
+  3  AHEBLA      AHLI       H   NBO 22L-F  2 M  ET DOCV DOCS
+                                             ETI
+         KP NBO    0032290476.22,0032290587.11
+                   2 / 33 KG
+         0322102142434  C01 11NOV H LFWNBO USED
+  4  AHOUNOU     ERNES AG2  H   NBO 11A-F  1 M  ET DOCV DOCS
+                                             ETI
+         KP NBO    0032290231.23
+                   1 / 23 KG
+         0322102147758  C01 11NOV H LFWNBO USED
+  5  AKPO        ESSEG      V   NBO 14C-F  1 M  PX IB WB
+                                             ET DOCV DOCS ETI
+                                             FQTV
+         KP NBO    9032258007.21
+                   1 / 21 KG
+         ET00091646494
+         KP 0037 V  COO  11NOV/ETA1122
+         0322102114351  C04 11NOV V LFWNBO USED
+  6  AMUHAYA     SCHOL AH6  L   NBO 28A-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257801.13
+                   1 / 13 KG
+         KP 0055 L  DSS  11NOV/ETA1134
+         0325224677177  C02 11NOV L LFWNBO USED
+  7  ANYANGA     BENAR      V   NBO 17J-F NB M  IB ET DOCV
+                                             DOCS ETI
+         KP 0055 V  DSS  11NOV/ETA1134
+         0325224677141  C04 11NOV V LFWNBO USED
+  8  ARABA       SEGNO      V   NBO 15C-F  1 M  IB WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257995.22
+                   1 / 22 KG
+         KP 0037 V  COO  11NOV/ETA1122
+         0323951917724  C02 11NOV V LFWNBO USED
+  9  AWAMBENG    FLORE      U   NBO 13L-F  2 F  IB WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032258003.23,9032258004.25
+                   2 / 48 KG
+         KP 0021 U  ACC  11NOV ETA1100
+         0322102125840  C02 11NOV U LFWNBO USED
+ 10  CHEPKIRUI   ABIGA      H   NBO 16A-F NB F  IB ET DOCV
+                                             DOCS ETI
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006394  C04 11NOV H LFWNBO USED
+ 11  CHITOU      KAMAL      U   NBO 25L-F  1 M  CS CM DOCV
+                                             DOCS TKT
+         KP NBO    0032290291.12
+                   1 / 12 KG
+ 12  CONTEH      ABIBA      K   NBO 18A-F  2 F  IB WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257791.23,9032257792.23
+                   2 / 46 KG
+         KP 0023 K  FNA  11NOV ETA1145
+         0325225977177  C02 11NOV K LFWNBO USED
+ 13  DIAMESSO    PATRI      V   NBO 24A-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257782.10
+                   1 / 10 KG
+         KP 0041 V  BZV  11NOV/ETA1027
+         0323927467474  C02 11NOV V LFWNBO USED
+ 14  DO REGO EP  FABIE AG2  H   NBO 11B-F NB M  ET DOCV DOCS
+                                             ETI
+         0322102147759  C01 11NOV H LFWNBO USED
+ 15  DRAKE       ANDRE      U   NBO 21A-F NB M  IB WB ET
+                                             DOCV DOCS ETI
+         KP 0055 U  DSS  11NOV/ETA1134
+         0323951663447  C02 11NOV U LFWNBO USED
+ 16  EKWUAZI     CONRA      C   NBO  4C-S NB M  ET DOCV DOCS
+                                             ETI
+         0322102161736  C01 11NOV N LFWNBO USED
+ 17  GITAU       FELIC AE2  H   NBO 19C-F  2 F  PX IB WB
+                                             ET DOCV DOCS ETI
+         KP NBO    9032257821.10,9032257824.13
+                   2 / 23 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0322102146227  C04 11NOV H LFWNBO USED
+ 18  GODE        VITAL AH6  L   NBO 31J-F  1 M  IB WB ET
+                                             DOCV DOCS ETI FQTV
+         KP NBO    9032257815.12
+                   1 / 12 KG
+         KL1573025321
+         KP 0055 L  DSS  11NOV/ETA1134
+         0325224677182  C02 11NOV L LFWNBO USED
+ 19  ILOVI       JOSEP AF9  H   NBO 27A-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257754.23
+                   1 / 23 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006403  C04 11NOV H LFWNBO USED
+ 20  INDASI      HILDA AH6  L   NBO 28C-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257802.13,9032257809.19
+                   2 / 32 KG
+         KP 0055 L  DSS  11NOV/ETA1134
+         0325224677181  C02 11NOV L LFWNBO USED
+ 21  JACOB       ELIZA      H   NBO 17A-F  1 F  PX IB ET
+                                             CM DOCV DOCS ETI
+         KP NBO    9032257756.15
+                   1 / 15 KG
+       1 07030990901
+         KP 0063 H  LOS  11NOV ETA0915
+         0322102135838  C02 11NOV H LFWNBO USED
+ 22  JORDAN      JAMES      H   NBO 22A-F NB M  IB WB ET
+                                             DOCV DOCS ETI
+         KP 0055 H  DSS  11NOV/ETA1134
+         0323951643248  C02 11NOV H LFWNBO USED
+ 23  KAMAU       GRACE      K   NBO 31A-F  1 F  IB WB ET
+                                             DOCV DOCS ETI FQTV
+         KP NBO    9032257950.19
+                   1 / 19 KG
+         ET10066432014
+         KP 0031 K  ABV  11NOV ETA1105
+         0324812013080  C04 11NOV K LFWNBO USED
+ 24  KAMUIRU     KENNE      E   NBO 15A-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257715.16
+                   1 / 16 KG
+         KP 0023 E  BJL  11NOV ETA1145
+         0322102146168  C04 11NOV E LFWNBO USED
+ 25  KASHILA     EPHRA      L   NBO 20L-F  2 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257921.23,9032257922.9
+                   2 / 32 KG
+         KP 0023 L  FNA  11NOV ETA1145
+         0323993128139  C02 11NOV L LFWNBO USED
+ 26  KIMANI      GEORG      S   NBO 15L-F  1 M  IB CS ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257726.16
+                   1 / 16 KG
+         KP 0055 S  DSS  11NOV/ETA1134
+         0719235098433  C04 11NOV S LFWNBO USED
+ 27  KIORIA      FIBBY      L   NBO 33L-F  2 F  IB WB ET
+                                             DOCV DOCS OTHS ETI
+         KP NBO    9032257861.23,9032257862.18
+                   2 / 41 KG
+         KP 0063 L  LOS  11NOV ETA0915
+         OTHS-FIBBY/EVAH NJOKI ADT
+         0322102157802  C02 11NOV L LFWNBO USED
+ 28  KIPKECH     WESLE AF9  H   NBO 27B-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257742.13
+                   1 / 13 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006399  C04 11NOV H LFWNBO USED
+ 29  KIPTANUI    BRIDG      S   NBO 12A-F  1 F  CS ET DOCV
+                                             DOCS ETI
+         KP NBO    0032290208.18
+                   1 / 18 KG
+         0713940755996  C03 11NOV S LFWNBO USED
+ 30  KIRIMI      ELVIS      H   NBO 19L-F  2 M  IB WB ET
+                                             DOCV DOCS ETI FQTV
+         KP NBO    9032257759.7,9032257760.22
+                   2 / 29 KG
+         ET10078915976
+         KP 0035 H  BGF  11NOV/ETA1059
+         0323940689568  C04 11NOV H LFWNBO USED
+ 31  KOGOMNA     PYA A      U   NBO 30A-F  2 M  WB CS ET
+                                             DOCV DOCS ETI FQTV
+         KP NBO    0032260603.20,0032290602.23
+                   2 / 43 KG
+         ET10120407076
+         0712164620193  C01 11NOV U LFWNBO USED
+ 32  KOSGEI      ABIGA AF9  H   NBO 27C-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257745.17
+                   1 / 17 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006405  C04 11NOV H LFWNBO USED
+ 33  LASOI       MARYL AF9  H   NBO 27J-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257770.10,9032257771.9
+                   2 / 19 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006402  C04 11NOV H LFWNBO USED
+ 34  MACHARIA    YVONN      J   NBO  4A-F  2 F  IB WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257774P.24,9032257775P.14
+                   2 / 38 KG
+         KP 0023 J  FNA  11NOV ETA1145
+         0324811996248  C02 11NOV J LFWNBO USED
+ 35  MAGANAH     KELLY      H   NBO 14A-F  2 M  PX WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032258021V.23,9032258022V.25
+                   2 / 48 KG
+         0322102150746  C01 11NOV H LFWNBO USED
+ 36  MAKOBO      CAROL      U   NBO 24L-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257785.24,9032257786.20
+                   2 / 44 KG
+         KP 0071 U  FIH  11NOV ETA1115
+         0327508932929  C04 11NOV U LFWNBO USED
+ 37  MALOBA      JAMES      Q   NBO 34A-F  2 M  PX IB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257772.23,9032257773.23
+                   2 / 46 KG
+         KP 0035 Q  BGF  11NOV/ETA1059
+         0322102154790  C02 11NOV Q LFWNBO USED
+ 38  MANGAA      MESHA      H   NBO 13A-F  2 M  PX WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032258023V.27,9032258024V.22
+                   2 / 49 KG
+         0322102150578  C01 11NOV H LFWNBO USED
+ 39  MIDAYE      KOISS      C   NBO  1A-F  1 M  IB FF SIL
+                                             WB ET DOCV DOCS
+                                             ETO IR
+         KP NBO    9032257966P.22
+                   1 / 22 KG
+         KP500376575            SILVER
+         KP 0031 V  ABV  11NOV ETA1105
+         0324820314665  C02 11NOV V LFWNBO USED
+ 40  MNENE       EMMAN      H   NBO 23L-F  2 M  IB WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257926.25,9032257927.26
+                   2 / 51 KG
+         KP 0035 H  DLA  11NOV/ETA1059
+         0323940698701  C02 11NOV H LFWNBO USED
+ 41  MUMBUA      NICOL      U   NBO 12L-F  1 F  PX IB WB
+                                             ET DOCV DOCS ETI
+         KP NBO    9032257999.23
+                   1 / 23 KG
+         KP 0021 U  ACC  11NOV ETA1100
+         0322102120964  C04 11NOV U LFWNBO USED
+ 42  MWITI       MICHA AE2  H   NBO 18C-F  1 M  PX IB WB
+                                             ET DOCV DOCS ETI
+         KP NBO    9032257826.31
+                   1 / 31 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0322102146226  C04 11NOV H LFWNBO USED
+ 43  NDRIEPSETO  CARIN      J   NBO  3L-F  1 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032258012.23
+                   1 / 23 KG
+         KP 0037 Y  COO  11NOV/ETA1122
+         0323952058830  C02 11NOV J LFWNBO USED
+ 44  NGIMBI      MABIA      U   NBO 25A-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257793.19,9032257794.19
+                   2 / 38 KG
+         KP 0071 U  FIH  11NOV ETA1115
+         0322102155210  C04 11NOV U LFWNBO USED
+ 45  NGISIREI    ROBER AF9  H   NBO 27K-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257734.14
+                   1 / 14 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006398  C04 11NOV H LFWNBO USED
+ 46  NYALANDA    SHEIL      K   NBO 16L-F  1 F  IB WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257915.18
+                   1 / 18 KG
+         KP 0031 K  ABV  11NOV ETA1105
+         0329404339399  C04 11NOV K LFWNBO USED
+ 47  OBARE       CORNI AC2  K   NBO 25J-F  2 F  PX IB ET
+                                             DOCV DOCS ETI AE
+         AE-KP 0078/LFWNBO/BG  BG /HI/1 /0
+            GOLF BAG UPTO 23KG
+         EMD-0324400114142 C02
+         KP NBO    9032257917.23,9032257935.18
+                   2 / 41 KG
+         KP 0031 K  ABV  11NOV ETA1105
+         0322102132050  C04 11NOV K LFWNBO USED
+ 48  OCHIENG     BREND AH6  L   NBO 28J-F  1 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257795.20
+                   1 / 20 KG
+         KP 0055 L  DSS  11NOV/ETA1134
+         0325224677178  C02 11NOV L LFWNBO USED
+ 49  OKELLO      JOSIA      U   NBO 18L-F  1 M  IB WB ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257924.21
+                   1 / 21 KG
+         KP 0021 U  ACC  11NOV ETA1100
+         0322102160002  C02 11NOV U LFWNBO USED
+ 50  OKOTH       CAROL      H   NBO 21L-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257777.19,9032257779.19
+                   2 / 38 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006332  C04 11NOV H LFWNBO USED
+ 51  OLUOKO      KINGS      U   NBO 29A-F  1 M  WB ET DOCV
+                                             DOCS ETI
+         KP NBO    0032290214.16
+                   1 / 16 KG
+         0322102150408  C04 11NOV U LFWNBO USED
+ 52  ONAMU       CHELS AH6  L   NBO 28L-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257803.21,9032257808.11
+                   2 / 32 KG
+         KP 0055 L  DSS  11NOV/ETA1134
+         0325224677179  C02 11NOV L LFWNBO USED
+ 53  OTIENO      DAMIA      K   NBO 14L-F  2 M  IB CS ET
+                                             DOCV DOCS ETI
+         KP NBO    9032257687.8,9032257688.18
+                   2 / 26 KG
+         KP 0023 L  BJL  11NOV ETA1145
+         0714893615776  C04 11NOV K LFWNBO USED
+ 54  OUKO        JOSEP      J   NBO  4L-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257753P.26,9032257755P.10
+                   2 / 36 KG
+         KP 0055 J  DSS  11NOV/ETA1134
+         0325224677142  C04 11NOV J LFWNBO USED
+ 55  OUMA        PHILI      U   NBO 20A-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257758.12
+                   1 / 12 KG
+         KP 0035 U  BGF  11NOV/ETA1059
+         0323940761333  C02 11NOV U LFWNBO USED
+ 56  PAIPI       PAUL       M   NBO 13J-F  1 M  IB EIB ET
+                                             DOCV DOCS ETI
+         KP NBO    0032614152.23
+                   1 / 23 KG
+         KP 0029 M  BKO  11NOV ETA1120
+         0323985349000  C02 11NOV M LFWNBO USED
+ 57  RATEMO      VIVIA AH6  L   NBO 28K-F  2 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257814.9,9032257817.15
+                   2 / 24 KG
+         KP 0055 L  DSS  11NOV/ETA1134
+         0325224677180  C02 11NOV L LFWNBO USED
+ 58  RONO        FAITH AF9  H   NBO 27L-F  1 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257748.27
+                   1 / 27 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006406  C04 11NOV H LFWNBO USED
+ 59  SEKENTO     DAVID AF9  H   NBO 26L-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257737.9
+                   1 / 9  KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006401  C04 11NOV H LFWNBO USED
+ 60  THAIRU      PAUL       U   NBO 26A-F  1 M  WB ET DOCV
+                                             DOCS ETI
+         KP NBO    0032290503.23
+                   1 / 23 KG
+         0322102150409  C04 11NOV U LFWNBO USED
+ 61  TORRESROSS  PRISC      J   NBO  3A-F  1 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032258011.16
+                   1 / 16 KG
+         KP 0037 Y  COO  11NOV/ETA1122
+         0323952013636  C02 11NOV J LFWNBO USED
+ 62  TUITOEK     ENOCK AF9  H   NBO 26K-F  1 M  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257743.16
+                   1 / 16 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006400  C04 11NOV H LFWNBO USED
+ 63  WAINAINA    CECIL AF9  H   NBO 26J-F  1 F  IB ET DOCV
+                                             DOCS ETI
+         KP NBO    9032257744.14
+                   1 / 14 KG
+         KP 0055 H  DSS  11NOV/ETA1134
+         0324812006404  C04 11NOV H LFWNBO USED
+ 64  WAMBUI      PENIN AC2  K   NBO 25K-F  2 F  PX IB ET
+                                             DOCV DOCS ETI AE
+         AE-KP 0078/LFWNBO/BG  BG /HI/1 /0
+            GOLF BAG UPTO 23KG
+         EMD-0324400114143 C02
+         KP NBO    9032257919.19,9032257920.27
+                   2 / 46 KG
+         KP 0031 K  ABV  11NOV ETA1105
+         0322102132049  C04 11NOV K LFWNBO USED
+ 65  WITTIG      KATRI      M   NBO 11L-F  2 F  IB EIB ET
+                                             DOCV DOCS ETI
+         KP NBO    0032614121.19,0032614123.19
+                   2 / 38 KG
+         KP 0029 M  BKO  11NOV ETA1120
+         0323985460286  C02 11NOV M LFWNBO USED
+ 66  XXX         CREW       Y   NBO 12C-S NB M  CM DOCV DOCS
+                                             TKT
+ 67  YEHYA       SAMER      U   NBO 29L-F  1 M  CS ET DOCV
+                                             DOCS ETI
+         KP NBO    0032290293.10
+                   1 / 10 KG
+         0712164440565  C01 11NOV U LFWNBO USED
+ 
+HDQ.HDQ8HEA 1123 12-NOV-2026 1CC450
+ 

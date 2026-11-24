@@ -1,3 +1,7 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +13,7 @@ import { useAudit } from "../context/AuditContext";
 import { computeAuditSummary } from "../parser";
 import { motion, AnimatePresence } from "motion/react";
 import { Scale, CalendarRange, ArrowLeftRight, Activity } from "lucide-react";
-import { ExportButton } from "../components/ui/ExportButton";
+import { ExportButton } from "../components/ExportButton";
 
 import { PageWrapper } from "../components/layout/PageWrapper";
 
@@ -52,27 +56,29 @@ export const Analytics: React.FC = () => {
     <PageWrapper className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">Statistics & Analytics</h2>
-          <p className="text-slate-500 text-sm font-medium">Visualization of sales volumes and trends</p>
+          <h2 className="text-2xl font-black text-slate-900 dark:text-[#FAF7F2] tracking-tight">Statistics & Analytics</h2>
+          <p className="text-slate-500 dark:text-[#DECAB1] text-sm font-medium">Visualization of sales volumes and trends</p>
         </div>
         <div className="flex items-center gap-3">
           <button
+            type="button"
             onClick={() => setIsComparisonMode(!isComparisonMode)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs transition-all border shadow-sm ${
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs transition-all border shadow-sm cursor-pointer ${
               isComparisonMode 
                 ? "bg-indigo-600 text-white border-indigo-500 shadow-indigo-100" 
-                : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                : "bg-white dark:bg-[#1F1209] text-slate-600 dark:text-[#FAF7F2] border-slate-200 dark:border-[#4C2812] hover:bg-slate-50 dark:hover:bg-[#2A180D]"
             }`}
           >
             <Scale className="w-4 h-4" />
             {isComparisonMode ? "Disable Comparison" : "Compare Two Periods"}
           </button>
           <ExportButton
-          summary={filteredSummary}
-          reports={filteredReports}
-          filters={filters}
-          disabled={isProcessing}
-        />
+            summary={isComparisonMode && compareSummary ? compareSummary : filteredSummary}
+            reports={isComparisonMode && compareSummary ? filterReports(reports, compareFilters) : filteredReports}
+            filters={isComparisonMode && compareSummary ? compareFilters : filters}
+            disabled={isProcessing}
+            size="sm"
+          />
         </div>
       </div>
 
@@ -84,14 +90,14 @@ export const Analytics: React.FC = () => {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="bg-indigo-50/50 border border-indigo-100 p-6 rounded-[2rem] mb-8">
+            <div className="bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-100 dark:border-indigo-900/50 p-6 rounded-[2rem] mb-8">
                <div className="flex items-center gap-3 mb-6">
                  <div className="bg-indigo-600 p-2 rounded-xl text-white">
                    <ArrowLeftRight className="w-5 h-5" />
                  </div>
                  <div>
-                   <h3 className="font-black text-slate-900">Comparative Analysis</h3>
-                   <p className="text-indigo-600 text-[11px] font-bold uppercase tracking-widest">Growth vs Base Period</p>
+                   <h3 className="font-black text-slate-900 dark:text-[#FAF7F2]">Comparative Analysis</h3>
+                   <p className="text-indigo-600 dark:text-indigo-400 text-[11px] font-bold uppercase tracking-widest">Growth vs Base Period</p>
                  </div>
                </div>
                
@@ -99,7 +105,7 @@ export const Analytics: React.FC = () => {
 
                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-slate-500 ml-2">
+                    <div className="flex items-center gap-2 text-slate-500 dark:text-[#DECAB1] ml-2">
                        <CalendarRange className="w-4 h-4" />
                        <span className="text-[11px] font-bold uppercase tracking-wider">Period A (Reference)</span>
                     </div>
@@ -114,11 +120,11 @@ export const Analytics: React.FC = () => {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-indigo-500 ml-2">
+                    <div className="flex items-center gap-2 text-indigo-500 dark:text-indigo-400 ml-2">
                        <Scale className="w-4 h-4" />
                        <span className="text-[11px] font-bold uppercase tracking-wider">Period B (Target)</span>
                     </div>
-                    <div className="ring-2 ring-indigo-500/20 rounded-3xl overflow-hidden shadow-xl shadow-indigo-100/50">
+                    <div className="ring-2 ring-indigo-500/20 rounded-2xl shadow-xl shadow-indigo-100/50 dark:shadow-none">
                       <InteractiveFilters
                         filters={compareFilters}
                         onFilterChange={setCompareFilters}
@@ -149,9 +155,9 @@ export const Analytics: React.FC = () => {
         </>
       )}
 
-      <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-        <h4 className="font-bold text-slate-800 mb-6 flex items-center gap-2">
-          <Activity className="w-5 h-5 text-indigo-600" />
+      <div className="bg-white dark:bg-[#1F1209] p-6 rounded-3xl border border-slate-200 dark:border-[#4C2812] shadow-sm">
+        <h4 className="font-bold text-slate-800 dark:text-[#FAF7F2] mb-6 flex items-center gap-2">
+          <Activity className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
           {isComparisonMode ? "Variance Visualization (Period B Data)" : "Volume Visualization"}
         </h4>
         <SalesCharts 

@@ -1,6 +1,29 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React, { useState, useEffect } from "react";
 import { StationReport } from "../types";
-import {  ChevronDown, ChevronUp, AlertCircle, CheckCircle, Clock, Building2, Coins, SearchCheck, ChevronLeft, ChevronRight,Plane, Store, ScrollText, FileText} from "lucide-react";
+import { 
+  ChevronDown, 
+  ChevronUp, 
+  AlertCircle, 
+  CheckCircle, 
+  Clock, 
+  Building2, 
+  Coins, 
+  SearchCheck, 
+  ChevronLeft, 
+  ChevronRight,
+  MonitorCheck,
+  Plane,
+  Store,
+  HeadphoneOff,
+  UserRoundCheck,
+  ScrollText,
+  FileText
+} from "lucide-react";
 import { TaxDetailsModal } from "./TaxDetailsModal";
 import { SingleTaxExplanationModal } from "./SingleTaxExplanationModal";
 import { Skeleton } from "./ui/Skeleton";
@@ -16,8 +39,9 @@ export const AuditAnomalyList: React.FC<AuditAnomalyListProps> = ({ reports, loa
   const [selectedTaxReport, setSelectedTaxReport] = useState<StationReport | null>(null);
   const [selectedTaxItem, setSelectedTaxItem] = useState<{ code: string; amount: number; currency: string } | null>(null);
 
+  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5); 
+  const [itemsPerPage, setItemsPerPage] = useState(5); // default to 5 for nice vertical detail display
 
   // Reset page when filter changes or report catalog updates
   useEffect(() => {
@@ -58,6 +82,8 @@ export const AuditAnomalyList: React.FC<AuditAnomalyListProps> = ({ reports, loa
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
   };
+
+  // Filter list by text input (city or station)
   const filteredReports = reports.filter(rep => {
     if (!search) return true;
     const term = search.toLowerCase();
@@ -87,7 +113,7 @@ export const AuditAnomalyList: React.FC<AuditAnomalyListProps> = ({ reports, loa
             placeholder="Search by city, station (e.g., LFWCT, Lomé, 03222811)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white border border-slate-200 text-slate-800 text-sm rounded-xl pl-10 pr-5 py-2.5.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-white border border-slate-200 text-slate-800 text-sm rounded-xl pl-10 pr-4 py-2.5.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
       </div>
@@ -104,14 +130,14 @@ export const AuditAnomalyList: React.FC<AuditAnomalyListProps> = ({ reports, loa
             const slicedReports = filteredReports.slice(indexOfFirstReport, indexOfLastReport);
             
             return slicedReports.map(rep => {
-               const isExpanded = expandedId === rep.id;
+              const isExpanded = expandedId === rep.id;
               
               return (
                 <div 
                   key={rep.id} 
                   className={`transition-all duration-300 text-sm ${
                     isExpanded 
-                      ? "bg-green-50 border-y border-green-200 shadow-xs" 
+                      ? "bg-slate-50/30 border-y border-slate-200/80 shadow-xs" 
                       : ""
                   }`}
                 >
@@ -187,7 +213,7 @@ export const AuditAnomalyList: React.FC<AuditAnomalyListProps> = ({ reports, loa
                               key={block.currency}
                               className="text-xs bg-indigo-50/80 text-indigo-800 px-3 py-1.5 rounded-xl font-bold font-mono border border-indigo-150/70"
                             >
-                              {block.currency} : {block.accountingTotal.toLocaleString("fr-FR")}
+                              {block.currency} : {block.amountTotal.toLocaleString("fr-FR")}
                             </span>
                           ))}
                         </>

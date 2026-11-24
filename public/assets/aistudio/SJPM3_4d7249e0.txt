@@ -1,0 +1,135 @@
+VDS/10NOV
+      SCHEDULED FLIGHTS - 10NOV
+ 
+      DEP/ARR    SCHEDULED     ACTUAL  
+FLT   STATION     DEP/ARR      DEP/ARR 
+  10  LFW/ABJ    1415/1545             
+  11  ABJ/LFW    0930/1100    0930/    
+  14  LFW/CKY    1250/1535             
+      CKY/NKC    1615/1805             
+  17  CKY/BKO    0700/0825             
+      BKO/LFW    0905/1120             
+  20  LFW/ACC    1415/1510             
+      ACC/ROB    1550/1750             
+  21  ROB/ACC    0730/0930             
+      ACC/LFW    1010/1100             
+  22  LFW/ACC    1230/1325             
+      ACC/FNA    1400/1620             
+      FNA/BJL    1655/1815             
+  23  BJL/FNA    0600/0720    0610/    
+      FNA/ACC    0755/1015             
+      ACC/LFW    1050/1145             
+  28  LFW/BKO    1340/1555             
+  30  LFW/ABV    1420/1700             
+  31  ABV/LFW    1025/1105             
+  34  LFW/DLA    1320/1605             
+      DLA/BGF    1645/1830             
+  35  BGF/DLA    0815/1000             
+      DLA/LFW    1040/1125    1035/    
+  36  LFW/COO    1245/1425             
+  37  COO/LFW    1205/1145    1205/    
+  38  LFW/DLA    1405/1650             
+      DLA/NDJ    1730/1920             
+  40  LFW/LBV    1350/1650             
+      LBV/BZV    1730/1920             
+  45  BZV/FIH    0740/0825             
+      FIH/LFW    0905/1115             
+  46  LFW/NIM    1405/1655             
+      NIM/OUA    1735/1750             
+  47  OUA/NIM    0800/1015    0808/    
+      NIM/LFW    1055/1135             
+  50  LFW/DSS    1340/1725             
+  51  DSS/LFW    0920/1250    0910/    
+  53  OXB/DSS    0630/0730             
+      DSS/LFW    0820/1150    0820/    
+  54  LFW/DSS    1240/1625             
+      DSS/RAI    1715/1735             
+  61  TMS/LBV    0730/0930    0733/    
+      LBV/LFW    1010/1100    1000/    
+  62  LFW/LOS    1515/1715             
+  63  LOS/LFW    0915/0915             
+  65  NDJ/NSI    0800/0940    0744/    
+      NSI/LFW    1020/1120             
+  68  LFW/SSG    1425/1705             
+      SSG/NSI    1745/1845             
+  70  LFW/FIH    1355/1805             
+      FIH/JNB    1845/0005             
+  77  PNR/NBJ    0710/0830             
+      NBJ/LFW    0910/1140             
+  79  NBO/LFW    0905/1145             
+1003  ADD/GRU    0940/1600             
+1004  GRU/ADD    0130/1930             
+1006  ADD/NBO    1045/1310             
+1007  NBO/ADD    1725/1925             
+1010  MBA/ADD    1835/2105             
+1011  JNB/ADD    1430/2045             
+1012  ADD/JNB    0845/1305             
+1014  FIH/ADD    1325/1955             
+1015  ADD/FIH    1000/1210             
+1016  ADD/JNB    1535/2010             
+1017  JNB/ADD    0820/1445             
+1021  MBA/ADD    1225/1455             
+1025  ADD/NSI    0905/1110             
+      NSI/LBV    1210/1310             
+      LBV/ADD    1410/2055             
+1039  ADD/NBO    2320/0125             
+1040  NBO/ADD    0455/0710             
+1041  ADD/MBA    0920/1140             
+1043  ADD/MBA    1530/1750             
+1050  ADD/LFW    0915/1145             
+      LFW/EWR    1315/1910             
+1051  EWR/LFW    2115/1145             
+      LFW/ADD    1245/2110             
+1053  ADD/DLA    0905/1135             
+      DLA/SSG    1235/1320             
+      SSG/ADD    1420/2055             
+1054  DSS/BKO    0825/1015             
+      BKO/ADD    1115/2115             
+1055  ADD/BKO    1005/1405             
+      BKO/DSS    1515/1705             
+1056  ABV/ADD    1320/2010             
+1057  ADD/ABV    0925/1205             
+1061  ACC/ADD    1205/2045             
+1062  ADD/ACC    0825/1105             
+1068  ADD/ABJ    1030/1345             
+      ABJ/CKY    1445/1635             
+1069  CKY/OUA    0800/1015             
+      OUA/ADD    1115/2015             
+1072  ADD/NIM    1020/1400             
+      NIM/OUA    1510/1525             
+1073  NDJ/ADD    1355/2000             
+1074  ADD/NDJ    1040/1245             
+1080  ACC/ADD    0555/1450             
+1081  ADD/ACC    0210/0510             
+1082  ACC/ADD    2000/0455             
+1083  ADD/ACC    1600/1900             
+1098  DMM/ADD    0305/0700             
+1103  ADD/FCO    2300/0335             
+      FCO/IAD    0425/0800             
+1104  IAD/ADD    1000/0715             
+1109  ADD/DXB    2140/0255             
+1110  DXB/ADD    0425/0740             
+1111  ADD/DXB    1030/1545             
+1112  DXB/ADD    1710/2020             
+1121  ADD/DXB    2255/0410             
+1122  DXB/ADD    0540/0850             
+1180  ADD/BZV    0845/1110             
+      BZV/PNR    1210/1315             
+      PNR/ADD    1415/2040             
+1200  ADD/JNB    2330/0355             
+1201  JNB/ADD    2250/0525             
+1203  LOS/ADD    1315/2035             
+1204  ADD/LOS    0840/1205             
+1803  LFW/ADD    1255/2120             
+5010  DSS/NKC    1915/2030             
+5011  NKC/DSS    2115/2230             
+5014  DSS/BJL    1515/1555             
+5015  BJL/DSS    1645/1725             
+5016  DSS/CMN    0420/0740             
+5017  CMN/DSS    0920/1235             
+5018  DSS/CDG    0005/0545             
+5019  CDG/DSS    0745/1345             
+END
+ 
+HDQ.HDQ8HEA 0232 11-NOV-2026 1D27E4
+ 

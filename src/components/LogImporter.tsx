@@ -1,6 +1,18 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import React, { useState, useRef } from "react";
-import { FileUp,  ScrollText, ShieldCheck, Fingerprint, FileWarning,Loader2,Zap,} from "lucide-react";
+import { 
+  FileUp, 
+  ScrollText, 
+  ShieldCheck, 
+  Fingerprint, 
+  FileWarning,
+  Loader2,
+  Zap,
+} from "lucide-react";
 import { parseRawReports } from "../parser";
 import { StationReport } from "../types";
 import { ValidationSummary } from "./ValidationSummary";
@@ -9,7 +21,7 @@ interface LogImporterProps {
   onImport: (rawText: string) => void;
 }
 
-export const LogImporter: React.FC<LogImporterProps> = ({ onImport}) => {
+export const LogImporter: React.FC<LogImporterProps> = ({ onImport }) => {
   const [inputText, setInputText] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);

@@ -1,25 +1,29 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
-import React from "react";
+import React, { useMemo } from "react";
 import { 
   Filter, 
-  CalendarRange, 
   MapPin, 
   Banknote, 
   Binoculars, 
   ShieldAlert,
   CalendarDays,
-  Target
 } from "lucide-react";
+import { DateRangePicker, dcsDateToIso } from "./ui/DateRangePicker";
+import { useLanguage } from "../context/LanguageContext";
 
 export interface FilterState {
-  dateStr: string; 
-  startDate: string;
-  endDate: string; 
-  stationNumber: string;
-  cityName: string; 
-  currency: string;
-  stationType: string; 
-  hasErrorsOnly: boolean; 
+  dateStr: string; // "ALL" or specific date string "01JUN"
+  startDate: string; // "YYYY-MM-DD" or ""
+  endDate: string; // "YYYY-MM-DD" or ""
+  stationNumber: string; // "ALL" or specific number "03222811"
+  cityName: string; // "ALL" or specific city
+  currency: string; // "ALL" or specific currency
+  stationType: string; // "ALL", "CT" (Ville), "AP" (Aéroport), "CC" (Call Center)
+  hasErrorsOnly: boolean; // boolean
 }
 
 interface InteractiveFiltersProps {
@@ -39,7 +43,22 @@ export const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
   availableCities,
   availableCurrencies
 }) => {
-  const handleChange = (field: keyof FilterState, value: any) => {
+  const { pick } = useLanguage();
+
+  const availableIsoDates = useMemo(
+    () => availableDates.map((d) => dcsDateToIso(d, "26")).filter(Boolean),
+    [availableDates]
+  );
+
+  const handleChange = (field: keyof FilterState, value: unknown) => {
+    if (field === "dateStr") {
+      onFilterChange({
+        ...filters,
+        dateStr: (value as string) || "ALL",
+        ...(value && value !== "ALL" ? { startDate: "", endDate: "" } : {}),
+      });
+      return;
+    }
     onFilterChange({
       ...filters,
       [field]: value
@@ -60,90 +79,82 @@ export const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
   };
 
   return (
-    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm mb-6">
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-50">
+    <div className="bg-white dark:bg-[#1F1209] p-5 rounded-2xl border border-slate-200 dark:border-[#4C2812] shadow-sm mb-6">
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-[#4C2812]">
         <div id="filter-header" className="flex items-center gap-2">
-          <Filter className="w-5 h-5 text-indigo-600" />
-          <h3 className="font-semibold text-slate-800 text-sm">Filters & Audit Settings</h3>
+          <Filter className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+          <h3 className="font-semibold text-slate-800 dark:text-[#FAF7F2] text-sm">
+            {pick("Filtres & Paramètres d'Audit", "Filters & Audit Settings")}
+          </h3>
         </div>
         <button
           id="btn-reset-filters"
+          type="button"
           onClick={handleReset}
-          className="text-xs text-indigo-600 hover:text-indigo-800 font-medium transition cursor-pointer"
+          className="text-xs text-indigo-600 dark:text-[#F7BA42] hover:text-indigo-800 dark:hover:underline font-medium transition cursor-pointer"
         >
-          Reset all filters
+          {pick("Réinitialiser les filtres", "Reset all filters")}
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-4">
-        {/* Date Selector */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-9 gap-4">
+        {/* Date Range Picker */}
+        <div id="filter-date-range-container" className="sm:col-span-2">
+          <DateRangePicker
+            id="input-filter-date-range"
+            label={pick("Plage de dates", "Date Range")}
+            startDate={filters.startDate}
+            endDate={filters.endDate}
+            availableIsoDates={availableIsoDates}
+            onChange={({ startDate, endDate }) => {
+              onFilterChange({
+                ...filters,
+                dateStr: startDate || endDate ? "ALL" : filters.dateStr,
+                startDate,
+                endDate,
+              });
+            }}
+          />
+        </div>
+
+        {/* Specific Date Selector */}
         <div id="filter-date-container" className="flex flex-col">
-          <label className="text-xs font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
+          <label className="text-xs font-semibold text-slate-500 dark:text-[#DECAB1] mb-1.5 flex items-center gap-1">
             <CalendarDays className="w-3.5 h-3.5 text-slate-400" />
-            Specific Date
+            {pick("Date précise", "Specific Date")}
           </label>
           <input
             id="input-filter-date"
             list="dates-list"
             value={filters.dateStr === "ALL" ? "" : filters.dateStr}
             onChange={(e) => handleChange("dateStr", e.target.value || "ALL")}
-            placeholder="All dates"
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder={pick("Toutes dates", "All dates")}
+            className="min-h-[40px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-100 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"
           />
           <datalist id="dates-list">
-            <option value="ALL">All dates</option>
+            <option value="ALL">{pick("Toutes dates", "All dates")}</option>
             {availableDates.map(date => (
               <option key={date} value={date}>{date} (2026)</option>
             ))}
           </datalist>
         </div>
 
-        {/* Start Date Picker */}
-        <div id="filter-start-date-container" className="flex flex-col">
-          <label className="text-xs font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
-            <CalendarRange className="w-3.5 h-3.5 text-indigo-500" />
-            Start Date
-          </label>
-          <input
-            id="input-filter-start-date"
-            type="date"
-            value={filters.startDate}
-            onChange={(e) => handleChange("startDate", e.target.value)}
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer font-sans"
-          />
-        </div>
-
-        {/* End Date Picker */}
-        <div id="filter-end-date-container" className="flex flex-col">
-          <label className="text-xs font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
-            <CalendarRange className="w-3.5 h-3.5 text-indigo-500" />
-            End Date
-          </label>
-          <input
-            id="input-filter-end-date"
-            type="date"
-            value={filters.endDate}
-            onChange={(e) => handleChange("endDate", e.target.value)}
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer font-sans"
-          />
-        </div>
-
         {/* Station Name/Num Selector */}
         <div id="filter-station-container" className="flex flex-col">
-          <label className="text-xs font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
+          <label className="text-xs font-semibold text-slate-500 dark:text-[#DECAB1] mb-1.5 flex items-center gap-1">
             <MapPin className="w-3.5 h-3.5 text-slate-400" />
-            Station Code
+            {pick("Code Station", "Station Code")}
           </label>
           <input
             id="input-filter-station"
             list="stations-list"
             value={filters.stationNumber === "ALL" ? "" : filters.stationNumber}
             onChange={(e) => handleChange("stationNumber", e.target.value || "ALL")}
-            placeholder="All stations"
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder={pick("Toutes stations", "All stations")}
+            className="min-h-[40px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-100 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <datalist id="stations-list">
-            <option value="ALL">All stations</option>
+            <option value="ALL">{pick("Toutes stations", "All stations")}</option>
             {availableStations.map(station => (
               <option key={station.number} value={station.number}>
                 {station.name} ({station.number})
@@ -154,19 +165,20 @@ export const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
 
         {/* City Selector */}
         <div id="filter-city-container" className="flex flex-col">
-          <label className="text-xs font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
+          <label className="text-xs font-semibold text-slate-500 dark:text-[#DECAB1] mb-1.5 flex items-center gap-1">
             <MapPin className="w-3.5 h-3.5 text-slate-400" />
-            City
+            {pick("Ville (ABJ, LFW...)", "City (ABJ, LFW...)")}
           </label>
           <input
             id="input-filter-city"
             list="cities-list"
             value={filters.cityName === "ALL" ? "" : filters.cityName}
-             onChange={(e) => handleChange("cityName", (e.target.value || "ALL").toUpperCase())}
-            placeholder="All cities"
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase"          />
+            onChange={(e) => handleChange("cityName", (e.target.value || "ALL").toUpperCase())}
+            placeholder={pick("Toutes villes", "All cities")}
+            className="min-h-[40px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-100 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 uppercase"
+          />
           <datalist id="cities-list">
-            <option value="ALL">All cities</option>
+            <option value="ALL">{pick("Toutes villes", "All cities")}</option>
             {availableCities.map(city => (
               <option key={city} value={city}>{city}</option>
             ))}
@@ -175,17 +187,17 @@ export const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
 
         {/* Office Type Selector */}
         <div id="filter-type-container" className="flex flex-col">
-          <label className="text-xs font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
+          <label className="text-xs font-semibold text-slate-500 dark:text-[#DECAB1] mb-1.5 flex items-center gap-1">
             <Binoculars className="w-3.5 h-3.5 text-slate-400" />
-            Station Type
+            {pick("Type Station", "Station Type")}
           </label>
           <select
             id="select-filter-type"
             value={filters.stationType}
             onChange={(e) => handleChange("stationType", e.target.value)}
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+            className="min-h-[40px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-100 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
           >
-            <option value="ALL">All types</option>
+            <option value="ALL">{pick("Tous types", "All types")}</option>
             <option value="CT">CT - City Office</option>
             <option value="AP">AP - Airport</option>
             <option value="CC">CC - Call Center</option>
@@ -194,20 +206,20 @@ export const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
 
         {/* Currency Selector */}
         <div id="filter-currency-container" className="flex flex-col">
-          <label className="text-xs font-semibold text-slate-500 mb-1.5 flex items-center gap-1">
+          <label className="text-xs font-semibold text-slate-500 dark:text-[#DECAB1] mb-1.5 flex items-center gap-1">
             <Banknote className="w-3.5 h-3.5 text-slate-400" />
-            Audit Currency
+            {pick("Devise", "Audit Currency")}
           </label>
           <input
             id="input-filter-currency"
             list="currencies-list"
             value={filters.currency === "ALL" ? "" : filters.currency}
             onChange={(e) => handleChange("currency", e.target.value || "ALL")}
-            placeholder="All currencies"
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            placeholder={pick("Toutes devises", "All currencies")}
+            className="min-h-[40px] bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-100 text-xs rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <datalist id="currencies-list">
-            <option value="ALL">All currencies</option>
+            <option value="ALL">{pick("Toutes devises", "All currencies")}</option>
             {availableCurrencies.map(curr => (
               <option key={curr} value={curr}>{curr}</option>
             ))}
@@ -215,24 +227,23 @@ export const InteractiveFilters: React.FC<InteractiveFiltersProps> = ({
         </div>
 
         {/* Audit Filter (Errors / Anomaly Only) */}
-        <div id="filter-anomaly-container" className="flex flex-col justify-end">
+        <div id="filter-anomaly-container" className="sm:col-span-2 md:col-span-4 xl:col-span-2 flex flex-col justify-end">
           <button
             id="toggle-filter-errors"
+            type="button"
             onClick={() => handleChange("hasErrorsOnly", !filters.hasErrorsOnly)}
-            className={`w-full text-xs font-semibold rounded-xl p-2.5 flex items-center justify-center gap-2 transition-all border ${
+            className={`w-full min-h-[40px] text-xs font-semibold rounded-xl px-3 py-2 flex items-center justify-center gap-2 transition-all border cursor-pointer whitespace-nowrap ${
               filters.hasErrorsOnly
-                ? "bg-rose-50 border-rose-300 text-rose-700 font-bold shadow-sm"
-                : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"
+                ? "bg-rose-50 dark:bg-rose-950/60 border-rose-300 dark:border-rose-700 text-rose-700 dark:text-rose-200 font-bold shadow-sm"
+                : "bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
             }`}
           >
-            <ShieldAlert className={`w-4 h-4 ${filters.hasErrorsOnly ? "text-rose-600" : "text-slate-400"}`} />
-            Anomalies Only
-            {filters.hasErrorsOnly && (
-              <span className="bg-rose-500 text-white rounded-full w-2 h-2 bloock"></span>
-            )}
+            <ShieldAlert className={`w-4 h-4 shrink-0 ${filters.hasErrorsOnly ? "text-rose-600 dark:text-rose-400" : "text-slate-400"}`} />
+            <span>{pick("Anomalies uniquement", "Anomalies Only")}</span>
           </button>
         </div>
       </div>
     </div>
   );
 };
+

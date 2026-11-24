@@ -11,16 +11,16 @@ import { SalesReportParser } from '../services/fileParser';
 import { ExcelGenerator } from '../services/excelGeneratorService';
 import { DataStorageService } from '../services/dataStorageService';
 import { CurrencyService } from '../services/CurrencyService';
-import { SalesData,ProcessingStatus, SavedData } from '../types';
+import { SalesData} from '../types';
 import { useNavigate } from "react-router-dom";
 
  export const OnlineApp: React.FC = ()=> {
   const navigate = useNavigate();
   const [salesData, setSalesData] = useState<SalesData[]>([]);
-  const [filteredData, setFilteredData] = useState<SalesData[]>([]);
+  const [filteredData, setFilteredData] = useState<any[]>([]);
   const [displayCurrency, setDisplayCurrency] = useState('USD');
   const [activeTab, setActiveTab] = useState<'data' | 'chart' | 'history'>('data');
-  const [processingStatus, setProcessingStatus] = useState<ProcessingStatus>({
+  const [processingStatus, setProcessingStatus] = useState<any>({
     isProcessing: false,
     progress: 0,
     currentStep: ''
@@ -96,7 +96,7 @@ import { useNavigate } from "react-router-dom";
     }
   };
 
-  const handleLoadHistoricalData = (historicalData: SavedData[]) => {
+  const handleLoadHistoricalData = (historicalData: any[]) => {
     const allData = historicalData.flatMap(item => item.data);
     setSalesData(allData);
     setFilteredData(allData);

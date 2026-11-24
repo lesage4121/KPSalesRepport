@@ -1,12 +1,29 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import React, { useState } from "react";
 import { AuditSummary } from "../types";
 import { EXCHANGE_RATES_TO_XOF } from "../utils/constants";
-import { Coins, ChevronDown, ChevronUp, ScanSearch, CircleDollarSign,BriefcaseBusiness} from "lucide-react";
-import { motion, Variants } from "motion/react";
+import { 
+  ShieldCheck, 
+  TrendingUp, 
+  AlertTriangle, 
+  FileText, 
+  Coins, 
+  ChevronDown, 
+  ChevronUp, 
+  ScanSearch, 
+  Zap, 
+  CircleDollarSign,
+  BriefcaseBusiness
+} from "lucide-react";
+import { motion } from "motion/react";
 import { Skeleton } from "./ui/Skeleton";
+import { CommissionStats } from "./CommissionStats";
 
-const containerVariants: Variants = {
+const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -16,7 +33,7 @@ const containerVariants: Variants = {
   },
 };
 
-const itemVariants: Variants = {
+const itemVariants = {
   hidden: { opacity: 0, y: 15 },
   visible: {
     opacity: 1,
@@ -107,21 +124,13 @@ const CURRENCY_CONFIGS: Record<string, CurrencyConfig> = {
     locale: "fr-FR",
     isIntegerOnly: false,
   },
-
-"***": {
-    unit: "Unknown",
-    isPrefix: false,
-    bgIcon: "bg-gray-50",
-    textIcon: "text-gray-600",
-    locale: "fr-FR",
-    isIntegerOnly: true,
-  },
 };
 
 export const DashboardStats: React.FC<DashboardStatsProps> = ({ summary, loading = false }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
+
   // Sort currencies: keep XOF, then USD first, and others alphabetically
-  const activeCurrencies = Object.keys(summary.totalTaxByCurrency).filter(cur => {
+  const activeCurrencies = Object.keys(summary.totalSalesByCurrency).filter(cur => {
     const s = summary.totalSalesByCurrency[cur];
     return s && (s.total > 0 || s.refund > 0 || s.commission !== 0);
   }).sort((a, b) => {
@@ -144,8 +153,6 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ summary, loading
     const rate = EXCHANGE_RATES_TO_XOF[cur] || 1;
     return sum + (stats.accountingTotal * rate);
   }, 0);
-  
-  console.log(summary.totalSalesByCurrency["USD"])
 
   if (loading) {
     return (
@@ -264,14 +271,14 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ summary, loading
       </motion.div>
 
       {/* Currency Section Header (Collapsible) */}
-      {activeCurrencies.length > 0 && ( 
+      {activeCurrencies.length > 0 && (
         <div className="bg-slate-50/30 rounded-2xl border border-slate-100 shadow-xs overflow-hidden transition-all duration-300">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-between p-5 bg-white border-b border-slate-100 hover:bg-slate-100 hover:shadow-sm transition-all duration-200 cursor-pointer text-left focus:outline-none"
-          id="toggle-currency-panel"
-           aria-expanded={isOpen}
-         >
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="w-full flex items-center justify-between p-5 bg-white border-b border-slate-100 hover:bg-slate-50/80 transition-colors cursor-pointer text-left focus:outline-none"
+            id="toggle-currency-panel"
+            aria-expanded={isOpen}
+          >
             <div className="flex items-center gap-3">
               <div className="bg-indigo-50 p-2.5 rounded-xl text-indigo-650 flex-shrink-0">
                 <Coins className="w-5.5 h-5.5" />
@@ -291,7 +298,11 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ summary, loading
               </div>
             </div>
             <div className="text-slate-400 hover:text-slate-700 transition-colors p-1">
-              {isOpen ? ( <ChevronUp className="w-8 h-8 stroke-[2.5]" /> ) : (<ChevronDown className="w-8 h-8 stroke-[2.5]" />)}
+              {isOpen ? (
+                <ChevronUp className="w-5 h-5 stroke-[2.5]" />
+              ) : (
+                <ChevronDown className="w-5 h-5 stroke-[2.5]" />
+              )}
             </div>
           </button>
 
@@ -348,7 +359,9 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ summary, loading
                         <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider mb-1">Total Sales {cur}</p>
                         <h3 className="text-lg sm:text-xl font-black text-emerald-600 font-mono truncate">
                           {formattedTotal}
-                        </h3>                      
+                        </h3>
+                        <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tighter -mt-0.5 mb-2 italic">(To Be Remitted)</p>
+                        
                         <div className="mt-3 pt-3 border-t border-slate-100 space-y-3">
                           <div className="flex justify-between items-center">
                             <span className="text-[10px] text-slate-400 font-bold uppercase">Net amount HT</span>
@@ -380,6 +393,8 @@ export const DashboardStats: React.FC<DashboardStatsProps> = ({ summary, loading
                   );
                 })}
               </motion.div>
+              
+              <CommissionStats summary={summary} />
             </div>
           )}
         </div>
