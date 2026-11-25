@@ -1,3 +1,7 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 import React, { useState, useMemo, useEffect } from "react";
 import { 
@@ -6,7 +10,6 @@ import {
   Terminal, 
   Search, 
   Filter, 
-  Clock, 
   Plane, 
   RotateCcw, 
   Copy, 
@@ -61,6 +64,7 @@ import {
   useSimulatedScheduleImport,
 } from "./ScheduleImportProgress";
 import { CollapsiblePanel } from "./CollapsiblePanel";
+import { FilterOptionField, FilterOptionItem } from "./FilterOptionField";
 import { useLanguage } from "../../context/LanguageContext";
 
 interface ScheduledFlightsViewerProps {
@@ -351,6 +355,29 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
     const codeshareUniqueFlights = parsedData.codeshareUniqueFlightsCount;
     const withAdjustments = parsedData.segments.filter(s => s.hasSystemAdjustment).length;
     const withoutAdjustments = total - withAdjustments;
+
+    let kpRegisteredCount = 0;
+    let kpPdcCount = 0;
+    for (const seg of parsedData.segments) {
+      if (!seg.isKpOperated) continue;
+      const res = resolveFlightStatusDetail(
+        seg.flightNumber,
+        seg.date,
+        seg.origin,
+        statusDetails
+      );
+      if ((res.detail?.registration || "").trim()) {
+        kpRegisteredCount += 1;
+      }
+      if (
+        res.detail &&
+        !res.detail.isManualOnly &&
+        (res.resolvedStatus || "").trim().toUpperCase() === "PDC"
+      ) {
+        kpPdcCount += 1;
+      }
+    }
+
     return {
       total,
       uniqueFlights,
@@ -360,8 +387,39 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
       codeshareUniqueFlights,
       withAdjustments,
       withoutAdjustments,
+      kpRegisteredCount,
+      kpPdcCount,
     };
-  }, [parsedData]);
+  }, [parsedData, statusDetails]);
+
+  const { originOptions, destinationOptions } = useMemo(() => {
+    if (!parsedData) {
+      return {
+        originOptions: [] as FilterOptionItem[],
+        destinationOptions: [] as FilterOptionItem[],
+      };
+    }
+    const origMap = new Map<string, number>();
+    const destMap = new Map<string, number>();
+    for (const seg of parsedData.segments) {
+      if (carrierFilter === "KP" && !seg.isKpOperated) continue;
+      if (carrierFilter === "CODESHARE" && seg.isKpOperated) continue;
+      origMap.set(seg.origin, (origMap.get(seg.origin) || 0) + 1);
+      destMap.set(seg.destination, (destMap.get(seg.destination) || 0) + 1);
+    }
+    return {
+      originOptions: parsedData.origins.map((orig) => ({
+        value: orig,
+        label: orig,
+        count: origMap.get(orig) ?? 0,
+      })),
+      destinationOptions: parsedData.destinations.map((dest) => ({
+        value: dest,
+        label: dest,
+        count: destMap.get(dest) ?? 0,
+      })),
+    };
+  }, [parsedData, carrierFilter]);
 
   // Quick single copy
   const handleCopyWincmd = (cmd: string, id: string) => {
@@ -503,8 +561,8 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
                 </h3>
                 <p className="text-[#6E472B] dark:text-[#DECAB1] text-xs leading-relaxed">
                   {pick(
-                    "Importez un fichier VDS/Date ou un fichier GD*station... pour extraire les vols et commandes WINCMD.",
-                    "Import a VDS/Date schedule file or a GD*station... file to extract flights and WINCMD commands."
+                    "Importez un fichier VDS (SCHEDULED FLIGHTS) ou un fichier GD* par station (DAILY DEPARTURE FLIGHT LIST) pour extraire les vols et commandes WINCMD.",
+                    "Import a VDS schedule file or a GD* station departure list file (DAILY DEPARTURE FLIGHT LIST) to extract flights and WINCMD commands."
                   )}
                 </p>
               </div>
@@ -547,7 +605,7 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
                     )}
                   </p>
                   <p className="text-xs text-[#6E472B] dark:text-[#DECAB1]">
-                    .txt · .dat
+                    .txt · .log · .vds · .dat
                   </p>
                 </div>
               )}
@@ -562,7 +620,7 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
                   <Terminal className="w-4 h-4" />
                   <span>
                     {pick(
-                      "Fichier VDS/date indisponible ou date passée",
+                      "Date antérieure sans VDS/date disponible",
                       "Past date without VDS/date available"
                     )}
                   </span>
@@ -575,15 +633,15 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
                 </h4>
                 <p className="text-xs text-[#6E472B] dark:text-[#DECAB1] leading-relaxed">
                   {pick(
-                    "Générez et téléchargez le lot de commandes ",
-                    "Generate and download the batch of commands "
+                    "Générez et téléchargez en ANSI le lot de commandes ",
+                    "Generate and download in ANSI the batch of commands "
                   )}
                   <code className="font-mono font-semibold text-[#4C2812] dark:text-[#F7BA42]">
                     WINCMD(&quot;PTRGD*LFW/{isQuickDateValid ? quickNormalizedDate : "21NOV"}/T0000-2359/ALL‡A&quot;)
                   </code>
                   {pick(
-                    ` pour l'ensemble des stations de KP `,
-                    ` across all stored network stations .`
+                    ` pour l'ensemble des stations enregistrées (${stations.length} stations en base).`,
+                    ` across all stored network stations (${stations.length} stations in DB).`
                   )}
                 </p>
               </div>
@@ -685,15 +743,15 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
             subtitle={
               stats
                 ? pick(
-                    `${parsedData.sourceType === "GD" ? `Liste GD* (${parsedData.stationsWithFlightsCount || 0}/${parsedData.stationsQueriedCount || 0} stations) · ` : ""}${stats.kpSegments} tronçons KP (${stats.kpUniqueFlights} vols) · ${stats.codeshareSegments} codeshares · ${stats.withAdjustments} ajustements`,
-                    `${parsedData.sourceType === "GD" ? `GD* List (${parsedData.stationsWithFlightsCount || 0}/${parsedData.stationsQueriedCount || 0} stations) · ` : ""}${stats.kpSegments} KP legs (${stats.kpUniqueFlights} flights) · ${stats.codeshareSegments} codeshares · ${stats.withAdjustments} adjustments`
+                    `${parsedData.sourceType === "GD" ? `Liste GD* (${parsedData.stationsWithFlightsCount || 0}/${parsedData.stationsQueriedCount || 0} stations) · ` : ""}${stats.kpSegments} KP (${stats.kpUniqueFlights} vols) · Immatriculés ${stats.kpRegisteredCount}/${stats.kpSegments} · PDC ${stats.kpPdcCount}/${stats.kpSegments}`,
+                    `${parsedData.sourceType === "GD" ? `GD* List (${parsedData.stationsWithFlightsCount || 0}/${parsedData.stationsQueriedCount || 0} stations) · ` : ""}${stats.kpSegments} KP (${stats.kpUniqueFlights} flights) · Reg. ${stats.kpRegisteredCount}/${stats.kpSegments} · PDC ${stats.kpPdcCount}/${stats.kpSegments}`
                   )
                 : pick(`${parsedData.segments.length} tronçons`, `${parsedData.segments.length} legs`)
             }
             icon={<Plane className="w-4 h-4 text-[#4C2812] dark:text-[#F7BA42]" />}
             badge={parsedData.sourceType === "GD" ? "GD*" : pick("Actif", "Active")}
             accent="asky"
-            defaultOpen={false}
+            defaultOpen={true}
             rightContent={
               <div className="flex flex-wrap items-center gap-2 shrink-0">
                 <button
@@ -713,12 +771,12 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
                   onClick={() => setIsWincmdModalOpen(true)}
                   className="group inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#4C2812] via-[#3B1E0D] to-[#281408] dark:from-[#E89C1D] dark:via-[#F0A82E] dark:to-[#D48B13] hover:brightness-110 text-[#F7BA42] dark:text-[#1F1209] border border-[#E89C1D]/55 dark:border-[#F7BA42]/70 text-xs font-extrabold shadow-md shadow-amber-950/15 transition-all cursor-pointer shrink-0"
                   title={pick(
-                    "Ouvrir les options WINCMD, l'aperçu et les exports (ANSI, Excel, Texte)",
-                    "Open WINCMD options, preview & exports (ANSI, Excel, Text)"
+                    "Ouvrir les options Sabre CMD, l'aperçu et les exports (ANSI, Excel, Texte)",
+                    "Open Sabre CMD options, preview & exports (ANSI, Excel, Text)"
                   )}
                 >
                   <Layers className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
-                  <span>{pick("WINCMD & Exports", "WINCMD & Exports")}</span>
+                  <span>Sabre CMD</span>
                   <span className="px-1.5 py-0.5 rounded-md bg-[#E89C1D]/20 dark:bg-[#1F1209]/15 text-[10px] font-mono font-bold tabular-nums">
                     {filteredSegments.length}
                   </span>
@@ -763,26 +821,20 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
 
                 <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] p-3.5 rounded-2xl">
                   <span className="text-[11px] font-bold text-[#6E472B] dark:text-[#DECAB1] uppercase tracking-wider flex items-center gap-1.5">
-                    <Globe className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#F7BA42]" /> Codeshares
+                    <BadgeCheck className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#F7BA42]" /> {pick("Immatriculés", "Registered")}
                   </span>
-                  <div className="text-xl font-black text-[#4C2812] dark:text-[#FAF7F2] mt-1">
-                    {stats.codeshareSegments} <span className="text-xs text-[#6E472B] dark:text-[#DECAB1] font-medium">{pick("tronçons", "legs")}</span>
+                  <div className="text-xl font-black text-[#4C2812] dark:text-[#FAF7F2] mt-1 tabular-nums">
+                    {stats.kpRegisteredCount}/{stats.kpSegments}
                   </div>
-                  <span className="text-[10px] text-[#6E472B] dark:text-[#DECAB1]">
-                    {stats.codeshareUniqueFlights} {pick("partenaires", "partners")}
-                  </span>
                 </div>
 
                 <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] p-3.5 rounded-2xl">
                   <span className="text-[11px] font-bold text-[#6E472B] dark:text-[#DECAB1] uppercase tracking-wider flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-[#E89C1D]" /> {pick("Ajustements", "Adjustments")}
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#E89C1D]" /> PDC
                   </span>
-                  <div className="text-xl font-black text-[#8C5214] dark:text-[#F7BA42] mt-1">
-                    {stats.withAdjustments} <span className="text-xs text-[#6E472B] dark:text-[#DECAB1] font-medium">/ {stats.total}</span>
+                  <div className="text-xl font-black text-[#8C5214] dark:text-[#F7BA42] mt-1 tabular-nums">
+                    {stats.kpPdcCount}/{stats.kpSegments}
                   </div>
-                  <span className="text-[10px] text-[#6E472B] dark:text-[#DECAB1]">
-                    {pick("Heures saisies", "Entered times")}
-                  </span>
                 </div>
               </div>
             )}
@@ -798,10 +850,7 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
                     <h4 className="text-xs sm:text-sm font-extrabold text-[#321B0A] dark:text-[#FAF7F2]">
-                      {pick(
-                        "Détails Avions & Capacités (PTRG*)",
-                        "Aircraft Details & Capacities (PTRG*)"
-                      )}
+                      {pick("Détails Vols", "Flight Details")}
                     </h4>
                     <span className="font-mono text-[11px] font-bold text-[#8C5214] dark:text-[#F7BA42] tabular-nums">
                       {statusDetails.length > 0
@@ -850,38 +899,7 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
                         </span>
                       </button>
                     )}
-                    {ptrgAndRegSummary.missingReg > 0 && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setRegistrationFilter((prev) =>
-                            prev === "MISSING" ? "ALL" : "MISSING"
-                          )
-                        }
-                        className={`px-2.5 py-0.5 rounded-lg text-[11px] font-mono font-extrabold border inline-flex items-center gap-1.5 transition cursor-pointer ${
-                          registrationFilter === "MISSING"
-                            ? "bg-amber-600 text-white border-amber-600 shadow-xs"
-                            : "bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-700 hover:bg-amber-100 dark:hover:bg-amber-950/80"
-                        }`}
-                        title={pick(
-                          "Cliquer pour filtrer les vols sans immatriculation avion",
-                          "Click to filter flights missing aircraft registration"
-                        )}
-                      >
-                        <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                        <span>
-                          {ptrgAndRegSummary.missingReg}{" "}
-                          {pick("Sans immat.", "No reg.")}
-                        </span>
-                      </button>
-                    )}
                   </div>
-                  <p className="text-[11px] text-[#6E472B] dark:text-[#DECAB1]">
-                    {pick(
-                      "Association stricte par (N° de vol + Date + Origine).",
-                      "Strict matching by (Flight # + Date + Origin)."
-                    )}
-                  </p>
                 </div>
               </div>
 
@@ -897,7 +915,7 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
                   )}
                 >
                   <Terminal className="w-3.5 h-3.5 text-[#E89C1D]" />
-                  <span>{pick("Exporter PTRG* (ANSI)", "Export PTRG* (ANSI)")}</span>
+                  <span>Sabre CMD</span>
                   <span className="font-mono text-[10px] opacity-85">
                     ({ptrgExportSummary.uniqueCount})
                   </span>
@@ -955,186 +973,174 @@ export const ScheduledFlightsViewer: React.FC<ScheduledFlightsViewerProps> = ({
             icon={<Filter className="w-4 h-4 text-[#4C2812] dark:text-[#F7BA42]" />}
             defaultOpen={false}
           >
-            <div className="space-y-3">
-            {/* 1. Primary Carrier Selection Tabs */}
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="inline-flex flex-wrap bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] p-1 rounded-2xl text-xs font-medium">
-                <button
-                  onClick={() => setCarrierFilter("KP")}
-                  className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                    carrierFilter === "KP"
-                      ? "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] font-extrabold shadow-xs"
-                      : "text-[#6E472B] dark:text-[#DECAB1] hover:text-[#321B0A] dark:hover:text-[#F7BA42]"
-                  }`}
-                >
-                  <Plane className="w-3.5 h-3.5" />
-                  <span>{pick("Vols KP", "KP Flights")}</span>
-                  <span className="font-mono text-[10px] opacity-85">
-                    ({parsedData.kpOperatedSegmentsCount})
-                  </span>
-                </button>
+            <div className="space-y-2.5">
+              {/* Top Bar: Free Search + Reset */}
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="relative flex-1 min-w-[220px]">
+                  <Search className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#F7BA42] absolute left-3 top-2" />
+                  <input
+                    type="text"
+                    placeholder={pick("Rechercher vol, aéroport, immat., WINCMD...", "Search flight, airport, reg., WINCMD...")}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D]"
+                  />
+                </div>
 
-                <button
-                  onClick={() => setCarrierFilter("ALL")}
-                  className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                    carrierFilter === "ALL"
-                      ? "bg-white dark:bg-[#4C2812] text-[#4C2812] dark:text-[#F7BA42] font-extrabold shadow-xs"
-                      : "text-[#6E472B] dark:text-[#DECAB1] hover:text-[#321B0A] dark:hover:text-[#F7BA42]"
-                  }`}
-                >
-                  <span>{pick("Tous", "All")}</span>
-                  <span className="font-mono text-[10px] opacity-85">
-                    ({parsedData.segments.length})
-                  </span>
-                </button>
-
-                <button
-                  onClick={() => setCarrierFilter("CODESHARE")}
-                  className={`px-3.5 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-                    carrierFilter === "CODESHARE"
-                      ? "bg-white dark:bg-[#4C2812] text-[#4C2812] dark:text-[#F7BA42] font-extrabold shadow-xs"
-                      : "text-[#6E472B] dark:text-[#DECAB1] hover:text-[#321B0A] dark:hover:text-[#F7BA42]"
-                  }`}
-                >
-                  <Globe className="w-3.5 h-3.5" />
-                  <span>Codeshares</span>
-                  <span className="font-mono text-[10px] opacity-85">
-                    ({parsedData.codeshareSegmentsCount})
-                  </span>
-                </button>
+                {(searchTerm || originFilter !== "ALL" || destinationFilter !== "ALL" || registrationFilter !== "ALL" || statusFilter !== "ALL" || ptrgStatusFilter !== "ALL" || segmentFilter !== "ALL" || carrierFilter !== "KP") && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCarrierFilter("KP");
+                      setSearchTerm("");
+                      setOriginFilter("ALL");
+                      setDestinationFilter("ALL");
+                      setRegistrationFilter("ALL");
+                      setStatusFilter("ALL");
+                      setPtrgStatusFilter("ALL");
+                      setSegmentFilter("ALL");
+                    }}
+                    className="text-xs text-rose-700 dark:text-rose-400 hover:underline font-bold cursor-pointer px-2 py-1"
+                  >
+                    {pick("Réinitialiser", "Reset")}
+                  </button>
+                )}
               </div>
 
-              {(searchTerm || originFilter !== "ALL" || destinationFilter !== "ALL" || registrationFilter !== "ALL" || statusFilter !== "ALL" || ptrgStatusFilter !== "ALL" || segmentFilter !== "ALL" || carrierFilter !== "KP") && (
-                <button
-                  onClick={() => {
-                    setCarrierFilter("KP");
-                    setSearchTerm("");
-                    setOriginFilter("ALL");
-                    setDestinationFilter("ALL");
-                    setRegistrationFilter("ALL");
-                    setStatusFilter("ALL");
-                    setPtrgStatusFilter("ALL");
-                    setSegmentFilter("ALL");
-                  }}
-                  className="text-xs text-rose-700 dark:text-rose-400 hover:underline font-bold cursor-pointer"
-                >
-                  {pick("Réinitialiser", "Reset")}
-                </button>
-              )}
-            </div>
+              {/* Searchable Filter Option Fields Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-2">
+                <FilterOptionField
+                  value={carrierFilter}
+                  onChange={(v) => setCarrierFilter(v as "KP" | "ALL" | "CODESHARE")}
+                  allValue="ALL"
+                  allLabel={pick(`Tous (${parsedData.segments.length})`, `All (${parsedData.segments.length})`)}
+                  prefixLabel={pick("Opérateur", "Carrier")}
+                  options={[
+                    {
+                      value: "KP",
+                      label: pick("Vols KP", "KP Flights"),
+                      count: parsedData.kpOperatedSegmentsCount,
+                      keywords: "kp asky opere",
+                    },
+                    {
+                      value: "CODESHARE",
+                      label: "Codeshares",
+                      count: parsedData.codeshareSegmentsCount,
+                      keywords: "codeshare partenaire",
+                    },
+                  ]}
+                />
 
-            {/* 2. Secondary Search and Dropdown Filters */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-2.5">
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#F7BA42] absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  placeholder={pick("Vol, aéroport, immat...", "Flight, airport, reg...")}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-xl text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D]"
+                <FilterOptionField
+                  value={originFilter}
+                  onChange={setOriginFilter}
+                  allValue="ALL"
+                  allLabel={pick(`Toutes (${parsedData.origins.length})`, `All (${parsedData.origins.length})`)}
+                  prefixLabel={pick("Origine", "Origin")}
+                  options={originOptions}
+                />
+
+                <FilterOptionField
+                  value={destinationFilter}
+                  onChange={setDestinationFilter}
+                  allValue="ALL"
+                  allLabel={pick(`Toutes (${parsedData.destinations.length})`, `All (${parsedData.destinations.length})`)}
+                  prefixLabel="Dest."
+                  options={destinationOptions}
+                />
+
+                <FilterOptionField
+                  value={registrationFilter}
+                  onChange={setRegistrationFilter}
+                  allValue="ALL"
+                  allLabel={pick(`Toutes (${ptrgAndRegSummary.registrations.length})`, `All (${ptrgAndRegSummary.registrations.length})`)}
+                  prefixLabel={pick("Immat.", "Reg.")}
+                  options={[
+                    {
+                      value: "MISSING",
+                      label: pick("Sans immat.", "Missing reg."),
+                      count: ptrgAndRegSummary.missingReg,
+                      keywords: "sans immat missing aucune",
+                    },
+                    ...ptrgAndRegSummary.registrations.map(({ reg, count }) => ({
+                      value: reg,
+                      label: reg,
+                      count,
+                    })),
+                  ]}
+                />
+
+                <FilterOptionField
+                  value={ptrgStatusFilter}
+                  onChange={(v) =>
+                    setPtrgStatusFilter(v as "ALL" | "PDC" | "NON_PDC" | "MISSING_PTRG")
+                  }
+                  allValue="ALL"
+                  allLabel={pick("Tous", "All")}
+                  prefixLabel="PTRG*"
+                  options={[
+                    {
+                      value: "PDC",
+                      label: "PDC",
+                      count: ptrgAndRegSummary.pdc,
+                    },
+                    {
+                      value: "NON_PDC",
+                      label: "Non-PDC",
+                      count: ptrgAndRegSummary.nonPdc,
+                      keywords: "non pdc alert",
+                    },
+                    {
+                      value: "MISSING_PTRG",
+                      label: pick("Sans PTRG*", "No PTRG*"),
+                      count: ptrgAndRegSummary.missing,
+                      keywords: "sans ptrg missing",
+                    },
+                  ]}
+                />
+
+                <FilterOptionField
+                  value={statusFilter}
+                  onChange={setStatusFilter}
+                  allValue="ALL"
+                  allLabel={pick("Toutes", "All")}
+                  prefixLabel={pick("Heures réelles", "Actual")}
+                  options={[
+                    {
+                      value: "AJUSTE",
+                      label: pick("Saisies", "Entered"),
+                      count: stats?.withAdjustments,
+                      keywords: "ajuste saisies entered",
+                    },
+                    {
+                      value: "INITIAL",
+                      label: pick("Non renseignées", "Not entered"),
+                      count: stats?.withoutAdjustments,
+                      keywords: "initial non renseignees",
+                    },
+                  ]}
+                />
+
+                <FilterOptionField
+                  value={segmentFilter}
+                  onChange={(v) => setSegmentFilter(v as "ALL" | "MAIN" | "SUB")}
+                  allValue="ALL"
+                  allLabel={pick("Tous", "All")}
+                  prefixLabel={pick("Tronçons", "Legs")}
+                  options={[
+                    {
+                      value: "MAIN",
+                      label: pick("1er départ", "1st dep."),
+                      keywords: "main principal 1er depart",
+                    },
+                    {
+                      value: "SUB",
+                      label: pick("Escales", "Stops"),
+                      keywords: "sub escales stopover",
+                    },
+                  ]}
                 />
               </div>
-
-              <select
-                value={originFilter}
-                onChange={(e) => setOriginFilter(e.target.value)}
-                className="w-full px-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-xl text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              >
-                <option value="ALL">{pick(`Origine : Toutes (${parsedData.origins.length})`, `Origin: All (${parsedData.origins.length})`)}</option>
-                {parsedData.origins.map((orig) => (
-                  <option key={orig} value={orig}>{orig}</option>
-                ))}
-              </select>
-
-              <select
-                value={destinationFilter}
-                onChange={(e) => setDestinationFilter(e.target.value)}
-                className="w-full px-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-xl text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              >
-                <option value="ALL">{pick(`Dest. : Toutes (${parsedData.destinations.length})`, `Dest.: All (${parsedData.destinations.length})`)}</option>
-                {parsedData.destinations.map((dest) => (
-                  <option key={dest} value={dest}>{dest}</option>
-                ))}
-              </select>
-
-              <select
-                value={registrationFilter}
-                onChange={(e) => setRegistrationFilter(e.target.value)}
-                className={`w-full px-3 py-1.5 rounded-xl text-xs font-semibold border focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer ${
-                  registrationFilter === "MISSING"
-                    ? "bg-amber-50 dark:bg-amber-950/60 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200"
-                    : "bg-[#FAF7F2] dark:bg-[#28170C] border-[#E6D7C3] dark:border-[#5C351B] text-[#321B0A] dark:text-[#FAF7F2]"
-                }`}
-              >
-                <option value="ALL">
-                  {pick(
-                    `Immat. : Toutes (${ptrgAndRegSummary.registrations.length})`,
-                    `Reg.: All (${ptrgAndRegSummary.registrations.length})`
-                  )}
-                </option>
-                <option value="MISSING">
-                  {pick(
-                    `⚠ Sans immat. (${ptrgAndRegSummary.missingReg})`,
-                    `⚠ Missing reg. (${ptrgAndRegSummary.missingReg})`
-                  )}
-                </option>
-                {ptrgAndRegSummary.registrations.map(({ reg, count }) => (
-                  <option key={reg} value={reg}>
-                    {reg} ({count})
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={ptrgStatusFilter}
-                onChange={(e) =>
-                  setPtrgStatusFilter(
-                    e.target.value as "ALL" | "PDC" | "NON_PDC" | "MISSING_PTRG"
-                  )
-                }
-                className={`w-full px-3 py-1.5 rounded-xl text-xs font-semibold border focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer ${
-                  ptrgStatusFilter === "NON_PDC"
-                    ? "bg-rose-50 dark:bg-rose-950/60 border-rose-300 dark:border-rose-700 text-rose-800 dark:text-rose-200"
-                    : "bg-[#FAF7F2] dark:bg-[#28170C] border-[#E6D7C3] dark:border-[#5C351B] text-[#321B0A] dark:text-[#FAF7F2]"
-                }`}
-              >
-                <option value="ALL">{pick("Statut PTRG* : Tous", "PTRG* Status: All")}</option>
-                <option value="PDC">{pick(`PDC (${ptrgAndRegSummary.pdc})`, `PDC (${ptrgAndRegSummary.pdc})`)}</option>
-                <option value="NON_PDC">
-                  {pick(
-                    `Non-PDC (${ptrgAndRegSummary.nonPdc})`,
-                    `Non-PDC (${ptrgAndRegSummary.nonPdc})`
-                  )}
-                </option>
-                <option value="MISSING_PTRG">
-                  {pick(
-                    `Sans PTRG* (${ptrgAndRegSummary.missing})`,
-                    `No PTRG* (${ptrgAndRegSummary.missing})`
-                  )}
-                </option>
-              </select>
-
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-xl text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              >
-                <option value="ALL">{pick("Heures réelles : Toutes", "Actual times: All")}</option>
-                <option value="AJUSTE">{pick(`Saisies (${stats?.withAdjustments})`, `Entered (${stats?.withAdjustments})`)}</option>
-                <option value="INITIAL">{pick(`Non renseignées (${stats?.withoutAdjustments})`, `Not entered (${stats?.withoutAdjustments})`)}</option>
-              </select>
-
-              <select
-                value={segmentFilter}
-                onChange={(e) => setSegmentFilter(e.target.value as "ALL" | "MAIN" | "SUB")}
-                className="w-full px-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-xl text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              >
-                <option value="ALL">{pick("Tous tronçons", "All legs")}</option>
-                <option value="MAIN">{pick("1er départ", "1st departure")}</option>
-                <option value="SUB">{pick("Escales", "Stops")}</option>
-              </select>
-            </div>
             </div>
           </CollapsiblePanel>
 

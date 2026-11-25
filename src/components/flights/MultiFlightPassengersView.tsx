@@ -1,23 +1,16 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import React, { useEffect, useMemo, useState } from "react";
-import * as XLSX from "xlsx";
 import {
   AlertTriangle,
-  Calendar,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   CreditCard,
   Eye,
   FileDown,
-  FileSpreadsheet,
+  FileText,
   Filter,
+  Globe,
   Luggage,
-  Plane,
   RotateCcw,
   Search,
   Users,
@@ -30,14 +23,23 @@ import {
   ManifestPassenger,
 } from "../../types";
 import {
+  buildPriorFlightPaxKeysMap,
   extractInfantFromRawLines,
   getDcsFlightDateSortOrder,
   getEditCodeLabel,
+  getPassengerDepartureType,
   isPassengerNoShow,
+  isPassengerNoTicket,
+  isPassengerPaperTicket,
   isPassengerWebCheckin,
   isPassengerWithSeat,
   normalizeDcsFlightDate,
+  PassengerDepartureType,
 } from "../../utils/manifestParser";
+import {
+  exportFilteredPassengersReportToPDF,
+  exportGlobalStationDailyReportToPDF,
+} from "../../utils/flightStatsExport";
 import {
   formatEmdMonetaryValue,
   normalizeEmdNumber,
@@ -46,6 +48,7 @@ import { PassengerDossierDrawer } from "./PassengerDossierDrawer";
 import { BabyBottleIcon } from "./BabyBottleIcon";
 import { WebCheckinBadge } from "../ui/WebCheckinBadge";
 import { CollapsiblePanel } from "./CollapsiblePanel";
+import { FilterOptionField, MultiFilterOptionField } from "./FilterOptionField";
 import { useLanguage } from "../../context/LanguageContext";
 
 interface MultiFlightPassengersViewProps {
@@ -59,6 +62,7 @@ interface MultiFlightPassengersViewProps {
 
 type CabinFilter = "BOTH" | "C" | "Y";
 type SeatStatusFilter = "ALL" | "WITH_SEAT" | "NO_SHOW" | "NO_SEAT";
+type DepartureTypeFilter = "ALL" | PassengerDepartureType;
 type GenderTypeFilter =
   | "ALL"
   | "M"
@@ -82,15 +86,231 @@ type SpecialFilter =
   | "HAS_EMD"
   | "HAS_FF"
   | "NO_TICKET"
+  | "PAPER_TKT"
   | "HAS_CONNECTION";
 type SortMode = "FLIGHT_ALPHA" | "ALPHA" | "WEIGHT_DESC";
 type EditCodeMatchMode = "ANY" | "ALL";
 
 interface CrossFlightEntry {
   flight: ManifestFlight;
+  legFlights: ManifestFlight[];
   passenger: ManifestPassenger;
   normDate: string;
   dateSortOrder: number;
+  sectorStations: string[];
+  sectorLabel: string;
+  transitStops: string[];
+  depType: PassengerDepartureType;
+}
+
+function normPaxToken(value?: string): string {
+  return (value || "").trim().toUpperCase().replace(/\s+/g, " ");
+}
+
+function normFlightNumToken(value?: string): string {
+  return (value || "").trim().toUpperCase().replace(/^0+(?=\d)/, "");
+}
+
+function padDcsTimeToken(time?: string): string {
+  const digits = (time || "").replace(/\D/g, "");
+  if (!digits) return "";
+  return digits.padStart(4, "0").slice(-4);
+}
+
+function getCrossEntryKey(entry: CrossFlightEntry): string {
+  return `${entry.legFlights.map((l) => l.id).join("+")}__${entry.passenger.id}`;
+}
+
+interface RawLegEntry {
+  flight: ManifestFlight;
+  passenger: ManifestPassenger;
+  normDate: string;
+  dateSortOrder: number;
+  depType: PassengerDepartureType;
+}
+
+function sortLegsChronologically(legs: RawLegEntry[]): RawLegEntry[] {
+  if (legs.length <= 1) return legs;
+  const allHaveTimes = legs.every((l) => padDcsTimeToken(l.flight.departureTime) !== "");
+  if (allHaveTimes) {
+    return [...legs].sort((a, b) => {
+      const ta = padDcsTimeToken(a.flight.departureTime);
+      const tb = padDcsTimeToken(b.flight.departureTime);
+      if (ta !== tb) return ta.localeCompare(tb);
+      return a.flight.origin.localeCompare(b.flight.origin);
+    });
+  }
+
+  // Chain legs when some departure times are unavailable
+  const remaining = [...legs];
+  const ordered: RawLegEntry[] = [];
+  // Pick initial leg: prefer non-TRANSIT, then earliest departure time, then leg not listed as another's primaryDestination
+  remaining.sort((a, b) => {
+    const aIsTransit = a.depType === "TRANSIT" ? 1 : 0;
+    const bIsTransit = b.depType === "TRANSIT" ? 1 : 0;
+    if (aIsTransit !== bIsTransit) return aIsTransit - bIsTransit;
+    const ta = padDcsTimeToken(a.flight.departureTime);
+    const tb = padDcsTimeToken(b.flight.departureTime);
+    if (ta && tb && ta !== tb) return ta.localeCompare(tb);
+    return a.flight.origin.localeCompare(b.flight.origin);
+  });
+  ordered.push(remaining.shift()!);
+
+  while (remaining.length > 0) {
+    const prev = ordered[ordered.length - 1];
+    const prevPrimaryDest = (prev.flight.primaryDestination || "").trim().toUpperCase();
+    const prevTime = padDcsTimeToken(prev.flight.departureTime);
+    let nextIdx = remaining.findIndex(
+      (cand) =>
+        prevPrimaryDest &&
+        (cand.flight.origin || "").trim().toUpperCase() === prevPrimaryDest
+    );
+    if (nextIdx === -1 && prevTime) {
+      let bestIdx = -1;
+      let bestTime = "";
+      remaining.forEach((cand, idx) => {
+        const ct = padDcsTimeToken(cand.flight.departureTime);
+        if (ct && ct >= prevTime && (bestIdx === -1 || ct < bestTime)) {
+          bestIdx = idx;
+          bestTime = ct;
+        }
+      });
+      nextIdx = bestIdx;
+    }
+    if (nextIdx === -1) nextIdx = 0;
+    ordered.push(remaining.splice(nextIdx, 1)[0]);
+  }
+
+  return ordered;
+}
+
+function consolidateMultiLegEntries(legs: RawLegEntry[]): CrossFlightEntry {
+  const sorted = sortLegsChronologically(legs);
+  const firstLeg = sorted[0];
+  const lastLeg = sorted[sorted.length - 1];
+
+  const sectorStations: string[] = [];
+  for (const leg of sorted) {
+    const orig = (leg.flight.origin || "").trim().toUpperCase();
+    if (orig && sectorStations[sectorStations.length - 1] !== orig) {
+      sectorStations.push(orig);
+    }
+  }
+  const finalDest = (
+    lastLeg.passenger.destination ||
+    firstLeg.passenger.destination ||
+    ""
+  )
+    .trim()
+    .toUpperCase();
+  if (finalDest && sectorStations[sectorStations.length - 1] !== finalDest) {
+    sectorStations.push(finalDest);
+  }
+
+  const sectorLabel = sectorStations.join(" → ");
+  const transitStops =
+    sectorStations.length >= 3 ? sectorStations.slice(1, -1) : [];
+
+  if (sorted.length === 1) {
+    return {
+      flight: firstLeg.flight,
+      legFlights: [firstLeg.flight],
+      passenger: firstLeg.passenger,
+      normDate: firstLeg.normDate,
+      dateSortOrder: firstLeg.dateSortOrder,
+      sectorStations,
+      sectorLabel,
+      transitStops,
+      depType: firstLeg.depType,
+    };
+  }
+
+  // Pick single-leg baggage authority (never double-count checked bags/weight across stopovers)
+  const bagSourcePax = sorted.reduce((best, cur) => {
+    const curWt = cur.passenger.totalBagWeight || 0;
+    const bestWt = best.totalBagWeight || 0;
+    if (curWt !== bestWt) return curWt > bestWt ? cur.passenger : best;
+    const curBags = Math.max(
+      cur.passenger.bags.length,
+      cur.passenger.bagsDeclaredCount || 0,
+      cur.passenger.bagsTotalDeclaredLine?.count || 0
+    );
+    const bestBags = Math.max(
+      best.bags.length,
+      best.bagsDeclaredCount || 0,
+      best.bagsTotalDeclaredLine?.count || 0
+    );
+    return curBags > bestBags ? cur.passenger : best;
+  }, firstLeg.passenger);
+
+  const mergedEditCodes = Array.from(
+    new Set(sorted.flatMap((l) => l.passenger.editCodes))
+  );
+  const mergedEmdNumbers = Array.from(
+    new Set(sorted.flatMap((l) => l.passenger.emdNumbers))
+  );
+  const firstSeat =
+    firstLeg.passenger.seat ||
+    sorted.find((l) => l.passenger.seat)?.passenger.seat ||
+    "";
+
+  const mergedPassenger: ManifestPassenger = {
+    ...firstLeg.passenger,
+    destination: finalDest || firstLeg.passenger.destination,
+    baggageDestination:
+      lastLeg.passenger.baggageDestination ||
+      firstLeg.passenger.baggageDestination,
+    seat: firstSeat,
+    isOffloadedOrNoSeat: sorted.every((l) => l.passenger.isOffloadedOrNoSeat),
+    ticket:
+      firstLeg.passenger.ticket ||
+      sorted.find((l) => l.passenger.ticket)?.passenger.ticket,
+    inboundFlight: firstLeg.passenger.inboundFlight,
+    outboundFlight: lastLeg.passenger.outboundFlight,
+    editCodes: mergedEditCodes,
+    emdNumbers: mergedEmdNumbers,
+    kpFrequentFlyer:
+      firstLeg.passenger.kpFrequentFlyer ||
+      sorted.find((l) => l.passenger.kpFrequentFlyer)?.passenger
+        .kpFrequentFlyer,
+    partnerFrequentFlyer:
+      firstLeg.passenger.partnerFrequentFlyer ||
+      sorted.find((l) => l.passenger.partnerFrequentFlyer)?.passenger
+        .partnerFrequentFlyer,
+    infant:
+      firstLeg.passenger.infant ||
+      sorted.find((l) => l.passenger.infant)?.passenger.infant,
+    hasInfant: sorted.some((l) => l.passenger.hasInfant),
+    isCodeshare: sorted.some((l) => l.passenger.isCodeshare),
+    isTransitMarker: sorted.some((l) => l.passenger.isTransitMarker),
+    bags: bagSourcePax.bags,
+    totalBagWeight: bagSourcePax.totalBagWeight,
+    bagsDeclaredCount: bagSourcePax.bagsDeclaredCount,
+    bagsTotalDeclaredLine: bagSourcePax.bagsTotalDeclaredLine,
+    hasMissingBaggageWeight: bagSourcePax.hasMissingBaggageWeight,
+    baggageCompliance: bagSourcePax.baggageCompliance,
+    ancillaries:
+      bagSourcePax.ancillaries.length > 0
+        ? bagSourcePax.ancillaries
+        : firstLeg.passenger.ancillaries,
+    isNoBagDeclared: bagSourcePax.isNoBagDeclared,
+    baggageDeviations: bagSourcePax.baggageDeviations,
+    allowedWeightPerBag: bagSourcePax.allowedWeightPerBag,
+    allowedTotalWeight: bagSourcePax.allowedTotalWeight,
+    allowedBagsCount: bagSourcePax.allowedBagsCount,
+  };
+
+  return {
+    flight: firstLeg.flight,
+    legFlights: sorted.map((l) => l.flight),
+    passenger: mergedPassenger,
+    normDate: firstLeg.normDate,
+    dateSortOrder: firstLeg.dateSortOrder,
+    sectorStations,
+    sectorLabel,
+    transitStops,
+    depType: firstLeg.depType,
+  };
 }
 
 export const MultiFlightPassengersView: React.FC<
@@ -116,6 +336,8 @@ export const MultiFlightPassengersView: React.FC<
   const [cabinFilter, setCabinFilter] = useState<CabinFilter>("BOTH");
   const [seatStatusFilter, setSeatStatusFilter] =
     useState<SeatStatusFilter>("ALL");
+  const [departureTypeFilter, setDepartureTypeFilter] =
+    useState<DepartureTypeFilter>("ALL");
   const [genderTypeFilter, setGenderTypeFilter] =
     useState<GenderTypeFilter>("ALL");
   const [bookingClassFilter, setBookingClassFilter] = useState<string>("ALL");
@@ -252,21 +474,110 @@ export const MultiFlightPassengersView: React.FC<
     });
   }, [flightsMatchingDate, originFilter, effectiveSelectedFlightNumbers]);
 
-  // All passenger entries inside the selected scope (sorted deterministically)
+  // Cross-leg transit lookup across all loaded flights (handles intermediate stopovers even without '#')
+  const priorLegPaxKeysMap = useMemo(
+    () => buildPriorFlightPaxKeysMap(parsedResult.flights),
+    [parsedResult.flights]
+  );
+
+  // All passenger entries inside the selected scope (consolidated across through-transit legs when viewing ALL stations)
   const scopedEntries = useMemo<CrossFlightEntry[]>(() => {
     const out: CrossFlightEntry[] = [];
-    for (const f of scopedFlights) {
-      const normDate = normalizeDcsFlightDate(f.date);
-      const dateSortOrder = getDcsFlightDateSortOrder(normDate, f.extractedYear);
-      // Business first, then Economy (already sorted alphabetically with classSeq)
-      for (const p of f.businessPassengers) {
-        out.push({ flight: f, passenger: p, normDate, dateSortOrder });
+
+    if (originFilter !== "ALL") {
+      // Station-specific view: keep only departures from the selected station without cross-station consolidation
+      for (const f of scopedFlights) {
+        const normDate = normalizeDcsFlightDate(f.date);
+        const dateSortOrder = getDcsFlightDateSortOrder(normDate, f.extractedYear);
+        const priorKeys = priorLegPaxKeysMap.get(f.id);
+        const orderedPax = [...f.businessPassengers, ...f.economyPassengers];
+        for (const p of orderedPax) {
+          const orig = (f.origin || "").trim().toUpperCase();
+          const dest = (p.destination || "").trim().toUpperCase();
+          const sectorStations =
+            orig && dest && orig !== dest
+              ? [orig, dest]
+              : [orig || dest].filter(Boolean);
+          out.push({
+            flight: f,
+            legFlights: [f],
+            passenger: p,
+            normDate,
+            dateSortOrder,
+            sectorStations,
+            sectorLabel: sectorStations.join(" → "),
+            transitStops: [],
+            depType: getPassengerDepartureType(p, f, priorKeys),
+          });
+        }
       }
-      for (const p of f.economyPassengers) {
-        out.push({ flight: f, passenger: p, normDate, dateSortOrder });
+    } else {
+      // All-stations view: consolidate multi-leg through-transit passengers on the same flight & date
+      const groupedLegs = new Map<string, RawLegEntry[]>();
+
+      for (const f of scopedFlights) {
+        const normDate = normalizeDcsFlightDate(f.date);
+        const dateSortOrder = getDcsFlightDateSortOrder(normDate, f.extractedYear);
+        const priorKeys = priorLegPaxKeysMap.get(f.id);
+        const airline = normPaxToken(f.airline || "KP");
+        const flightNum = normFlightNumToken(f.flightNumber);
+        const noTicketCountsInLeg = new Map<string, number>();
+
+        const orderedPax = [...f.businessPassengers, ...f.economyPassengers];
+        for (const p of orderedPax) {
+          const depType = getPassengerDepartureType(p, f, priorKeys);
+          const last = normPaxToken(p.lastName);
+          const first = normPaxToken(p.firstName);
+          const ticketNum = normPaxToken(
+            p.ticket?.ticketNumber || p.ticket?.paperTicketNumber
+          );
+
+          let paxIdentity: string;
+          if (ticketNum) {
+            paxIdentity = `${last}|${first}|${ticketNum}`;
+          } else {
+            const nameKey = `${last}|${first}`;
+            const occ = noTicketCountsInLeg.get(nameKey) || 0;
+            noTicketCountsInLeg.set(nameKey, occ + 1);
+            paxIdentity = `${nameKey}|NO_TKT#${occ}`;
+          }
+
+          const groupKey = `${normDate}|${airline}|${flightNum}::${paxIdentity}`;
+          const list = groupedLegs.get(groupKey);
+          const item: RawLegEntry = {
+            flight: f,
+            passenger: p,
+            normDate,
+            dateSortOrder,
+            depType,
+          };
+          if (list) {
+            list.push(item);
+          } else {
+            groupedLegs.set(groupKey, [item]);
+          }
+        }
+      }
+
+      for (const legs of groupedLegs.values()) {
+        if (legs.length === 1) {
+          out.push(consolidateMultiLegEntries(legs));
+          continue;
+        }
+        // Group distinct-origin through-legs together; keep duplicate same-origin entries separate if any exist
+        const hasTransitOrMultiStop =
+          new Set(legs.map((l) => (l.flight.origin || "").trim().toUpperCase())).size > 1;
+        if (hasTransitOrMultiStop) {
+          out.push(consolidateMultiLegEntries(legs));
+        } else {
+          for (const single of legs) {
+            out.push(consolidateMultiLegEntries([single]));
+          }
+        }
       }
     }
-    // Default deterministic order: most recent date -> flight number -> origin -> cabin C/Y -> classSeq
+
+    // Default deterministic order: most recent date -> flight number -> origin -> cabin C/Y -> alphabetical
     out.sort((a, b) => {
       if (b.dateSortOrder !== a.dateSortOrder) {
         return b.dateSortOrder - a.dateSortOrder;
@@ -283,10 +594,12 @@ export const MultiFlightPassengersView: React.FC<
       if (a.passenger.cabinClass !== b.passenger.cabinClass) {
         return a.passenger.cabinClass === "C" ? -1 : 1;
       }
-      return (a.passenger.classSeq || 0) - (b.passenger.classSeq || 0);
+      const lastCmp = a.passenger.lastName.localeCompare(b.passenger.lastName);
+      if (lastCmp !== 0) return lastCmp;
+      return a.passenger.firstName.localeCompare(b.passenger.firstName);
     });
     return out;
-  }, [scopedFlights]);
+  }, [scopedFlights, originFilter, priorLegPaxKeysMap]);
 
   // Dynamic criteria metadata computed from scoped entries
   const filterMeta = useMemo(() => {
@@ -310,9 +623,12 @@ export const MultiFlightPassengersView: React.FC<
       MISSING_WEIGHT: 0,
       ECART_NON_COUVERT: 0,
       COUVERT_EMD: 0,
+      DEP_LOCAL: 0,
+      DEP_TRANSIT: 0,
+      DEP_CONNECTION: 0,
     };
 
-    for (const { passenger: p } of scopedEntries) {
+    for (const { passenger: p, depType, transitStops } of scopedEntries) {
       if (p.cabinClass === "C") counts.C++;
       else counts.Y++;
 
@@ -320,12 +636,20 @@ export const MultiFlightPassengersView: React.FC<
       else counts.UNSEATED++;
       if (isPassengerNoShow(p)) counts.NO_SHOW++;
 
+      if (depType === "LOCAL") counts.DEP_LOCAL++;
+      else if (depType === "TRANSIT") counts.DEP_TRANSIT++;
+      else counts.DEP_CONNECTION++;
+
+      if (depType !== "TRANSIT" && transitStops.length > 0) {
+        counts.DEP_TRANSIT++;
+      }
+
       if (!p.isChild && p.gender === "M") counts.M++;
       if (!p.isChild && p.gender === "F") counts.F++;
       if (p.isChild) counts.CHD++;
       if (p.hasInfant) counts.INF++;
       if (p.isOffloadedOrNoSeat) counts.NO_SEAT++;
-      if (p.isTransitMarker) counts.TRANSIT++;
+      if (depType === "TRANSIT" || transitStops.length > 0) counts.TRANSIT++;
       if (p.isCodeshare) counts.CODESHARE++;
       if (isPassengerWebCheckin(p)) counts.WEB_CHECKIN++;
       if (p.hasMissingBaggageWeight) counts.MISSING_WEIGHT++;
@@ -361,7 +685,8 @@ export const MultiFlightPassengersView: React.FC<
   const filteredEntries = useMemo(() => {
     const q = searchTerm.toLowerCase().trim();
 
-    const matched = scopedEntries.filter(({ flight, passenger: pax, normDate }) => {
+    const matched = scopedEntries.filter((entry) => {
+      const { flight, passenger: pax, normDate, depType, transitStops } = entry;
       // 1. Cabin
       if (cabinFilter !== "BOTH" && pax.cabinClass !== cabinFilter) {
         return false;
@@ -378,6 +703,15 @@ export const MultiFlightPassengersView: React.FC<
         return false;
       }
 
+      // 1c. Departure Origin Type (Local vs Same-Aircraft Transit vs Different-Flight Connection)
+      if (departureTypeFilter !== "ALL") {
+        if (departureTypeFilter === "TRANSIT") {
+          if (depType !== "TRANSIT" && transitStops.length === 0) return false;
+        } else if (depType !== departureTypeFilter) {
+          return false;
+        }
+      }
+
       // 2. Gender / Pax Type / Operational status
       if (genderTypeFilter === "M" && (pax.isChild || pax.gender !== "M")) {
         return false;
@@ -390,7 +724,13 @@ export const MultiFlightPassengersView: React.FC<
       if (genderTypeFilter === "NO_SEAT" && !pax.isOffloadedOrNoSeat) {
         return false;
       }
-      if (genderTypeFilter === "TRANSIT" && !pax.isTransitMarker) return false;
+      if (
+        genderTypeFilter === "TRANSIT" &&
+        depType !== "TRANSIT" &&
+        transitStops.length === 0
+      ) {
+        return false;
+      }
       if (genderTypeFilter === "CODESHARE" && !pax.isCodeshare) return false;
       if (genderTypeFilter === "WEB_CHECKIN" && !isPassengerWebCheckin(pax)) return false;
 
@@ -470,7 +810,10 @@ export const MultiFlightPassengersView: React.FC<
       ) {
         return false;
       }
-      if (specialFilter === "NO_TICKET" && Boolean(pax.ticket)) {
+      if (specialFilter === "NO_TICKET" && !isPassengerNoTicket(pax)) {
+        return false;
+      }
+      if (specialFilter === "PAPER_TKT" && !isPassengerPaperTicket(pax)) {
         return false;
       }
       if (
@@ -497,6 +840,9 @@ export const MultiFlightPassengersView: React.FC<
         `${flight.airline}${flight.flightNumber}`,
         `${flight.airline} ${flight.flightNumber}`,
         flight.origin,
+        entry.sectorLabel,
+        ...entry.sectorStations,
+        ...entry.transitStops,
         pax.fullNameDisplay,
         pax.seat,
         pax.destination,
@@ -545,6 +891,7 @@ export const MultiFlightPassengersView: React.FC<
     scopedEntries,
     cabinFilter,
     seatStatusFilter,
+    departureTypeFilter,
     genderTypeFilter,
     bookingClassFilter,
     selectedEditCodes,
@@ -567,10 +914,14 @@ export const MultiFlightPassengersView: React.FC<
     let bags = 0;
     let weight = 0;
     let webCheckin = 0;
+    let noEt = 0;
+    let tkt = 0;
+    let noShow = 0;
+    const emdSet = new Set<string>();
     const flightIds = new Set<string>();
 
-    for (const { flight, passenger: p } of filteredEntries) {
-      flightIds.add(flight.id);
+    for (const { legFlights, passenger: p } of filteredEntries) {
+      legFlights.forEach((lf) => flightIds.add(lf.id));
       if (p.cabinClass === "C") business++;
       else economy++;
 
@@ -580,6 +931,10 @@ export const MultiFlightPassengersView: React.FC<
 
       if (p.hasInfant) infant++;
       if (isPassengerWebCheckin(p)) webCheckin++;
+      if (isPassengerNoTicket(p)) noEt++;
+      if (isPassengerPaperTicket(p)) tkt++;
+      if (isPassengerNoShow(p)) noShow++;
+      p.emdNumbers.forEach((e) => emdSet.add(e));
 
       const actualBags = Math.max(
         p.bags.length,
@@ -601,6 +956,10 @@ export const MultiFlightPassengersView: React.FC<
       webCheckin,
       bags,
       weight,
+      noEt,
+      tkt,
+      noShow,
+      emdCount: emdSet.size,
       flightsCount: flightIds.size,
     };
   }, [filteredEntries]);
@@ -614,6 +973,7 @@ export const MultiFlightPassengersView: React.FC<
     originFilter,
     cabinFilter,
     seatStatusFilter,
+    departureTypeFilter,
     genderTypeFilter,
     bookingClassFilter,
     selectedEditCodes,
@@ -635,9 +995,7 @@ export const MultiFlightPassengersView: React.FC<
 
   const drawerIndex = useMemo(() => {
     if (!drawerKey) return -1;
-    return filteredEntries.findIndex(
-      (item) => `${item.flight.id}__${item.passenger.id}` === drawerKey
-    );
+    return filteredEntries.findIndex((item) => getCrossEntryKey(item) === drawerKey);
   }, [filteredEntries, drawerKey]);
 
   const activeDrawerItem =
@@ -651,6 +1009,7 @@ export const MultiFlightPassengersView: React.FC<
   const hasPassengerFilters =
     cabinFilter !== "BOTH" ||
     seatStatusFilter !== "ALL" ||
+    departureTypeFilter !== "ALL" ||
     genderTypeFilter !== "ALL" ||
     bookingClassFilter !== "ALL" ||
     selectedEditCodes.length > 0 ||
@@ -658,27 +1017,6 @@ export const MultiFlightPassengersView: React.FC<
     destFilter !== "ALL" ||
     specialFilter !== "ALL" ||
     searchTerm.trim() !== "";
-
-  const toggleDate = (date: string) => {
-    setSelectedDates((prev) =>
-      prev.includes(date) ? prev.filter((d) => d !== date) : [...prev, date]
-    );
-  };
-
-  const toggleFlightNumber = (flightNum: string) => {
-    setSelectedFlightNumbers((prev) =>
-      prev.includes(flightNum)
-        ? prev.filter((n) => n !== flightNum)
-        : [...prev, flightNum]
-    );
-  };
-
-  const addEditCodeFilter = (code: string) => {
-    if (!code) return;
-    setSelectedEditCodes((prev) =>
-      prev.includes(code) ? prev : [...prev, code]
-    );
-  };
 
   const toggleEditCodeFilter = (code: string) => {
     setSelectedEditCodes((prev) =>
@@ -695,6 +1033,7 @@ export const MultiFlightPassengersView: React.FC<
   const resetPassengerFilters = () => {
     setCabinFilter("BOTH");
     setSeatStatusFilter("ALL");
+    setDepartureTypeFilter("ALL");
     setGenderTypeFilter("ALL");
     setBookingClassFilter("ALL");
     setSelectedEditCodes([]);
@@ -705,99 +1044,46 @@ export const MultiFlightPassengersView: React.FC<
     setSearchTerm("");
   };
 
-  const handleExportExcel = () => {
-    if (filteredEntries.length === 0) return;
-
-    const rows = filteredEntries.map(({ flight, passenger: p, normDate }) => {
-      const infantInfo =
-        p.infant ||
-        extractInfantFromRawLines(p.rawLines, {
-          date: flight.date,
-          bookingClass: p.bookingClass,
-          route: `${flight.origin}${p.destination}`,
-        });
-      const actualBags = Math.max(
-        p.bags.length,
-        p.bagsDeclaredCount || 0,
-        p.bagsTotalDeclaredLine?.count || 0
-      );
-      return {
-        Date: normDate,
-        Vol: `${flight.airline} ${flight.flightNumber}`,
-        Origine: flight.origin,
-        Destination: p.destination,
-        Cabine: p.cabinClass,
-        Ordre: p.classSeq,
-        Nom: p.lastName,
-        Prénom: p.firstName,
-        "Sexe / Type": p.isChild ? "CHD" : p.gender || "N/D",
-        "Bébé (INF)": p.hasInfant
-          ? infantInfo?.fullNameDisplay || "OUI"
-          : "",
-        "Classe Résa": p.bookingClass,
-        Siège: p.seat || (p.isOffloadedOrNoSeat ? "SANS SIÈGE" : ""),
-        "Check-in Web (WB)": isPassengerWebCheckin(p) ? "OUI" : "NON",
-        "Statut Embarquement": isPassengerWithSeat(p)
-          ? "Voyagé (Avec siège)"
-          : "No-Show (Sans siège)",
-        "Bagages (pcs)": actualBags,
-        "Poids (kg)": p.totalBagWeight,
-        "Poids Manquant": p.hasMissingBaggageWeight ? "OUI" : "NON",
-        "Conformité Bagages": p.baggageCompliance,
-        "Edit Codes": p.editCodes.join(" "),
-        EMD: p.emdNumbers.join(", "),
-        "FF / FQTV":
-          p.kpFrequentFlyer?.number || p.partnerFrequentFlyer?.number || "",
-        Billet: p.ticket?.ticketNumber || "",
-        "Billet Bébé (IFET)": infantInfo?.ticket?.ticketNumber || "",
-      };
-    });
-
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet(rows);
-    ws["!cols"] = [
-      { wch: 10 },
-      { wch: 10 },
-      { wch: 8 },
-      { wch: 10 },
-      { wch: 8 },
-      { wch: 8 },
-      { wch: 18 },
-      { wch: 18 },
-      { wch: 11 },
-      { wch: 22 },
-      { wch: 10 },
-      { wch: 11 },
-      { wch: 12 },
-      { wch: 10 },
-      { wch: 13 },
-      { wch: 18 },
-      { wch: 24 },
-      { wch: 18 },
-      { wch: 16 },
-      { wch: 16 },
-      { wch: 16 },
-    ];
-    XLSX.utils.book_append_sheet(wb, ws, "Passagers Filtrés");
-
-    const dateTag =
-      selectedDates.length > 0 ? selectedDates.join("-") : "TOUTES_DATES";
-    const flightTag =
-      effectiveSelectedFlightNumbers.length > 0
-        ? `KP${effectiveSelectedFlightNumbers.join("-")}`
-        : "TOUS_VOLS";
-    XLSX.writeFile(wb, `ASKY_Passagers_${dateTag}_${flightTag}.xlsx`);
-  };
+  const activeFilterSummary = useMemo(() => {
+    const parts: string[] = [];
+    if (originFilter !== "ALL") parts.push(`${pick("Station", "Station")}: ${originFilter}`);
+    if (cabinFilter !== "BOTH") parts.push(`${pick("Cabine", "Cabin")}: ${cabinFilter}`);
+    if (seatStatusFilter !== "ALL") parts.push(seatStatusFilter);
+    if (departureTypeFilter !== "ALL") parts.push(departureTypeFilter);
+    if (genderTypeFilter !== "ALL") parts.push(genderTypeFilter);
+    if (bookingClassFilter !== "ALL") parts.push(`${pick("Classe", "Cls")}: ${bookingClassFilter}`);
+    if (selectedEditCodes.length > 0) parts.push(`Codes: ${selectedEditCodes.join(",")}`);
+    if (baggageFilter !== "ALL") parts.push(baggageFilter);
+    if (destFilter !== "ALL") parts.push(`Dest: ${destFilter}`);
+    if (specialFilter !== "ALL") parts.push(specialFilter);
+    if (searchTerm.trim()) parts.push(`"${searchTerm.trim()}"`);
+    return parts.join(" · ");
+  }, [
+    originFilter,
+    cabinFilter,
+    seatStatusFilter,
+    departureTypeFilter,
+    genderTypeFilter,
+    bookingClassFilter,
+    selectedEditCodes,
+    baggageFilter,
+    destFilter,
+    specialFilter,
+    searchTerm,
+    pick,
+  ]);
 
   const handleExportCSV = () => {
     if (filteredEntries.length === 0) return;
     const headers = [
       "Date",
       "Flight",
+      "Sector",
       "Origin",
+      "Departure_Type",
+      "Transit_Stops",
       "Destination",
       "Cabin",
-      "Seq",
       "LastName",
       "FirstName",
       "Gender_Type",
@@ -823,7 +1109,14 @@ export const MultiFlightPassengersView: React.FC<
       return s;
     };
     const lines = [headers.join(",")];
-    for (const { flight, passenger: p, normDate } of filteredEntries) {
+    for (const {
+      flight,
+      passenger: p,
+      normDate,
+      sectorLabel,
+      depType,
+      transitStops,
+    } of filteredEntries) {
       const infantInfo =
         p.infant ||
         extractInfantFromRawLines(p.rawLines, {
@@ -840,10 +1133,12 @@ export const MultiFlightPassengersView: React.FC<
         [
           normDate,
           `${flight.airline} ${flight.flightNumber}`,
+          sectorLabel,
           flight.origin,
+          depType,
+          transitStops.join(";"),
           p.destination,
           p.cabinClass,
-          p.classSeq,
           p.lastName,
           p.firstName,
           p.isChild ? "CHD" : p.gender || "N/A",
@@ -913,17 +1208,20 @@ export const MultiFlightPassengersView: React.FC<
 
   return (
     <div className="space-y-4">
-      {/* 1. Scope Selector: Multi-Date & Multi-Flight Number */}
+      {/* 1. Passenger Filters (including Scope: Dates, Station départ, Vols) */}
       <CollapsiblePanel
-        title={pick("Périmètre : Dates & Vols", "Scope: Dates & Flights")}
-        subtitle={scopeSummaryText}
-        icon={<Calendar className="w-4 h-4 text-[#4C2812] dark:text-[#F7BA42]" />}
+        title={pick("Filtres Passagers", "Passenger Filters")}
+        subtitle={`${scopeSummaryText} · ${filteredEntries.length} / ${scopedEntries.length} ${pick("passagers", "passengers")}${hasScopeFilters || hasPassengerFilters ? ` · ${pick("Filtres actifs", "Active filters")}` : ""}`}
+        icon={<Filter className="w-4 h-4 text-[#4C2812] dark:text-[#F7BA42]" />}
         defaultOpen={true}
         rightContent={
-          hasScopeFilters ? (
+          hasScopeFilters || hasPassengerFilters ? (
             <button
               type="button"
-              onClick={resetScope}
+              onClick={() => {
+                resetScope();
+                resetPassengerFilters();
+              }}
               className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/70 text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer transition"
             >
               <RotateCcw className="w-3 h-3" />
@@ -932,225 +1230,84 @@ export const MultiFlightPassengersView: React.FC<
           ) : null
         }
       >
-        <div className="space-y-4">
-          {/* Dates multi-select */}
-          <div>
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E472B] dark:text-[#F7BA42] flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5" />
-                {pick("1. Dates :", "1. Dates:")}
-              </span>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => setSelectedDates([])}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer ${
-                  selectedDates.length === 0
-                    ? "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] border-[#4C2812] dark:border-[#E89C1D]"
-                    : "bg-[#FAF7F2] dark:bg-[#28170C] text-[#4C2812] dark:text-[#FAF7F2] border-[#E6D7C3] dark:border-[#5C351B] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11]"
-                }`}
-              >
-                {pick(
-                  `Toutes les dates (${availableDates.length})`,
-                  `All dates (${availableDates.length})`
-                )}
-              </button>
-
-              {availableDates.map((d) => {
-                const isSelected = selectedDates.includes(d.date);
-                return (
-                  <button
-                    key={d.date}
-                    type="button"
-                    onClick={() => toggleDate(d.date)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-mono font-semibold border transition cursor-pointer inline-flex items-center gap-1.5 ${
-                      isSelected
-                        ? "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] border-[#4C2812] dark:border-[#E89C1D]"
-                        : "bg-[#FAF7F2] dark:bg-[#28170C] text-[#321B0A] dark:text-[#FAF7F2] border-[#E6D7C3] dark:border-[#5C351B] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11]"
-                    }`}
-                  >
-                    <span>{d.date}</span>
-                    <span
-                      className={`text-[10px] ${
-                        isSelected
-                          ? "text-[#F3E9D8] dark:text-[#321B0A]"
-                          : "text-[#6E472B] dark:text-[#DECAB1]"
-                      }`}
-                    >
-                      ({d.flightsCount} {pick("vols", "fl.")} · {d.paxCount} pax)
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Flight Numbers multi-select + Origin selector */}
-          <div className="pt-3 border-t border-[#E6D7C3]/70 dark:border-[#4C2812]/70">
-            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E472B] dark:text-[#F7BA42] flex items-center gap-1.5">
-                <Plane className="w-3.5 h-3.5" />
-                {pick("2. Vols :", "2. Flights:")}
-              </span>
-
-              {availableOrigins.length > 1 && (
-                <select
-                  value={originFilter}
-                  onChange={(e) => setOriginFilter(e.target.value)}
-                  className="px-2.5 py-1 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-mono font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-                  title={pick(
-                    "Filtrer par station de départ",
-                    "Filter by departure station"
-                  )}
-                >
-                  <option value="ALL">
-                    {pick(
-                      `Origine : Toutes (${availableOrigins.length})`,
-                      `Origin: All (${availableOrigins.length})`
-                    )}
-                  </option>
-                  {availableOrigins.map((o) => (
-                    <option key={o.code} value={o.code}>
-                      {pick("Départ", "Dep.")} {o.code} ({o.count})
-                    </option>
-                  ))}
-                </select>
+        <div className="space-y-2.5">
+          {/* Scope Row: Dates, Departure Station, Flights */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <MultiFilterOptionField
+              values={selectedDates}
+              onChange={setSelectedDates}
+              prefixLabel={pick("Dates", "Dates")}
+              allLabel={pick(
+                `Toutes (${availableDates.length})`,
+                `All (${availableDates.length})`
               )}
-            </div>
+              placeholder={pick("Saisir ou choisir date(s)...", "Type or select date(s)...")}
+              options={availableDates.map((d) => ({
+                value: d.date,
+                label: d.date,
+                count: `${d.flightsCount} ${pick("vols", "fl.")} · ${d.paxCount}p`,
+                keywords: d.date,
+              }))}
+              title={pick("Choisir ou saisir une ou plusieurs dates", "Select or type one or more dates")}
+            />
 
-            <div className="flex flex-wrap items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => setSelectedFlightNumbers([])}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer ${
-                  effectiveSelectedFlightNumbers.length === 0
-                    ? "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] border-[#4C2812] dark:border-[#E89C1D]"
-                    : "bg-[#FAF7F2] dark:bg-[#28170C] text-[#4C2812] dark:text-[#FAF7F2] border-[#E6D7C3] dark:border-[#5C351B] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11]"
-                }`}
-              >
-                {pick(
-                  `Tous les vols (${availableFlightNumbers.length} n°)`,
-                  `All flights (${availableFlightNumbers.length} #)`
-                )}
-              </button>
+            <FilterOptionField
+              value={originFilter}
+              onChange={setOriginFilter}
+              prefixLabel={pick("Station départ", "Dep. station")}
+              allLabel={pick(
+                `Toutes (${availableOrigins.length})`,
+                `All (${availableOrigins.length})`
+              )}
+              placeholder={pick("Saisir ou choisir station...", "Type or select station...")}
+              options={availableOrigins.map((o) => ({
+                value: o.code,
+                label: o.code,
+                count: `${o.count} ${pick("vol(s)", "fl.")}`,
+                keywords: o.code,
+              }))}
+              title={pick("Filtrer par station de départ", "Filter by departure station")}
+            />
 
-              {availableFlightNumbers.map((fn) => {
-                const isSelected = effectiveSelectedFlightNumbers.includes(
-                  fn.flightNumber
-                );
+            <MultiFilterOptionField
+              values={effectiveSelectedFlightNumbers}
+              onChange={setSelectedFlightNumbers}
+              prefixLabel={pick("Vols", "Flights")}
+              allLabel={pick(
+                `Tous (${availableFlightNumbers.length} n°)`,
+                `All (${availableFlightNumbers.length} #)`
+              )}
+              placeholder={pick("Saisir ou choisir n° vol...", "Type or select flight #...")}
+              options={availableFlightNumbers.map((fn) => {
                 const originsLabel = Array.from(fn.origins).join("/");
-                return (
-                  <button
-                    key={fn.flightNumber}
-                    type="button"
-                    onClick={() => toggleFlightNumber(fn.flightNumber)}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-mono font-semibold border transition cursor-pointer inline-flex items-center gap-1.5 ${
-                      isSelected
-                        ? "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] border-[#4C2812] dark:border-[#E89C1D]"
-                        : "bg-[#FAF7F2] dark:bg-[#28170C] text-[#321B0A] dark:text-[#FAF7F2] border-[#E6D7C3] dark:border-[#5C351B] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11]"
-                    }`}
-                    title={`${fn.airline} ${fn.flightNumber} (${originsLabel}) · ${fn.legsCount} ${pick("tronçon(s)", "sector(s)")} · ${fn.paxCount} pax`}
-                  >
-                    <span>
-                      {fn.airline} {fn.flightNumber}
-                    </span>
-                    <span
-                      className={`text-[10px] ${
-                        isSelected
-                          ? "text-[#F3E9D8] dark:text-[#321B0A]"
-                          : "text-[#6E472B] dark:text-[#DECAB1]"
-                      }`}
-                    >
-                      {fn.legsCount > 1
-                        ? `${fn.legsCount}× · ${fn.paxCount}p`
-                        : `${originsLabel} · ${fn.paxCount}p`}
-                    </span>
-                  </button>
-                );
+                return {
+                  value: fn.flightNumber,
+                  label: `${fn.airline} ${fn.flightNumber} (${originsLabel})`,
+                  count: `${fn.legsCount > 1 ? `${fn.legsCount}× · ` : ""}${fn.paxCount}p`,
+                  keywords: `${fn.airline}${fn.flightNumber} ${fn.flightNumber} ${originsLabel}`,
+                };
               })}
-            </div>
+              title={pick("Choisir ou saisir un ou plusieurs vols", "Select or type one or more flights")}
+            />
           </div>
-        </div>
-      </CollapsiblePanel>
 
-      {/* 2. Passenger Criteria Filters */}
-      <CollapsiblePanel
-        title={pick("Filtres Passagers", "Passenger Filters")}
-        subtitle={pick(
-          `${filteredEntries.length} / ${scopedEntries.length} passagers${hasPassengerFilters ? " · Filtres actifs" : ""}`,
-          `${filteredEntries.length} / ${scopedEntries.length} passengers${hasPassengerFilters ? " · Active filters" : ""}`
-        )}
-        icon={<Filter className="w-4 h-4 text-[#4C2812] dark:text-[#F7BA42]" />}
-        defaultOpen={true}
-        rightContent={
-          hasPassengerFilters ? (
-            <button
-              type="button"
-              onClick={resetPassengerFilters}
-              className="px-2.5 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/50 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800/70 text-[11px] font-semibold inline-flex items-center gap-1 cursor-pointer transition"
-            >
-              <RotateCcw className="w-3 h-3" />
-              {pick("Effacer critères", "Clear criteria")}
-            </button>
-          ) : null
-        }
-      >
-        <div className="space-y-3">
-          {/* Top row: Cabin + Search + Sort + PageSize */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-            <div className="flex flex-wrap items-center gap-1.5">
-              {[
-                {
-                  id: "BOTH" as const,
-                  label: pick(
-                    `Toutes cabines (${scopedEntries.length})`,
-                    `All cabins (${scopedEntries.length})`
-                  ),
-                },
-                {
-                  id: "C" as const,
-                  label: `Business C (${filterMeta.counts.C})`,
-                },
-                {
-                  id: "Y" as const,
-                  label: pick(
-                    `Économie Y (${filterMeta.counts.Y})`,
-                    `Economy Y (${filterMeta.counts.Y})`
-                  ),
-                },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setCabinFilter(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer ${
-                    cabinFilter === tab.id
-                      ? "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] border-[#4C2812] dark:border-[#E89C1D]"
-                      : "bg-[#FAF7F2] dark:bg-[#28170C] text-[#4C2812] dark:text-[#FAF7F2] border-[#E6D7C3] dark:border-[#5C351B] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11]"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+          {/* Row 1: Free-text Search + Sort + PageSize */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div className="relative flex-1 min-w-0 sm:max-w-sm">
+              <Search className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#F7BA42] absolute left-3 top-2.5" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={pick(
+                  "Rechercher : nom, billet, tag, EMD, FF, vol...",
+                  "Search: name, ticket, tag, EMD, FF, flight..."
+                )}
+                className="w-full pl-8 pr-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-medium text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D]"
+              />
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <div className="relative w-full sm:w-64">
-                <Search className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#F7BA42] absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder={pick(
-                    "Nom, billet, tag, EMD, FF, vol...",
-                    "Name, ticket, tag, EMD, FF, flight..."
-                  )}
-                  className="w-full pl-8 pr-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-medium text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D]"
-                />
-              </div>
-
               <select
                 value={sortMode}
                 onChange={(e) => setSortMode(e.target.value as SortMode)}
@@ -1190,250 +1347,285 @@ export const MultiFlightPassengersView: React.FC<
             </div>
           </div>
 
-          {/* Seat / Boarding Status Quick Filter */}
-          <div className="pt-3 border-t border-[#E6D7C3]/70 dark:border-[#4C2812]/70 flex flex-wrap items-center gap-1.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E472B] dark:text-[#F7BA42] mr-1">
-              {pick("Statut :", "Status:")}
-            </span>
-            {[
-              {
-                id: "ALL" as const,
-                label: pick(
-                  `Tous (${scopedEntries.length})`,
-                  `All (${scopedEntries.length})`
-                ),
-              },
-              {
-                id: "WITH_SEAT" as const,
-                label: pick(
-                  `Avec siège (${filterMeta.counts.WITH_SEAT})`,
-                  `Seated (${filterMeta.counts.WITH_SEAT})`
-                ),
-              },
-              {
-                id: "NO_SHOW" as const,
-                label: pick(
-                  `No-Show / Sans siège (${filterMeta.counts.NO_SHOW})`,
-                  `No-Show / Unseated (${filterMeta.counts.NO_SHOW})`
-                ),
-              },
-            ].map((st) => (
-              <button
-                key={st.id}
-                type="button"
-                onClick={() => setSeatStatusFilter(st.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer ${
-                  seatStatusFilter === st.id
-                    ? st.id === "NO_SHOW"
-                      ? "bg-amber-600 text-white border-amber-600"
-                      : "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] border-[#4C2812] dark:border-[#E89C1D]"
-                    : "bg-[#FAF7F2] dark:bg-[#28170C] text-[#4C2812] dark:text-[#FAF7F2] border-[#E6D7C3] dark:border-[#5C351B] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11]"
-                }`}
-              >
-                {st.label}
-              </button>
-            ))}
-          </div>
+          {/* Row 2: Unified Searchable Option Fields Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2">
+            <FilterOptionField
+              value={cabinFilter}
+              onChange={(v) => setCabinFilter(v as CabinFilter)}
+              allValue="BOTH"
+              prefixLabel={pick("Cabine", "Cabin")}
+              allLabel={pick(
+                `Toutes (${scopedEntries.length})`,
+                `All (${scopedEntries.length})`
+              )}
+              placeholder={pick("Cabine...", "Cabin...")}
+              options={[
+                {
+                  value: "C",
+                  label: "Business (C)",
+                  count: filterMeta.counts.C,
+                  keywords: "business c",
+                },
+                {
+                  value: "Y",
+                  label: pick("Économie (Y)", "Economy (Y)"),
+                  count: filterMeta.counts.Y,
+                  keywords: "economie economy y",
+                },
+              ]}
+            />
 
-          {/* Criteria dropdowns */}
-          <div className="pt-3 border-t border-[#E6D7C3]/70 dark:border-[#4C2812]/70 flex flex-wrap items-center gap-2">
-            {/* Gender / Pax Type */}
-            <select
+            <FilterOptionField
+              value={seatStatusFilter}
+              onChange={(v) => setSeatStatusFilter(v as SeatStatusFilter)}
+              prefixLabel={pick("Statut", "Status")}
+              allLabel={pick(
+                `Tous (${scopedEntries.length})`,
+                `All (${scopedEntries.length})`
+              )}
+              placeholder={pick("Statut siège...", "Seat status...")}
+              options={[
+                {
+                  value: "WITH_SEAT",
+                  label: pick("Avec siège", "Seated"),
+                  count: filterMeta.counts.WITH_SEAT,
+                  keywords: "avec siege seated boarded",
+                },
+                {
+                  value: "NO_SHOW",
+                  label: pick("No-Show / Sans siège", "No-Show / Unseated"),
+                  count: filterMeta.counts.NO_SHOW,
+                  keywords: "no-show noshow sans siege unseated",
+                },
+              ]}
+            />
+
+            <FilterOptionField
+              value={departureTypeFilter}
+              onChange={(v) => setDepartureTypeFilter(v as DepartureTypeFilter)}
+              prefixLabel={
+                originFilter !== "ALL"
+                  ? pick(`Départ ${originFilter}`, `Dep. ${originFilter}`)
+                  : pick("Provenance", "Origin type")
+              }
+              allLabel={pick(
+                `Tous (${scopedEntries.length})`,
+                `All (${scopedEntries.length})`
+              )}
+              placeholder={pick("Local / Transit / Corresp...", "Local / Transit / Conn...")}
+              options={[
+                {
+                  value: "LOCAL",
+                  label: pick(
+                    `Locaux${originFilter !== "ALL" ? ` · ${originFilter}` : ""}`,
+                    `Local${originFilter !== "ALL" ? ` · ${originFilter}` : ""}`
+                  ),
+                  count: filterMeta.counts.DEP_LOCAL,
+                  keywords: "local locaux station",
+                },
+                {
+                  value: "TRANSIT",
+                  label: pick("Transit (même avion)", "Transit (same aircraft)"),
+                  count: filterMeta.counts.DEP_TRANSIT,
+                  keywords: "transit escale meme avion through #",
+                },
+                {
+                  value: "CONNECTION",
+                  label: pick(
+                    "Correspondance (transfert)",
+                    "Connection (transfer)"
+                  ),
+                  count: filterMeta.counts.DEP_CONNECTION,
+                  keywords: "correspondance transfert autre vol connection ib",
+                },
+              ]}
+              title={pick(
+                "Filtrer par provenance : locaux, transit (même avion) ou correspondance/transfert (autre vol)",
+                "Filter by departure origin: local, through-transit, or transfer connection"
+              )}
+            />
+
+            <FilterOptionField
               value={genderTypeFilter}
-              onChange={(e) =>
-                setGenderTypeFilter(e.target.value as GenderTypeFilter)
-              }
-              className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              title={pick(
-                "Filtrer par sexe ou catégorie passager",
-                "Filter by gender or passenger type"
-              )}
-            >
-              <option value="ALL">
-                {pick("Sexe / Catégorie : Tous", "Gender / Category: All")}
-              </option>
-              <option value="M">
-                {pick("Hommes (M)", "Male (M)")} · {filterMeta.counts.M}
-              </option>
-              <option value="F">
-                {pick("Femmes (F)", "Female (F)")} · {filterMeta.counts.F}
-              </option>
-              <option value="CHD">
-                {pick("Enfants (CHD)", "Children (CHD)")} ·{" "}
-                {filterMeta.counts.CHD}
-              </option>
-              <option value="INF">
-                {pick("Avec Bébé (INF)", "With Infant (INF)")} ·{" "}
-                {filterMeta.counts.INF}
-              </option>
-              <option value="NO_SEAT">
-                {pick("Sans siège / OFL", "No seat / OFL")} ·{" "}
-                {filterMeta.counts.NO_SEAT}
-              </option>
-              <option value="TRANSIT">
-                {pick("En transit (#)", "Transit (#)")} ·{" "}
-                {filterMeta.counts.TRANSIT}
-              </option>
-              <option value="CODESHARE">
-                Codeshare (CS) · {filterMeta.counts.CODESHARE}
-              </option>
-              <option value="WEB_CHECKIN">
-                Web Check-in (WB) · {filterMeta.counts.WEB_CHECKIN}
-              </option>
-            </select>
+              onChange={(v) => setGenderTypeFilter(v as GenderTypeFilter)}
+              prefixLabel={pick("Catégorie", "Category")}
+              allLabel={pick("Tous", "All")}
+              placeholder={pick("Sexe / Type...", "Gender / Type...")}
+              options={[
+                {
+                  value: "M",
+                  label: pick("Hommes (M)", "Male (M)"),
+                  count: filterMeta.counts.M,
+                  keywords: "homme male m",
+                },
+                {
+                  value: "F",
+                  label: pick("Femmes (F)", "Female (F)"),
+                  count: filterMeta.counts.F,
+                  keywords: "femme female f",
+                },
+                {
+                  value: "CHD",
+                  label: pick("Enfants (CHD)", "Children (CHD)"),
+                  count: filterMeta.counts.CHD,
+                  keywords: "enfant child chd",
+                },
+                {
+                  value: "INF",
+                  label: pick("Avec Bébé (INF)", "With Infant (INF)"),
+                  count: filterMeta.counts.INF,
+                  keywords: "bebe infant inf ifet",
+                },
+                {
+                  value: "NO_SEAT",
+                  label: pick("Sans siège / OFL", "No seat / OFL"),
+                  count: filterMeta.counts.NO_SEAT,
+                  keywords: "ofl sans siege offloaded",
+                },
+                {
+                  value: "CODESHARE",
+                  label: "Codeshare (CS)",
+                  count: filterMeta.counts.CODESHARE,
+                  keywords: "codeshare cs",
+                },
+                {
+                  value: "WEB_CHECKIN",
+                  label: "Web Check-in (WB)",
+                  count: filterMeta.counts.WEB_CHECKIN,
+                  keywords: "web check-in wb online",
+                },
+              ]}
+            />
 
-            {/* Booking Class */}
-            <select
+            <FilterOptionField
               value={bookingClassFilter}
-              onChange={(e) => setBookingClassFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              title={pick(
-                "Filtrer par classe de réservation",
-                "Filter by booking class"
-              )}
-            >
-              <option value="ALL">
-                {pick("Classe Résa : Toutes", "Booking Class: All")}
-              </option>
-              {filterMeta.bookingClasses.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {pick("Classe", "Class")} {c.code} ({c.count})
-                </option>
-              ))}
-            </select>
+              onChange={setBookingClassFilter}
+              prefixLabel={pick("Classe", "Class")}
+              allLabel={pick("Toutes", "All")}
+              placeholder={pick("Classe résa...", "Booking class...")}
+              options={filterMeta.bookingClasses.map((c) => ({
+                value: c.code,
+                label: `${pick("Classe", "Class")} ${c.code}`,
+                count: c.count,
+                keywords: c.code,
+              }))}
+            />
 
-            {/* Edit Code Adder (Multi-select enabled!) */}
-            <select
-              value=""
-              onChange={(e) => addEditCodeFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer max-w-[260px]"
-              title={pick(
-                "Sélectionner un ou plusieurs Edit Codes DCS",
-                "Select one or multiple DCS Edit Codes"
+            <MultiFilterOptionField
+              values={selectedEditCodes}
+              onChange={setSelectedEditCodes}
+              prefixLabel="Edit Codes"
+              allLabel={pick(
+                `Tous (${filterMeta.editCodes.length})`,
+                `All (${filterMeta.editCodes.length})`
               )}
-            >
-              <option value="">
-                {selectedEditCodes.length === 0
-                  ? pick(
-                      `Edit Code : Tous (${filterMeta.editCodes.length} codes)`,
-                      `Edit Code: All (${filterMeta.editCodes.length} codes)`
-                    )
-                  : pick(
-                      `+ Ajouter un Edit Code (${selectedEditCodes.length} actif${selectedEditCodes.length > 1 ? "s" : ""})`,
-                      `+ Add Edit Code (${selectedEditCodes.length} active)`
-                    )}
-              </option>
-              {filterMeta.editCodes.map((ec) => {
+              placeholder={pick("Saisir ou choisir code...", "Type or select code...")}
+              options={filterMeta.editCodes.map((ec) => {
                 const label = getEditCodeLabel(ec.code, language);
-                const already = selectedEditCodes.includes(ec.code);
-                return (
-                  <option key={ec.code} value={ec.code} disabled={already}>
-                    {already ? "✓ " : ""}
-                    {ec.code} ({ec.count})
-                    {label ? ` — ${label}` : ""}
-                  </option>
-                );
+                return {
+                  value: ec.code,
+                  label: label ? `${ec.code} — ${label}` : ec.code,
+                  count: ec.count,
+                  keywords: `${ec.code} ${label || ""}`,
+                };
               })}
-            </select>
+              title={pick(
+                "Sélectionner ou saisir un ou plusieurs Edit Codes DCS",
+                "Select or type one or multiple DCS Edit Codes"
+              )}
+            />
 
-            {/* Baggage & Allowance */}
-            <select
+            <FilterOptionField
               value={baggageFilter}
-              onChange={(e) =>
-                setBaggageFilter(e.target.value as BaggageFilter)
-              }
-              className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              title={pick(
-                "Filtrer par bagages ou conformité franchise",
-                "Filter by baggage or allowance compliance"
-              )}
-            >
-              <option value="ALL">
-                {pick(
-                  "Bagages & Franchise : Tous",
-                  "Baggage & Allowance: All"
-                )}
-              </option>
-              <option value="WITH_BAGS">
-                {pick("Avec bagages en soute", "With checked baggage")}
-              </option>
-              <option value="NO_BAGS">
-                {pick("Sans bagage (NB / 0)", "No baggage (NB / 0)")}
-              </option>
-              <option value="MISSING_WEIGHT">
-                {pick("Poids bagage non spécifié", "Missing baggage weight")} ·{" "}
-                {filterMeta.counts.MISSING_WEIGHT}
-              </option>
-              <option value="CONFORME">
-                {pick("Franchise conforme", "Allowance compliant")}
-              </option>
-              <option value="ECART_NON_COUVERT">
-                {pick("Écart sans EMD", "Excess without EMD")} ·{" "}
-                {filterMeta.counts.ECART_NON_COUVERT}
-              </option>
-              <option value="COUVERT_EMD">
-                {pick("Couvert par EMD / AE", "Covered by EMD / AE")} ·{" "}
-                {filterMeta.counts.COUVERT_EMD}
-              </option>
-            </select>
+              onChange={(v) => setBaggageFilter(v as BaggageFilter)}
+              prefixLabel={pick("Bagages", "Baggage")}
+              allLabel={pick("Tous", "All")}
+              placeholder={pick("Bagages / Franchise...", "Baggage / Allowance...")}
+              options={[
+                {
+                  value: "WITH_BAGS",
+                  label: pick("Avec bagages en soute", "With checked baggage"),
+                  keywords: "avec bagages checked",
+                },
+                {
+                  value: "NO_BAGS",
+                  label: pick("Sans bagage (NB / 0)", "No baggage (NB / 0)"),
+                  keywords: "sans bagage nb",
+                },
+                {
+                  value: "MISSING_WEIGHT",
+                  label: pick("Poids non spécifié", "Missing weight"),
+                  count: filterMeta.counts.MISSING_WEIGHT,
+                  keywords: "poids manquant missing weight",
+                },
+                {
+                  value: "CONFORME",
+                  label: pick("Franchise conforme", "Allowance compliant"),
+                  keywords: "conforme compliant",
+                },
+                {
+                  value: "ECART_NON_COUVERT",
+                  label: pick("Écart sans EMD", "Excess without EMD"),
+                  count: filterMeta.counts.ECART_NON_COUVERT,
+                  keywords: "ecart exces excess emd",
+                },
+                {
+                  value: "COUVERT_EMD",
+                  label: pick("Couvert par EMD / AE", "Covered by EMD / AE"),
+                  count: filterMeta.counts.COUVERT_EMD,
+                  keywords: "couvert emd ae",
+                },
+              ]}
+            />
 
-            {/* Passenger Destination */}
-            <select
+            <FilterOptionField
               value={destFilter}
-              onChange={(e) => setDestFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              title={pick(
-                "Filtrer par destination passager",
-                "Filter by passenger destination"
-              )}
-            >
-              <option value="ALL">
-                {pick("Destination : Toutes", "Destination: All")}
-              </option>
-              {filterMeta.destinations.map((d) => (
-                <option key={d.code} value={d.code}>
-                  → {d.code} ({d.count})
-                </option>
-              ))}
-            </select>
+              onChange={setDestFilter}
+              prefixLabel={pick("Dest.", "Dest.")}
+              allLabel={pick("Toutes", "All")}
+              placeholder={pick("Destination...", "Destination...")}
+              options={filterMeta.destinations.map((d) => ({
+                value: d.code,
+                label: `→ ${d.code}`,
+                count: d.count,
+                keywords: d.code,
+              }))}
+            />
 
-            {/* Special attributes (EMD, FF, No ticket, Connection) */}
-            <select
+            <FilterOptionField
               value={specialFilter}
-              onChange={(e) =>
-                setSpecialFilter(e.target.value as SpecialFilter)
-              }
-              className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              title={pick(
-                "Filtrer par EMD, fidélité, billet ou correspondance",
-                "Filter by EMD, loyalty, ticket, or connection"
-              )}
-            >
-              <option value="ALL">
-                {pick(
-                  "Billet / EMD / Fidélité : Tous",
-                  "Ticket / EMD / Loyalty: All"
-                )}
-              </option>
-              <option value="HAS_EMD">
-                {pick("Avec EMD / Ancillary", "With EMD / Ancillary")}
-              </option>
-              <option value="HAS_FF">
-                {pick(
-                  "Avec carte fidélité (FF / FQTV)",
-                  "With Frequent Flyer (FF / FQTV)"
-                )}
-              </option>
-              <option value="HAS_CONNECTION">
-                {pick(
-                  "Avec correspondance (IB / OB)",
-                  "With connection (IB / OB)"
-                )}
-              </option>
-              <option value="NO_TICKET">
-                {pick("Sans billet électronique", "Without e-ticket")}
-              </option>
-            </select>
+              onChange={(v) => setSpecialFilter(v as SpecialFilter)}
+              prefixLabel={pick("Billet / EMD", "Ticket / EMD")}
+              allLabel={pick("Tous", "All")}
+              placeholder={pick("EMD, FF, Billet...", "EMD, FF, Ticket...")}
+              options={[
+                {
+                  value: "HAS_EMD",
+                  label: pick("Avec EMD / Ancillary", "With EMD / Ancillary"),
+                  keywords: "emd ancillary ae",
+                },
+                {
+                  value: "HAS_FF",
+                  label: pick("Carte fidélité (FF/FQTV)", "Frequent Flyer (FF/FQTV)"),
+                  keywords: "fidelite loyalty ff fqtv",
+                },
+                {
+                  value: "HAS_CONNECTION",
+                  label: pick("Correspondance (IB / OB)", "Connection (IB / OB)"),
+                  keywords: "correspondance ib ob connection",
+                },
+                {
+                  value: "NO_TICKET",
+                  label: pick("Sans billet (NO ET)", "Without ticket (NO ET)"),
+                  keywords: "sans billet no ticket et",
+                },
+                {
+                  value: "PAPER_TKT",
+                  label: pick("Billet papier (TKT)", "Paper ticket (TKT)"),
+                  keywords: "billet papier tkt paper ticket",
+                },
+              ]}
+            />
           </div>
 
           {/* Active Edit Codes chips bar */}
@@ -1494,9 +1686,9 @@ export const MultiFlightPassengersView: React.FC<
         </div>
       </CollapsiblePanel>
 
-      {/* 3. Live Filtered Stats Bar + Export Actions */}
+      {/* 2. General Report Bar + Export Actions */}
       <div className="bg-white dark:bg-[#1F1209] border border-[#E6D7C3] dark:border-[#4C2812] rounded-2xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-mono tabular-nums">
+        <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-xs font-mono tabular-nums">
           <div className="flex items-center gap-1.5 font-sans font-bold text-[#321B0A] dark:text-[#FAF7F2]">
             <Users className="w-4 h-4 text-[#8C5214] dark:text-[#F7BA42]" />
             <span>
@@ -1566,36 +1758,107 @@ export const MultiFlightPassengersView: React.FC<
               {filteredSummary.weight.toLocaleString(locale)} kg
             </strong>
           </span>
+
+          <span className="text-[#D4BC9E] dark:text-[#5C351B]">|</span>
+
+          <span className="text-rose-700 dark:text-rose-400 font-semibold">
+            NO ET: <strong>{filteredSummary.noEt}</strong>
+          </span>
+
+          <span className="text-[#D4BC9E] dark:text-[#5C351B]">|</span>
+
+          <span className="text-[#4C2812] dark:text-[#F7BA42] font-semibold">
+            TKT: <strong>{filteredSummary.tkt}</strong>
+          </span>
+
+          <span className="text-[#D4BC9E] dark:text-[#5C351B]">|</span>
+
+          <span className="text-amber-800 dark:text-amber-300 font-semibold">
+            NOSHOW: <strong>{filteredSummary.noShow}</strong>
+          </span>
+
+          <span className="text-[#D4BC9E] dark:text-[#5C351B]">|</span>
+
+          <span className="text-emerald-700 dark:text-emerald-300 font-semibold">
+            EMD: <strong>{filteredSummary.emdCount}</strong>
+          </span>
         </div>
 
-        {filteredEntries.length > 0 && (
-          <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex flex-wrap items-center gap-1.5 shrink-0">
+          {filteredEntries.length > 0 && (
+            <>
+              <button
+                type="button"
+                onClick={() =>
+                  exportFilteredPassengersReportToPDF({
+                    entries: filteredEntries.map(
+                      ({
+                        flight,
+                        passenger,
+                        normDate,
+                        sectorLabel,
+                        depType,
+                        transitStops,
+                      }) => ({
+                        flight,
+                        passenger,
+                        normDate,
+                        sectorLabel,
+                        depType,
+                        transitStops,
+                      })
+                    ),
+                    flightsCount: filteredSummary.flightsCount,
+                    scopeLabel: scopeSummaryText,
+                    activeFilterSummary,
+                    priorLegPaxKeysMap,
+                    language,
+                  })
+                }
+                className="px-2.5 py-1.5 rounded-lg bg-[#4C2812] dark:bg-[#E89C1D] hover:bg-[#321B0A] dark:hover:bg-[#F7BA42] text-[#F7BA42] dark:text-[#1F1209] text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer"
+                title={pick(
+                  "Exporter le rapport général et la liste des passagers filtrés en PDF",
+                  "Export general report and filtered passenger list as PDF"
+                )}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>PDF</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleExportCSV}
+                className="px-2.5 py-1.5 rounded-lg border border-[#E6D7C3] dark:border-[#5C351B] bg-[#FAF7F2] dark:bg-[#28170C] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11] text-[#4C2812] dark:text-[#FAF7F2] text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer"
+                title={pick(
+                  "Exporter la sélection filtrée en CSV",
+                  "Export filtered selection to CSV"
+                )}
+              >
+                <FileDown className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                <span>CSV</span>
+              </button>
+            </>
+          )}
+          {parsedResult.flights.length > 0 && (
             <button
               type="button"
-              onClick={handleExportExcel}
-              className="px-2.5 py-1.5 rounded-lg bg-[#4C2812] dark:bg-[#E89C1D] hover:bg-[#321B0A] dark:hover:bg-[#F7BA42] text-[#F7BA42] dark:text-[#1F1209] text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer"
+              onClick={() =>
+                exportGlobalStationDailyReportToPDF({
+                  flights: parsedResult.flights,
+                  priorLegPaxKeysMap,
+                  language,
+                })
+              }
+              className="px-2.5 py-1.5 rounded-lg border border-[#E89C1D] bg-[#FDF4E3] dark:bg-[#2E1A0D] hover:bg-[#F3E9D8] dark:hover:bg-[#3A2212] text-[#4C2812] dark:text-[#F7BA42] text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer"
               title={pick(
-                "Exporter la sélection filtrée en Excel (.xlsx)",
-                "Export filtered selection to Excel (.xlsx)"
+                "Télécharger le rapport global journalier par station en PDF (tous les vols, indépendant des filtres)",
+                "Download global daily station report as PDF (all flights, independent of filters)"
               )}
             >
-              <FileSpreadsheet className="w-3.5 h-3.5" />
-              <span>Excel (.xlsx)</span>
+              <Globe className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#E89C1D]" />
+              <span>{pick("Rapport Global PDF", "Global Report PDF")}</span>
             </button>
-            <button
-              type="button"
-              onClick={handleExportCSV}
-              className="px-2.5 py-1.5 rounded-lg border border-[#E6D7C3] dark:border-[#5C351B] bg-[#FAF7F2] dark:bg-[#28170C] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11] text-[#4C2812] dark:text-[#FAF7F2] text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer"
-              title={pick(
-                "Exporter la sélection filtrée en CSV",
-                "Export filtered selection to CSV"
-              )}
-            >
-              <FileDown className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
-              <span>CSV</span>
-            </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* 4. Multi-Flight Passenger Table */}
@@ -1629,8 +1892,8 @@ export const MultiFlightPassengersView: React.FC<
                   <th className="py-3 pl-5 pr-3">
                     {pick("Date & Vol", "Date & Flight")}
                   </th>
-                  <th className="py-3 px-2 w-20">
-                    {pick("Cab. / Ordre", "Cab. / Seq")}
+                  <th className="py-3 px-2 w-16">
+                    {pick("Cabine", "Cabin")}
                   </th>
                   <th className="py-3 px-3">{pick("Passager", "Passenger")}</th>
                   <th className="py-3 px-3">
@@ -1657,8 +1920,15 @@ export const MultiFlightPassengersView: React.FC<
               </thead>
               <tbody className="divide-y divide-[#E6D7C3]/70 dark:divide-[#4C2812]/70 text-xs">
                 {paginatedEntries.map((entry, rowIndex) => {
-                  const { flight, passenger: pax, normDate } = entry;
-                  const entryKey = `${flight.id}__${pax.id}`;
+                  const {
+                    flight,
+                    passenger: pax,
+                    normDate,
+                    sectorLabel,
+                    depType,
+                    transitStops,
+                  } = entry;
+                  const entryKey = getCrossEntryKey(entry);
                   const infantInfo =
                     pax.infant ||
                     extractInfantFromRawLines(pax.rawLines, {
@@ -1671,10 +1941,6 @@ export const MultiFlightPassengersView: React.FC<
                     pax.bags.length,
                     pax.bagsDeclaredCount || 0,
                     pax.bagsTotalDeclaredLine?.count || 0
-                  );
-                  const orderNum = String(pax.classSeq || rowIndex + 1).padStart(
-                    3,
-                    "0"
                   );
 
                   const rowThemeClass =
@@ -1710,10 +1976,30 @@ export const MultiFlightPassengersView: React.FC<
                             {flight.airline} {flight.flightNumber}
                           </span>
                         </div>
-                        <div className="text-[11px] font-mono text-[#6E472B] dark:text-[#DECAB1] mt-0.5 flex items-center gap-1.5">
-                          <span>
-                            {flight.origin} → {pax.destination}
+                        <div className="text-[11px] font-mono text-[#6E472B] dark:text-[#DECAB1] mt-0.5 flex flex-wrap items-center gap-1.5">
+                          <span className="font-semibold text-[#4C2812] dark:text-[#FAF7F2]">
+                            {sectorLabel}
                           </span>
+                          <span
+                            className={`px-1.5 py-0.5 rounded font-sans text-[10px] font-bold ${
+                              depType === "TRANSIT"
+                                ? "bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300"
+                                : depType === "CONNECTION"
+                                ? "bg-sky-100 dark:bg-sky-950/70 text-sky-800 dark:text-sky-300"
+                                : "bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300"
+                            }`}
+                          >
+                            {depType === "TRANSIT"
+                              ? pick("Transit", "Transit")
+                              : depType === "CONNECTION"
+                              ? pick("Corresp.", "Conn.")
+                              : pick("Local", "Local")}
+                          </span>
+                          {transitStops.length > 0 && depType !== "TRANSIT" && (
+                            <span className="px-1.5 py-0.5 rounded font-sans text-[10px] font-bold bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300">
+                              {pick("Transit", "Transit")} {transitStops.join(", ")}
+                            </span>
+                          )}
                           {onInspectFlight && (
                             <button
                               type="button"
@@ -1733,11 +2019,11 @@ export const MultiFlightPassengersView: React.FC<
                         </div>
                       </td>
 
-                      {/* Cabin & Seq */}
-                      <td className="py-3 px-2 font-mono font-bold tabular-nums whitespace-nowrap">
+                      {/* Cabin (no sequence number) */}
+                      <td className="py-3 px-2 font-mono font-bold whitespace-nowrap">
                         <div className="inline-flex items-center gap-1">
                           <span
-                            className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                            className={`px-2 py-0.5 rounded text-[11px] font-bold ${
                               pax.cabinClass === "C"
                                 ? "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209]"
                                 : "bg-[#EFE6D8] dark:bg-[#3A2212] text-[#4C2812] dark:text-[#DECAB1]"
@@ -1745,17 +2031,6 @@ export const MultiFlightPassengersView: React.FC<
                           >
                             {pax.cabinClass}
                           </span>
-                          <span className="text-[#4C2812] dark:text-[#F7BA42]">
-                            {orderNum}
-                          </span>
-                          {pax.isTransitMarker && (
-                            <span
-                              className="text-[#8C5214] dark:text-[#E89C1D] font-bold"
-                              title="Transit (#)"
-                            >
-                              #
-                            </span>
-                          )}
                         </div>
                       </td>
 
@@ -1951,11 +2226,17 @@ export const MultiFlightPassengersView: React.FC<
                       <td className="py-3 px-3 font-mono text-[11px]">
                         {pax.ticket ? (
                           <div className="text-[#321B0A] dark:text-[#FAF7F2] tabular-nums">
-                            {pax.ticket.ticketNumber} · {pax.ticket.couponNumber}
+                            {pax.ticket.isPaperTicket
+                              ? `TKT ${pax.ticket.paperTicketNumber || pax.ticket.ticketNumber || ""}`.trim()
+                              : `${pax.ticket.ticketNumber} · ${pax.ticket.couponNumber}`}
                           </div>
+                        ) : isPassengerPaperTicket(pax) ? (
+                          <span className="text-[#8C5214] dark:text-[#F7BA42] font-semibold">
+                            TKT ({pick("Papier", "Paper")})
+                          </span>
                         ) : (
                           <span className="text-[#8C5214]/70 dark:text-[#DECAB1]/60 font-sans">
-                            {pick("Sans billet", "No ticket")}
+                            {pick("Sans billet (NO ET)", "No ticket (NO ET)")}
                           </span>
                         )}
                         {infantInfo?.ticket && (
@@ -2059,13 +2340,13 @@ export const MultiFlightPassengersView: React.FC<
         onPrev={() => {
           if (drawerIndex > 0) {
             const prev = filteredEntries[drawerIndex - 1];
-            setDrawerKey(`${prev.flight.id}__${prev.passenger.id}`);
+            setDrawerKey(getCrossEntryKey(prev));
           }
         }}
         onNext={() => {
           if (drawerIndex >= 0 && drawerIndex < filteredEntries.length - 1) {
             const next = filteredEntries[drawerIndex + 1];
-            setDrawerKey(`${next.flight.id}__${next.passenger.id}`);
+            setDrawerKey(getCrossEntryKey(next));
           }
         }}
       />

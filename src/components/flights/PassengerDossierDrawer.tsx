@@ -343,6 +343,7 @@ export const PassengerDossierDrawer: React.FC<PassengerDossierDrawerProps> = ({
               </div>
               <span className="text-[11px] font-mono text-[#6E472B] dark:text-[#DECAB1]">
                 {pick("Franchise", "Allowance")} : {passenger.allowedBagsCount} pcs max · {passenger.allowedTotalWeight} kg {pick("cumulés", "total")}
+                {isPassengerWebCheckin(passenger) ? " (+5 kg WB)" : ""}
               </span>
             </div>
 

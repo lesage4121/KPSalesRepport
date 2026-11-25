@@ -342,6 +342,274 @@ export function isPassengerWebCheckin(pax: ManifestPassenger): boolean {
   );
 }
 
+export const WEB_CHECKIN_ALLOWANCE_BONUS_KG = 5;
+export const WEB_CHECKIN_ALLOWANCE_EXTRA_BAGS = 1;
+
+/**
+ * Returns true if the passenger has a paper ticket (TKT).
+ */
+export function isPassengerPaperTicket(pax: ManifestPassenger): boolean {
+  return Boolean(
+    pax.ticket?.isPaperTicket ||
+      pax.ticket?.paperTicketNumber ||
+      pax.editCodes?.some((c) => c.toUpperCase() === "TKT")
+  );
+}
+
+/**
+ * Returns true if the passenger has no ticket at all (neither electronic nor paper).
+ */
+export function isPassengerNoTicket(pax: ManifestPassenger): boolean {
+  if (isPassengerPaperTicket(pax)) return false;
+  const tkt = (
+    pax.ticket?.ticketNumber ||
+    pax.ticket?.paperTicketNumber ||
+    ""
+  ).trim();
+  return !pax.ticket || !tkt;
+}
+
+export function evaluatePassengerBaggageCompliance(pax: {
+  bookingClass: string;
+  editCodes: string[];
+  isWebCheckin?: boolean;
+  bags: ManifestBagItem[];
+  bagsDeclaredCount?: number;
+  bagsTotalDeclaredLine?: { count: number; weight: number; hasMissingWeight?: boolean };
+  totalBagWeight: number;
+  emdNumbers: string[];
+  ancillaries: ManifestAncillaryItem[];
+}): {
+  cabinClass: "C" | "Y";
+  allowedBagsCount: number;
+  allowedWeightPerBag: number;
+  allowedTotalWeight: number;
+  baggageCompliance: ManifestBaggageCompliance;
+  baggageDeviations: string[];
+} {
+  const cabinClass = getCabinClass(pax.bookingClass);
+  const isWb = Boolean(
+    pax.isWebCheckin ||
+      pax.editCodes?.some((c) => c.toUpperCase() === "WB")
+  );
+  const baseBagsCount = 2;
+  const allowedBagsCount =
+    baseBagsCount + (isWb ? WEB_CHECKIN_ALLOWANCE_EXTRA_BAGS : 0);
+  const allowedWeightPerBag = cabinClass === "C" ? 32 : 24;
+  const allowedTotalWeight =
+    baseBagsCount * allowedWeightPerBag +
+    (isWb ? WEB_CHECKIN_ALLOWANCE_BONUS_KG : 0);
+
+  const actualBagsCount = Math.max(
+    pax.bags.length,
+    pax.bagsDeclaredCount || 0,
+    pax.bagsTotalDeclaredLine?.count || 0
+  );
+  const deviations: string[] = [];
+
+  if (actualBagsCount > allowedBagsCount) {
+    deviations.push(
+      `Nombre de bagages (${actualBagsCount}) > franchise (${allowedBagsCount} pièces max)`
+    );
+  }
+
+  if (pax.totalBagWeight > allowedTotalWeight) {
+    deviations.push(
+      `Poids cumulé (${pax.totalBagWeight} kg) > franchise cumulée (${allowedTotalWeight} kg max)`
+    );
+  }
+
+  const hasEmdOrAe =
+    pax.emdNumbers.length > 0 ||
+    pax.ancillaries.length > 0 ||
+    pax.editCodes.some((c) => c.toUpperCase() === "AE");
+
+  let baggageCompliance: ManifestBaggageCompliance = "CONFORME";
+  if (deviations.length > 0) {
+    baggageCompliance = hasEmdOrAe ? "COUVERT_EMD" : "ECART_NON_COUVERT";
+  }
+
+  return {
+    cabinClass,
+    allowedBagsCount,
+    allowedWeightPerBag,
+    allowedTotalWeight,
+    baggageCompliance,
+    baggageDeviations: deviations,
+  };
+}
+
+export type PassengerDepartureType = "LOCAL" | "TRANSIT" | "CONNECTION";
+
+function normalizeFlightNumToken(num?: string): string {
+  return (num || "").trim().toUpperCase().replace(/^0+(?=\d)/, "");
+}
+
+function padDcsTimeToken(time?: string): string {
+  const digits = (time || "").replace(/\D/g, "");
+  if (!digits) return "";
+  return digits.padStart(4, "0").slice(-4);
+}
+
+function getPaxIdentityTokens(pax: ManifestPassenger): string[] {
+  const tokens: string[] = [];
+  const tkt = (pax.ticket?.ticketNumber || pax.ticket?.paperTicketNumber || "")
+    .trim()
+    .toUpperCase();
+  if (tkt) tokens.push(`TKT:${tkt}`);
+  const last = (pax.lastName || "").trim().toUpperCase().replace(/\s+/g, " ");
+  const first = (pax.firstName || "").trim().toUpperCase().replace(/\s+/g, " ");
+  if (last) tokens.push(`NAME:${last}|${first}`);
+  return tokens;
+}
+
+/**
+ * Builds the set of passenger identity keys from earlier stopover legs of the same
+ * flight (airline + flight number + date) continuing past `flight.origin`.
+ * Example: KP10 LFW -> ABJ -> ACC: at ABJ, passengers who boarded at LFW for ACC
+ * are returned here so they are reliably classified as TRANSIT at ABJ.
+ */
+export function buildPriorFlightPaxKeys(
+  flight: ManifestFlight,
+  allFlights: ManifestFlight[]
+): Set<string> {
+  const keys = new Set<string>();
+  if (!flight || !Array.isArray(allFlights) || allFlights.length <= 1) {
+    return keys;
+  }
+
+  const curAirline = (flight.airline || "").trim().toUpperCase();
+  const curNum = normalizeFlightNumToken(flight.flightNumber);
+  const curDate = normalizeDcsFlightDate(flight.date);
+  const curOrigin = (flight.origin || "").trim().toUpperCase();
+  const curDepTime = padDcsTimeToken(flight.departureTime);
+
+  for (const other of allFlights) {
+    if (other.id === flight.id) continue;
+    const otherAirline = (other.airline || "").trim().toUpperCase();
+    const otherNum = normalizeFlightNumToken(other.flightNumber);
+    const otherDate = normalizeDcsFlightDate(other.date);
+    const otherOrigin = (other.origin || "").trim().toUpperCase();
+
+    if (
+      otherAirline !== curAirline ||
+      otherNum !== curNum ||
+      otherDate !== curDate ||
+      !otherOrigin ||
+      otherOrigin === curOrigin
+    ) {
+      continue;
+    }
+
+    const otherDepTime = padDcsTimeToken(other.departureTime);
+    let isEarlierLeg = false;
+    if (curDepTime && otherDepTime && otherDepTime !== curDepTime) {
+      isEarlierLeg = otherDepTime < curDepTime;
+    } else {
+      // Fallback when departure time is missing/equal: earlier leg feeds passengers into curOrigin
+      const feedsCurOrigin =
+        other.primaryDestination?.toUpperCase() === curOrigin ||
+        other.passengers.some(
+          (op) => (op.destination || "").trim().toUpperCase() === curOrigin
+        );
+      const curFeedsOtherOrigin =
+        flight.primaryDestination?.toUpperCase() === otherOrigin ||
+        flight.passengers.some(
+          (cp) => (cp.destination || "").trim().toUpperCase() === otherOrigin
+        );
+      isEarlierLeg = feedsCurOrigin && !curFeedsOtherOrigin;
+    }
+
+    if (!isEarlierLeg) continue;
+
+    for (const op of other.passengers) {
+      const opDest = (op.destination || "").trim().toUpperCase();
+      // Passengers disembarking AT curOrigin are not continuing on the flight from curOrigin
+      if (opDest && opDest === curOrigin) continue;
+      for (const tok of getPaxIdentityTokens(op)) {
+        keys.add(tok);
+      }
+    }
+  }
+
+  return keys;
+}
+
+export function buildPriorFlightPaxKeysMap(
+  allFlights: ManifestFlight[]
+): Map<string, Set<string>> {
+  const map = new Map<string, Set<string>>();
+  for (const f of allFlights) {
+    map.set(f.id, buildPriorFlightPaxKeys(f, allFlights));
+  }
+  return map;
+}
+
+/**
+ * Classifies a passenger at the departure station of `flight`:
+ * - TRANSIT: arrived from another station on the SAME flight/aircraft and continues on this flight
+ *   (`#` marker, same carrier+flight inbound, present on an earlier stopover leg of this flight,
+ *   or ticket coupon route starts at an earlier origin than `flight.origin`).
+ * - CONNECTION (Transfert / Correspondance): arrived on a DIFFERENT inbound flight (`inboundFlight`
+ *   from another flight, or `IB`/`EIB` edit code) to continue on this flight.
+ * - LOCAL: originated at this departure station without coming from another flight
+ *   (even if continuing onward later via `outboundFlight`/`OB`).
+ */
+export function getPassengerDepartureType(
+  pax: ManifestPassenger,
+  flight?: Pick<ManifestFlight, "airline" | "flightNumber" | "origin"> | null,
+  priorLegPaxKeys?: Set<string>
+): PassengerDepartureType {
+  const sameFlightInbound = Boolean(
+    flight &&
+      pax.inboundFlight &&
+      pax.inboundFlight.carrier.trim().toUpperCase() ===
+        (flight.airline || "").trim().toUpperCase() &&
+      normalizeFlightNumToken(pax.inboundFlight.flightNumber) !== "" &&
+      normalizeFlightNumToken(pax.inboundFlight.flightNumber) ===
+        normalizeFlightNumToken(flight.flightNumber)
+  );
+
+  const onEarlierLegOfSameFlight = Boolean(
+    priorLegPaxKeys &&
+      priorLegPaxKeys.size > 0 &&
+      getPaxIdentityTokens(pax).some((tok) => priorLegPaxKeys.has(tok))
+  );
+
+  const flightOrigin = (flight?.origin || "").trim().toUpperCase();
+  const rawRoute = (pax.ticket?.route || "").trim().toUpperCase();
+  const routeOrigin = /^[A-Z]{6}$/.test(rawRoute) ? rawRoute.slice(0, 3) : "";
+  const inboundOrigin = (pax.inboundFlight?.origin || "").trim().toUpperCase();
+  const couponFromEarlierStop = Boolean(
+    flightOrigin &&
+      routeOrigin &&
+      routeOrigin !== flightOrigin &&
+      (!pax.inboundFlight || sameFlightInbound || inboundOrigin !== routeOrigin)
+  );
+
+  if (
+    pax.isTransitMarker ||
+    sameFlightInbound ||
+    onEarlierLegOfSameFlight ||
+    couponFromEarlierStop
+  ) {
+    return "TRANSIT";
+  }
+
+  const hasInboundCode = Boolean(
+    pax.editCodes?.some((c) => {
+      const u = c.toUpperCase();
+      return u === "IB" || u === "EIB";
+    })
+  );
+
+  if (pax.inboundFlight || hasInboundCode) {
+    return "CONNECTION";
+  }
+
+  return "LOCAL";
+}
+
 /**
  * Returns the number of seated passengers who checked in online (WB) on a flight.
  */
@@ -518,7 +786,7 @@ function parsePrimaryPassengerLine(line: string): {
   hasInfant: boolean;
   editCodes: string[];
 } | null {
-  const seqMatch = line.match(/^\s{0,3}(\d+)(#?)\s+/);
+  const seqMatch = line.match(/^\s{0,3}(\d+)(?:(#)\s*|\s+)/);
   if (!seqMatch) return null;
 
   // Locate bookingClass + 3-letter segment destination around col 26..34
@@ -945,14 +1213,9 @@ export function evaluateMissingBaggageWeight(pax: ManifestPassenger): {
 
 function finalizePassenger(
   pax: ManifestPassenger,
-  flightAirline: string,
+  _flightAirline: string,
   flightOrigin: string
 ): ManifestPassenger {
-  const cabinClass = getCabinClass(pax.bookingClass);
-  const allowedBagsCount = 2;
-  const allowedWeightPerBag = cabinClass === "C" ? 32 : 24;
-  const allowedTotalWeight = allowedBagsCount * allowedWeightPerBag;
-
   // Deduplicate edit codes preserving order
   const uniqueCodes: string[] = [];
   for (const code of pax.editCodes) {
@@ -1007,34 +1270,10 @@ function finalizePassenger(
     pax.baggageDestination = pax.bags[0]?.destination || pax.destination;
   }
 
-  // Evaluate baggage deviations against KP franchise rules (cumulative weight allowed, max 2 pieces)
-  // Economy (Y): max 2 pieces, max 48 kg cumulative (2 x 24 kg)
-  // Business (C): max 2 pieces, max 64 kg cumulative (2 x 32 kg)
-  const actualBagsCount = getEffectiveBagsCount(pax);
-  const deviations: string[] = [];
-
-  if (actualBagsCount > allowedBagsCount) {
-    deviations.push(
-      `Nombre de bagages (${actualBagsCount}) > franchise (${allowedBagsCount} pièces max)`
-    );
-  }
-
-  if (pax.totalBagWeight > allowedTotalWeight) {
-    deviations.push(
-      `Poids cumulé (${pax.totalBagWeight} kg) > franchise cumulée (${allowedTotalWeight} kg max)`
-    );
-  }
-
-  const hasEmdOrAe =
-    pax.emdNumbers.length > 0 ||
-    pax.ancillaries.length > 0 ||
-    uniqueCodes.includes("AE");
-
-  let baggageCompliance: ManifestBaggageCompliance = "CONFORME";
-  if (deviations.length > 0) {
-    baggageCompliance = hasEmdOrAe ? "COUVERT_EMD" : "ECART_NON_COUVERT";
-  }
-
+  // Evaluate baggage deviations against KP franchise rules (cumulative weight pooling allowed)
+  // Economy (Y): max 2 pieces, max 48 kg cumulative (WB: max 3 pieces, max 53 kg cumulative)
+  // Business (C): max 2 pieces, max 64 kg cumulative (WB: max 3 pieces, max 69 kg cumulative)
+  const baggageEval = evaluatePassengerBaggageCompliance(pax);
   const missingWeightCheck = evaluateMissingBaggageWeight(pax);
 
   // Clean up duplicate EMD numbers
@@ -1047,12 +1286,12 @@ function finalizePassenger(
 
   return {
     ...pax,
-    cabinClass,
-    allowedBagsCount,
-    allowedWeightPerBag,
-    allowedTotalWeight,
-    baggageCompliance,
-    baggageDeviations: deviations,
+    cabinClass: baggageEval.cabinClass,
+    allowedBagsCount: baggageEval.allowedBagsCount,
+    allowedWeightPerBag: baggageEval.allowedWeightPerBag,
+    allowedTotalWeight: baggageEval.allowedTotalWeight,
+    baggageCompliance: baggageEval.baggageCompliance,
+    baggageDeviations: baggageEval.baggageDeviations,
     hasMissingBaggageWeight: missingWeightCheck.hasMissingBaggageWeight,
     missingBaggageWeightDetails: missingWeightCheck.missingBaggageWeightDetails,
     fullNameDisplay: `${pax.lastName} ${pax.firstName}`.trim(),
@@ -1784,7 +2023,11 @@ export function aggregateManifestFlights(
       normDate !== f.date ? { ...f, date: normDate } : f;
     const key = `${f.airline}|${f.flightNumber.replace(/^0+/, "") || f.flightNumber}|${normDate}|${f.origin}`;
     const existing = uniqueMap.get(key);
-    if (!existing || f.passengers.length >= existing.passengers.length) {
+    if (
+      !existing ||
+      normalizedFlight.passengers.length > 0 ||
+      existing.passengers.length === 0
+    ) {
       uniqueMap.set(key, normalizedFlight);
     }
   }
@@ -1934,6 +2177,25 @@ export function hydrateManifestResult(
           ...candidatePax,
           hasMissingBaggageWeight: missingCheck.hasMissingBaggageWeight,
           missingBaggageWeightDetails: missingCheck.missingBaggageWeightDetails,
+        };
+      }
+
+      const baggageEval = evaluatePassengerBaggageCompliance(nextPax);
+      if (
+        nextPax.allowedBagsCount !== baggageEval.allowedBagsCount ||
+        nextPax.allowedTotalWeight !== baggageEval.allowedTotalWeight ||
+        nextPax.baggageCompliance !== baggageEval.baggageCompliance ||
+        nextPax.baggageDeviations.length !== baggageEval.baggageDeviations.length
+      ) {
+        paxChanged = true;
+        nextPax = {
+          ...nextPax,
+          cabinClass: baggageEval.cabinClass,
+          allowedBagsCount: baggageEval.allowedBagsCount,
+          allowedWeightPerBag: baggageEval.allowedWeightPerBag,
+          allowedTotalWeight: baggageEval.allowedTotalWeight,
+          baggageCompliance: baggageEval.baggageCompliance,
+          baggageDeviations: baggageEval.baggageDeviations,
         };
       }
 
@@ -2393,7 +2655,7 @@ export function exportManifestToExcel(
           "Origin": f.origin,
           "Seq No.": `${String(p.classSeq || p.seq).padStart(3, "0")}${p.isTransitMarker ? "#" : ""}`,
           "Passenger": p.fullNameDisplay,
-          "Cabin": p.cabinClass === "C" ? "Business (C - 2 pcs / 64 kg)" : "Economy (Y - 2 pcs / 48 kg)",
+          "Cabin": `${p.cabinClass === "C" ? "Business (C" : "Economy (Y"} - ${p.allowedBagsCount} pcs / ${p.allowedTotalWeight} kg${isPassengerWebCheckin(p) ? " incl. +1pc/+5kg WB" : ""})`,
           "Seat": p.seat || "-",
           "Bags Count": getEffectiveBagsCount(p),
           "Total Weight (kg)": p.hasMissingBaggageWeight && p.totalBagWeight === 0 ? "MISSING" : p.totalBagWeight,
@@ -2554,7 +2816,7 @@ export function exportManifestToExcel(
         "Origine": f.origin,
         "N° Ordre": `${String(p.classSeq || p.seq).padStart(3, "0")}${p.isTransitMarker ? "#" : ""}`,
         "Passager": p.fullNameDisplay,
-        "Cabine": p.cabinClass === "C" ? "Business (C - 2 pcs / 64 kg)" : "Éco (Y - 2 pcs / 48 kg)",
+        "Cabine": `${p.cabinClass === "C" ? "Business (C" : "Éco (Y"} - ${p.allowedBagsCount} pcs / ${p.allowedTotalWeight} kg${isPassengerWebCheckin(p) ? " incl. +1 sac/+5kg WB" : ""})`,
         "Siège": p.seat || "-",
         "Nb Bagages": getEffectiveBagsCount(p),
         "Poids Total (kg)": p.hasMissingBaggageWeight && p.totalBagWeight === 0 ? "MANQUANT" : p.totalBagWeight,

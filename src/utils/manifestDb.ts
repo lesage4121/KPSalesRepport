@@ -6,6 +6,7 @@
 import { ManifestFlight, ManifestParseResult } from "../types";
 import {
   aggregateManifestFlights,
+  computeTransportedPassengerReport,
   getFlightWebCheckinCount,
   hydrateManifestResult,
 } from "./manifestParser";
@@ -260,15 +261,16 @@ function toFlightSummary(f: ManifestFlight): StoredFlightSummary {
 }
 
 function toDaySummary(rec: StoredManifestDayRecord): StoredManifestDaySummary {
+  const transported = computeTransportedPassengerReport(rec.data.flights);
   return {
     dateKey: rec.dateKey,
     sortOrder: rec.sortOrder,
     savedAt: rec.savedAt,
     sourceFileName: rec.sourceFileName,
     totalFlights: rec.data.totalFlights,
-    totalPassengers: rec.data.totalPassengers,
-    totalBusinessPassengers: rec.data.totalBusinessPassengers,
-    totalEconomyPassengers: rec.data.totalEconomyPassengers,
+    totalPassengers: transported.totalPassengers,
+    totalBusinessPassengers: transported.business,
+    totalEconomyPassengers: transported.economy,
     totalBags: rec.data.totalBags,
     totalWeight: rec.data.totalWeight,
     totalUncoveredDeviations: rec.data.totalUncoveredDeviations,
@@ -418,7 +420,7 @@ export async function saveManifestToDb(
       const existing = existingByDate.get(dateKey);
       const combinedFlights =
         !replaceDay && existing
-          ? [...newDayFlights, ...existing.data.flights]
+          ? [...existing.data.flights, ...newDayFlights]
           : newDayFlights;
 
       const dayData = aggregateManifestFlights(combinedFlights);

@@ -1,7 +1,4 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+
 
 import React, { useEffect, useMemo, useState } from "react";
 import {
@@ -19,9 +16,15 @@ import {
   Eye,
   ListFilter,
   RotateCcw,
-  TrendingUp,
   Calendar,
   Pencil,
+  Users,
+  Luggage,
+  ShieldAlert,
+  Award,
+  UserX,
+  TicketX,
+  Smartphone,
 } from "lucide-react";
 import {
   EmdDocumentDetail,
@@ -32,19 +35,25 @@ import {
 } from "../../types";
 import { resolveFlightStatusDetail } from "../../utils/flightStatusParser";
 import {
-  exportManifestToExcel,
+  buildPriorFlightPaxKeys,
   extractInfantFromRawLines,
   getDcsFlightDateSortOrder,
   getEditCodeLabel,
   getFlightWebCheckinCount,
+  getPassengerDepartureType,
   isPassengerNoShow,
+  isPassengerNoTicket,
   isPassengerWebCheckin,
   isPassengerWithSeat,
   normalizeDcsFlightDate,
+  PassengerDepartureType,
 } from "../../utils/manifestParser";
 import {
+  exportFlightDetailReportToExcel,
+  exportFlightDetailReportToPDF,
+} from "../../utils/flightStatsExport";
+import {
   computeStationFlightEmdSummary,
-  extractUniqueEmdsFromFlights,
   formatCurrencyAmount,
   formatCurrencyTotals,
   formatEmdMonetaryWithTarget,
@@ -57,6 +66,7 @@ import { PassengerDossierDrawer } from "./PassengerDossierDrawer";
 import { BabyBottleIcon } from "./BabyBottleIcon";
 import { WebCheckinBadge } from "../ui/WebCheckinBadge";
 import { CollapsiblePanel } from "./CollapsiblePanel";
+import { FilterOptionField } from "./FilterOptionField";
 import { useLanguage } from "../../context/LanguageContext";
 
 interface ManifestFlightDetailViewProps {
@@ -73,6 +83,7 @@ interface ManifestFlightDetailViewProps {
 
 type CabinFilter = "BOTH" | "C" | "Y";
 type SeatStatusFilter = "ALL" | "WITH_SEAT" | "NO_SHOW" | "NO_SEAT";
+type DepartureTypeFilter = "ALL" | PassengerDepartureType;
 type GenderTypeFilter = "ALL" | "M" | "F" | "CHD" | "INF" | "WEB_CHECKIN" | "NO_SEAT";
 type BaggageFilter =
   | "ALL"
@@ -92,12 +103,13 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
   onOpenEmdAudit,
   onEditEquipment,
   onOpenEnhancedManifest,
-  onViewFlightEvolution,
 }) => {
-  const { language, pick } = useLanguage();
+  const { language, locale, pick } = useLanguage();
   const [cabinFilter, setCabinFilter] = useState<CabinFilter>("BOTH");
   const [seatStatusFilter, setSeatStatusFilter] =
     useState<SeatStatusFilter>("ALL");
+  const [departureTypeFilter, setDepartureTypeFilter] =
+    useState<DepartureTypeFilter>("ALL");
   const [genderTypeFilter, setGenderTypeFilter] =
     useState<GenderTypeFilter>("ALL");
   const [bookingClassFilter, setBookingClassFilter] = useState<string>("ALL");
@@ -142,6 +154,11 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
     return parsedResult.flights[activeFlightIndex] || null;
   }, [parsedResult.flights, activeFlightIndex]);
 
+  const priorLegPaxKeys = useMemo(() => {
+    if (!activeFlight) return undefined;
+    return buildPriorFlightPaxKeys(activeFlight, parsedResult.flights);
+  }, [activeFlight, parsedResult.flights]);
+
   const activeFlightStatus = useMemo(() => {
     if (!activeFlight) return null;
     return resolveFlightStatusDetail(
@@ -152,15 +169,77 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
     );
   }, [activeFlight, flightStatusDetails]);
 
-  const activeFlightEmdStats = useMemo(() => {
-    if (!activeFlight) return { total: 0, audited: 0 };
-    const unique = extractUniqueEmdsFromFlights([activeFlight]);
-    let audited = 0;
-    for (const rec of unique) {
-      if (emdDetailsMap[normalizeEmdNumber(rec.emdNumber)]) audited++;
+  const activeFlightKpis = useMemo(() => {
+    if (!activeFlight) {
+      return {
+        traveled: 0,
+        business: 0,
+        economy: 0,
+        bags: 0,
+        weight: 0,
+        uncoveredDeviations: 0,
+        missingBagWeight: 0,
+        emd: 0,
+        ff: 0,
+        fqtv: 0,
+        loyaltyTotal: 0,
+        noShow: 0,
+        noTicket: 0,
+        wbCount: 0,
+        wbPct: "0",
+      };
     }
-    return { total: unique.length, audited };
-  }, [activeFlight, emdDetailsMap]);
+    const traveled = activeFlight.grandTotals.passengersCount;
+    const wbCount = getFlightWebCheckinCount(activeFlight);
+    let noShow = 0;
+    let noTicket = 0;
+    for (const pax of activeFlight.passengers) {
+      if (isPassengerNoShow(pax)) noShow += 1;
+      if (isPassengerNoTicket(pax)) noTicket += 1;
+    }
+    return {
+      traveled,
+      business: activeFlight.businessTotals.passengersCount,
+      economy: activeFlight.economyTotals.passengersCount,
+      bags: activeFlight.grandTotals.bagsCount,
+      weight: activeFlight.grandTotals.totalWeight,
+      uncoveredDeviations: activeFlight.baggageUncoveredDeviationsCount,
+      missingBagWeight: activeFlight.baggageMissingWeightCount || 0,
+      emd: activeFlight.emdCount,
+      ff: activeFlight.ffCount,
+      fqtv: activeFlight.fqtvCount,
+      loyaltyTotal: activeFlight.ffCount + activeFlight.fqtvCount,
+      noShow,
+      noTicket,
+      wbCount,
+      wbPct: traveled > 0 ? ((wbCount / traveled) * 100).toFixed(1) : "0",
+    };
+  }, [activeFlight]);
+
+  const activeFilterSummary = useMemo(() => {
+    const parts: string[] = [];
+    if (cabinFilter !== "BOTH") parts.push(`${pick("Cabine", "Cabin")}: ${cabinFilter}`);
+    if (seatStatusFilter !== "ALL") parts.push(seatStatusFilter);
+    if (departureTypeFilter !== "ALL") parts.push(departureTypeFilter);
+    if (genderTypeFilter !== "ALL") parts.push(genderTypeFilter);
+    if (bookingClassFilter !== "ALL") parts.push(`${pick("Classe", "Cls")}: ${bookingClassFilter}`);
+    if (editCodeFilter !== "ALL") parts.push(`Code: ${editCodeFilter}`);
+    if (baggageFilter !== "ALL") parts.push(baggageFilter);
+    if (destFilter !== "ALL") parts.push(`Dest: ${destFilter}`);
+    if (searchTerm.trim()) parts.push(`"${searchTerm.trim()}"`);
+    return parts.join(" · ");
+  }, [
+    cabinFilter,
+    seatStatusFilter,
+    departureTypeFilter,
+    genderTypeFilter,
+    bookingClassFilter,
+    editCodeFilter,
+    baggageFilter,
+    destFilter,
+    searchTerm,
+    pick,
+  ]);
 
   const stationEmdSummary = useMemo(() => {
     if (!activeFlight) return null;
@@ -305,6 +384,7 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
     selectedFlightId,
     cabinFilter,
     seatStatusFilter,
+    departureTypeFilter,
     genderTypeFilter,
     bookingClassFilter,
     editCodeFilter,
@@ -331,6 +411,9 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
           WITH_SEAT: 0,
           NO_SHOW: 0,
           UNSEATED: 0,
+          DEP_LOCAL: 0,
+          DEP_TRANSIT: 0,
+          DEP_CONNECTION: 0,
         },
       };
     }
@@ -348,6 +431,9 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
       WITH_SEAT: 0,
       NO_SHOW: 0,
       UNSEATED: 0,
+      DEP_LOCAL: 0,
+      DEP_TRANSIT: 0,
+      DEP_CONNECTION: 0,
     };
 
     for (const p of activeFlight.passengers) {
@@ -363,6 +449,10 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
       if (isPassengerWithSeat(p)) counts.WITH_SEAT++;
       else counts.UNSEATED++;
       if (isPassengerNoShow(p)) counts.NO_SHOW++;
+      const depType = getPassengerDepartureType(p, activeFlight, priorLegPaxKeys);
+      if (depType === "LOCAL") counts.DEP_LOCAL++;
+      else if (depType === "TRANSIT") counts.DEP_TRANSIT++;
+      else counts.DEP_CONNECTION++;
       if (p.isChild) counts.CHD++;
       else if (p.gender === "M") counts.M++;
       else if (p.gender === "F") counts.F++;
@@ -383,11 +473,12 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
         .map(([code, count]) => ({ code, count })),
       counts,
     };
-  }, [activeFlight]);
+  }, [activeFlight, priorLegPaxKeys]);
 
   const hasActiveFilters =
     cabinFilter !== "BOTH" ||
     seatStatusFilter !== "ALL" ||
+    departureTypeFilter !== "ALL" ||
     genderTypeFilter !== "ALL" ||
     bookingClassFilter !== "ALL" ||
     editCodeFilter !== "ALL" ||
@@ -398,6 +489,7 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
   const resetAllFilters = () => {
     setCabinFilter("BOTH");
     setSeatStatusFilter("ALL");
+    setDepartureTypeFilter("ALL");
     setGenderTypeFilter("ALL");
     setBookingClassFilter("ALL");
     setEditCodeFilter("ALL");
@@ -428,6 +520,15 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
         return false;
       }
       if (seatStatusFilter === "NO_SEAT" && isPassengerWithSeat(pax)) {
+        return false;
+      }
+
+      // 0b. Provenance au départ (Local vs Transit même avion vs Correspondance/Transfert autre vol)
+      if (
+        departureTypeFilter !== "ALL" &&
+        getPassengerDepartureType(pax, activeFlight, priorLegPaxKeys) !==
+          departureTypeFilter
+      ) {
         return false;
       }
 
@@ -533,8 +634,10 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
     });
   }, [
     activeFlight,
+    priorLegPaxKeys,
     cabinFilter,
     seatStatusFilter,
+    departureTypeFilter,
     genderTypeFilter,
     bookingClassFilter,
     editCodeFilter,
@@ -588,6 +691,7 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
         pax.bagsDeclaredCount || 0,
         pax.bagsTotalDeclaredLine?.count || 0
       );
+      const depType = getPassengerDepartureType(pax, activeFlight, priorLegPaxKeys);
       const orderNum = String(pax.classSeq || rowIndex + 1).padStart(3, "0");
 
       const rowThemeClass =
@@ -675,8 +779,23 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
                 </span>
               )}
             </div>
-            <div className="text-[11px] text-[#6E472B] dark:text-[#DECAB1]">
-              → {pax.destination}
+            <div className="text-[11px] text-[#6E472B] dark:text-[#DECAB1] flex items-center gap-1.5 flex-wrap">
+              <span>→ {pax.destination}</span>
+              <span
+                className={`px-1.5 py-0.5 rounded font-sans text-[10px] font-bold ${
+                  depType === "TRANSIT"
+                    ? "bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300"
+                    : depType === "CONNECTION"
+                    ? "bg-sky-100 dark:bg-sky-950/70 text-sky-800 dark:text-sky-300"
+                    : "bg-emerald-100/80 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300"
+                }`}
+              >
+                {depType === "TRANSIT"
+                  ? pick("Transit", "Transit")
+                  : depType === "CONNECTION"
+                  ? pick("Corresp.", "Transfer")
+                  : pick("Local", "Local")}
+              </span>
               {pax.baggageDestination &&
                 pax.baggageDestination !== pax.destination && (
                   <span className="text-[#8C5214]/80 dark:text-[#F7BA42]/80"> (Bag {pax.baggageDestination})</span>
@@ -1114,259 +1233,7 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
         )}
       </div>
 
-      {/* Collapsible Flight Identity + Cabin Totals + Exports */}
-      <CollapsiblePanel
-        title={`${activeFlight.airline} ${activeFlight.flightNumber} · ${normalizeDcsFlightDate(activeFlight.date)} · ${activeFlight.origin}`}
-        subtitle={`${activeFlight.departureTimeFormatted} · ${activeFlight.aircraftType} (${activeFlight.isPureEconomy ? pick(`Pure Éco ${activeFlight.configRaw}`, `All-Economy ${activeFlight.configRaw}`) : activeFlight.configRaw || "—"}) · ${activeFlight.grandTotals.passengersCount} pax (${activeFlight.businessTotals.passengersCount}C/${activeFlight.economyTotals.passengersCount}Y) · ${activeFlight.grandTotals.bagsCount}/${activeFlight.grandTotals.totalWeight} kg`}
-        icon={<Plane className="w-4 h-4 text-[#4C2812] dark:text-[#F7BA42]" />}
-        defaultOpen={false}
-        rightContent={
-          onOpenEmdAudit ? (
-            <button
-              type="button"
-              onClick={() => onOpenEmdAudit(activeFlight)}
-              className="px-2.5 py-1 rounded-lg border border-[#E89C1D]/60 bg-[#FDF4E3] dark:bg-[#2E1A0D] hover:bg-[#F3E9D8] dark:hover:bg-[#3A2212] text-[#4C2812] dark:text-[#F7BA42] text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
-              title={pick(
-                "Extraire les commandes WINCMD(\"PTRWEMD*...\") et importer les montants WEMD* pour ce vol",
-                "Extract WINCMD(\"PTRWEMD*...\") commands and import WEMD* amounts for this flight"
-              )}
-            >
-              <CreditCard className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#E89C1D]" />
-              <span>EMDs Audit</span>
-              <span className="font-mono tabular-nums opacity-85">
-                ({activeFlightEmdStats.audited > 0
-                  ? `${activeFlightEmdStats.audited}/${activeFlightEmdStats.total}`
-                  : activeFlightEmdStats.total})
-              </span>
-            </button>
-          ) : undefined
-        }
-      >
-        <div className="space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#E6D7C3]/70 dark:border-[#4C2812]/70">
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#4C2812] dark:bg-[#2E1A0D] text-[#F7BA42] border border-transparent dark:border-[#E89C1D]/40 flex items-center justify-center shrink-0">
-                <Plane className="w-5 h-5" />
-              </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h4 className="text-base font-bold text-[#321B0A] dark:text-[#FAF7F2] font-mono">
-                  {activeFlight.airline} {activeFlight.flightNumber}
-                </h4>
-                <span className="text-[#D8C3A5] dark:text-[#5C351B]">|</span>
-                <span className="text-sm font-bold text-[#8C5214] dark:text-[#F7BA42] font-mono">
-                  {pick("Départ", "Dep.")} {activeFlight.origin}
-                </span>
-                <span className="text-xs font-mono text-[#6E472B] dark:text-[#DECAB1]">
-                  · {activeFlight.date} · {activeFlight.departureTimeFormatted}
-                  {activeFlight.gate ? ` · ${pick("Porte", "Gate")} ${activeFlight.gate}` : ""}
-                </span>
-              </div>
-              <div className="text-xs text-[#6E472B] dark:text-[#DECAB1] font-mono mt-0.5 space-y-0.5">
-                <div>
-                  {activeFlightStatus?.detail?.aircraftType || activeFlight.aircraftType}
-                  {activeFlightStatus?.detail?.registration ? (
-                    <span className="font-bold text-[#4C2812] dark:text-[#F7BA42]">
-                      /{activeFlightStatus.detail.registration}
-                    </span>
-                  ) : null}
-                  {activeFlightStatus?.detail && activeFlightStatus.detail.totalCapacity > 0 && (
-                    <span>
-                      {" "}· {pick("Cap.", "Cap.")}{" "}
-                      <strong>{activeFlightStatus.detail.totalCapacity}</strong> (
-                      {activeFlightStatus.detail.businessCapacity}C/
-                      {activeFlightStatus.detail.economyCapacity}Y)
-                      {activeFlightStatus.resolvedStatus
-                        ? ` · ${activeFlightStatus.resolvedStatus}`
-                        : ""}
-                      {activeFlightStatus.detail.boardingTimeFormatted
-                        ? ` · ${pick("Emb.", "Brd")} ${activeFlightStatus.detail.boardingTimeFormatted}`
-                        : ""}
-                    </span>
-                  )}
-                  {" "}· Config{" "}
-                  {activeFlight.isPureEconomy
-                    ? `${activeFlight.configRaw} (${pick("Pure Éco", "All-Economy")} · 0C/${activeFlight.configEconomy}Y)`
-                    : `${activeFlight.configRaw} (${activeFlight.configBusiness}C/${activeFlight.configEconomy}Y)`}{" "}
-                  · {activeFlight.headerEditCodes.join(" ")}
-                </div>
-                {activeFlight.destinationCounts && activeFlight.destinationCounts.length > 0 && (
-                  <div className="text-[#4C2812] dark:text-[#FAF7F2]">
-                    {pick("Destinations passagers :", "Passenger destinations:")}{" "}
-                    {activeFlight.destinationCounts
-                      .map((d) => `${d.code} (${d.count})`)
-                      .join(", ")}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
-            {onEditEquipment && (
-              <button
-                type="button"
-                onClick={() => onEditEquipment(activeFlight)}
-                className="px-3 py-2 rounded-xl border border-[#E6D7C3] dark:border-[#5C351B] bg-white dark:bg-[#28170C] hover:bg-[#FAF7F2] dark:hover:bg-[#351F11] text-[#4C2812] dark:text-[#F7BA42] text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
-              >
-                <Pencil className="w-3.5 h-3.5 text-[#E89C1D]" />
-                {pick("Modifier équipement", "Edit Equipment")}
-              </button>
-            )}
-
-            {onViewFlightEvolution && (
-              <button
-                type="button"
-                onClick={() =>
-                  onViewFlightEvolution(
-                    activeFlight.flightNumber,
-                    activeFlight.origin
-                  )
-                }
-                className="px-3 py-2 rounded-xl border border-[#E89C1D]/60 bg-[#FDF4E3] dark:bg-[#2E1A0D] hover:bg-[#F3E9D8] dark:hover:bg-[#3A2212] text-[#4C2812] dark:text-[#F7BA42] text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
-                title={pick("Voir la courbe d'évolution multi-jours de ce vol", "View multi-day trend chart for this flight")}
-              >
-                <TrendingUp className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#E89C1D]" />
-                {pick("Courbe d'évolution", "Trend Chart")}
-              </button>
-            )}
-
-            {onOpenEmdAudit && (
-              <button
-                type="button"
-                onClick={() => onOpenEmdAudit(activeFlight)}
-                className="px-3.5 py-2 rounded-xl border border-[#E89C1D]/60 bg-[#FDF4E3] dark:bg-[#2E1A0D] hover:bg-[#F3E9D8] dark:hover:bg-[#3A2212] text-[#4C2812] dark:text-[#F7BA42] text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap"
-                title={pick(
-                  "Extraire les commandes WINCMD(\"PTRWEMD*...\") et importer le fichier WEMD* pour ce vol",
-                  "Extract WINCMD(\"PTRWEMD*...\") commands and import WEMD* output for this flight"
-                )}
-              >
-                <CreditCard className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#E89C1D]" />
-                <span>EMDs Audit</span>
-                <span className="font-mono text-[11px] font-bold tabular-nums opacity-85">
-                  ({activeFlightEmdStats.audited > 0
-                    ? `${activeFlightEmdStats.audited}/${activeFlightEmdStats.total}`
-                    : activeFlightEmdStats.total})
-                </span>
-              </button>
-            )}
-
-            <button
-              type="button"
-              onClick={() => onOpenEnhancedManifest(activeFlight)}
-              className="px-3.5 py-2 rounded-xl bg-[#4C2812] dark:bg-[#5C3016] hover:bg-[#321B0A] dark:hover:bg-[#6E3B1D] text-[#F7BA42] border border-transparent dark:border-[#E89C1D]/45 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              Enhanced Manifest (.txt)
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                exportManifestToExcel(
-                  [activeFlight],
-                  pick(
-                    `Manifeste_${activeFlight.airline}${activeFlight.flightNumber}_${activeFlight.origin}_${activeFlight.date}.xlsx`,
-                    `Manifest_${activeFlight.airline}${activeFlight.flightNumber}_${activeFlight.origin}_${activeFlight.date}.xlsx`
-                  ),
-                  language
-                )
-              }
-              className="px-3 py-2 rounded-xl border border-[#E6D7C3] dark:border-[#5C351B] bg-white dark:bg-[#28170C] hover:bg-[#FAF7F2] dark:hover:bg-[#351F11] text-[#4C2812] dark:text-[#FAF7F2] text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
-            >
-              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
-              {pick("Excel Vol", "Flight Excel")}
-            </button>
-          </div>
-        </div>
-
-        {/* C / Y / Total */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-          <div className="p-3 rounded-xl bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] flex items-center justify-between font-mono tabular-nums">
-            <div>
-              <div className="font-sans font-bold text-[#321B0A] dark:text-[#F7BA42]">Business (C)</div>
-              <div className="text-[11px] text-[#6E472B] dark:text-[#DECAB1] mt-0.5">
-                {activeFlight.businessTotals.male}{pick("H", "M")} / {activeFlight.businessTotals.female}F /{" "}
-                {activeFlight.businessTotals.infant} INF
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="font-bold text-[#321B0A] dark:text-[#FAF7F2]">
-                {activeFlight.businessTotals.passengersCount} pax
-              </div>
-              <div className="text-[11px] text-[#6E472B] dark:text-[#DECAB1]">
-                {activeFlight.businessTotals.bagsCount} pcs ·{" "}
-                {activeFlight.businessTotals.totalWeight} kg
-              </div>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] flex items-center justify-between font-mono tabular-nums">
-            <div>
-              <div className="font-sans font-bold text-[#321B0A] dark:text-[#FAF7F2]">
-                {pick("Économie (Y)", "Economy (Y)")}
-              </div>
-              <div className="text-[11px] text-[#6E472B] dark:text-[#DECAB1] mt-0.5">
-                {activeFlight.economyTotals.male}{pick("H", "M")} / {activeFlight.economyTotals.female}F /{" "}
-                {activeFlight.economyTotals.child} CHD / {activeFlight.economyTotals.infant} INF
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="font-bold text-[#321B0A] dark:text-[#FAF7F2]">
-                {activeFlight.economyTotals.passengersCount} pax
-              </div>
-              <div className="text-[11px] text-[#6E472B] dark:text-[#DECAB1]">
-                {activeFlight.economyTotals.bagsCount} pcs ·{" "}
-                {activeFlight.economyTotals.totalWeight} kg
-              </div>
-            </div>
-          </div>
-
-          <div className="p-3 rounded-xl bg-[#4C2812] dark:bg-[#2E180A] border border-transparent dark:border-[#E89C1D]/45 text-white flex items-center justify-between font-mono tabular-nums">
-            <div>
-              <div className="font-sans font-bold">
-                {pick("Total Voyagé", "Traveled Total")}
-                {activeFlightStatus?.detail && activeFlightStatus.detail.totalCapacity > 0 && (
-                  <span className="ml-2 text-[#F7BA42] font-mono text-[11px]">
-                    LF {((activeFlight.grandTotals.passengersCount / activeFlightStatus.detail.totalCapacity) * 100).toFixed(1)}%
-                  </span>
-                )}
-              </div>
-              <div className="text-[11px] text-[#F3E9D8] mt-0.5">
-                {activeFlight.emdCount}/{activeFlight.ffCount + activeFlight.fqtvCount} EMD/FF ·{" "}
-                <span className="text-sky-300 font-semibold">
-                  {activeFlightWebCheckinCount} WB
-                  {activeFlight.grandTotals.passengersCount > 0
-                    ? ` (${((activeFlightWebCheckinCount / activeFlight.grandTotals.passengersCount) * 100).toFixed(0)}%)`
-                    : ""}
-                </span>
-                {activeFlight.passengers.length > activeFlight.grandTotals.passengersCount && (
-                  <span className="text-[#F7BA42] font-sans ml-1">
-                    · +{activeFlight.passengers.length - activeFlight.grandTotals.passengersCount}{" "}
-                    {pick("sans siège", "unseated")}
-                  </span>
-                )}
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="font-bold text-[#F7BA42]">
-                {activeFlight.grandTotals.passengersCount}
-                {activeFlightStatus?.detail && activeFlightStatus.detail.totalCapacity > 0
-                  ? `/${activeFlightStatus.detail.totalCapacity}`
-                  : ""}{" "}
-                pax
-              </div>
-              <div className="text-[11px] text-[#FAF7F2]">
-                {activeFlight.grandTotals.bagsCount}/
-                {activeFlight.grandTotals.totalWeight} kg
-              </div>
-            </div>
-          </div>
-        </div>
-        </div>
-      </CollapsiblePanel>
-
-      {/* Collapsible Cabin Switcher, Multi-Criteria Filters, Search & Pagination Bar */}
+      {/* 1. Passenger Filters (First, with PDF & Excel report + filtered passenger exports) */}
       <CollapsiblePanel
         title={pick("Filtres Passagers", "Passenger Filters")}
         subtitle={pick(
@@ -1374,205 +1241,9 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
           `${orderedPassengers.length} / ${activeFlight.passengers.length} shown (${activeFlight.grandTotals.passengersCount} traveled)${hasActiveFilters ? " · Active filters" : ""}`
         )}
         icon={<Search className="w-4 h-4 text-[#4C2812] dark:text-[#F7BA42]" />}
-        defaultOpen={false}
-      >
-        <div className="space-y-3">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        defaultOpen={true}
+        rightContent={
           <div className="flex flex-wrap items-center gap-1.5">
-            {[
-              {
-                id: "BOTH" as const,
-                label: pick(
-                  `Toutes les cabines (${activeFlight.passengers.length})`,
-                  `All cabins (${activeFlight.passengers.length})`
-                ),
-              },
-              {
-                id: "C" as const,
-                label: `Business C (${activeFlight.businessPassengers.length})`,
-              },
-              {
-                id: "Y" as const,
-                label: pick(
-                  `Économie Y (${activeFlight.economyPassengers.length})`,
-                  `Economy Y (${activeFlight.economyPassengers.length})`
-                ),
-              },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => setCabinFilter(tab.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer ${
-                  cabinFilter === tab.id
-                    ? "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] border-[#4C2812] dark:border-[#E89C1D]"
-                    : "bg-[#FAF7F2] dark:bg-[#28170C] text-[#4C2812] dark:text-[#FAF7F2] border-[#E6D7C3] dark:border-[#5C351B] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11]"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div className="relative w-full sm:w-64">
-              <Search className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#F7BA42] absolute left-3 top-2.5" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder={pick("Nom, billet, tag, EMD, FF...", "Name, ticket, tag, EMD, FF...")}
-                className="w-full pl-8 pr-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-medium text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D]"
-              />
-            </div>
-
-            <select
-              value={pageSize}
-              onChange={(e) => setPageSize(Number(e.target.value))}
-              className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-            >
-              <option value={20}>20 / page</option>
-              <option value={25}>25 / page</option>
-              <option value={50}>50 / page</option>
-              <option value={200}>{pick("Tout afficher", "Show all")}</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Seat / Boarding Status Quick Filter (Seated = Traveled vs No-Show = Ticket without Seat) */}
-        <div className="pt-3 border-t border-[#E6D7C3]/70 dark:border-[#4C2812]/70 flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#6E472B] dark:text-[#F7BA42] mr-1">
-            {pick("Statut :", "Status:")}
-          </span>
-          {[
-            {
-              id: "ALL" as const,
-              label: pick(
-                `Tous (${activeFlight.passengers.length})`,
-                `All (${activeFlight.passengers.length})`
-              ),
-            },
-            {
-              id: "WITH_SEAT" as const,
-              label: pick(
-                `Avec siège (${filterMeta.counts.WITH_SEAT})`,
-                `Seated (${filterMeta.counts.WITH_SEAT})`
-              ),
-            },
-            {
-              id: "NO_SHOW" as const,
-              label: pick(
-                `No-Show / Sans siège (${filterMeta.counts.NO_SHOW})`,
-                `No-Show / Unseated (${filterMeta.counts.NO_SHOW})`
-              ),
-            },
-          ].map((st) => (
-            <button
-              key={st.id}
-              type="button"
-              onClick={() => setSeatStatusFilter(st.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition cursor-pointer ${
-                seatStatusFilter === st.id
-                  ? st.id === "NO_SHOW"
-                    ? "bg-amber-600 text-white border-amber-600"
-                    : "bg-[#4C2812] dark:bg-[#E89C1D] text-[#F7BA42] dark:text-[#1F1209] border-[#4C2812] dark:border-[#E89C1D]"
-                  : "bg-[#FAF7F2] dark:bg-[#28170C] text-[#4C2812] dark:text-[#FAF7F2] border-[#E6D7C3] dark:border-[#5C351B] hover:bg-[#FDF4E3] dark:hover:bg-[#351F11]"
-              }`}
-            >
-              {st.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Multi-Criteria Passenger Filters */}
-        <div className="pt-3 border-t border-[#E6D7C3]/70 dark:border-[#4C2812]/70 flex flex-wrap items-center gap-2">
-          <select
-            value={genderTypeFilter}
-            onChange={(e) =>
-              setGenderTypeFilter(e.target.value as GenderTypeFilter)
-            }
-            className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-            title={pick("Filtrer par sexe ou catégorie passager", "Filter by gender or passenger type")}
-          >
-            <option value="ALL">{pick("Sexe / Type : Tous", "Gender / Type: All")}</option>
-            <option value="M">{pick("Hommes (M)", "Male (M)")} · {filterMeta.counts.M}</option>
-            <option value="F">{pick("Femmes (F)", "Female (F)")} · {filterMeta.counts.F}</option>
-            <option value="CHD">{pick("Enfants (CHD)", "Children (CHD)")} · {filterMeta.counts.CHD}</option>
-            <option value="INF">{pick("Avec Bébé (INF)", "With Infant (INF)")} · {filterMeta.counts.INF}</option>
-            <option value="WEB_CHECKIN">{pick("Check-in en ligne (WB)", "Online Check-in (WB)")} · {filterMeta.counts.WEB_CHECKIN}</option>
-            <option value="NO_SEAT">
-              {pick("Sans siège / OFL", "No seat / OFL")} · {filterMeta.counts.NO_SEAT}
-            </option>
-          </select>
-
-          <select
-            value={bookingClassFilter}
-            onChange={(e) => setBookingClassFilter(e.target.value)}
-            className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-            title={pick("Filtrer par classe de réservation", "Filter by booking class")}
-          >
-            <option value="ALL">{pick("Classe Résa : Toutes", "Booking Class: All")}</option>
-            {filterMeta.bookingClasses.map((c) => (
-              <option key={c.code} value={c.code}>
-                {pick("Classe", "Class")} {c.code} ({c.count})
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={editCodeFilter}
-            onChange={(e) => setEditCodeFilter(e.target.value)}
-            className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer max-w-[230px]"
-            title={pick("Filtrer par Edit Code DCS", "Filter by DCS Edit Code")}
-          >
-            <option value="ALL">{pick("Edit Code : Tous", "Edit Code: All")}</option>
-            {filterMeta.editCodes.map((ec) => {
-              const label = getEditCodeLabel(ec.code, language);
-              return (
-                <option key={ec.code} value={ec.code}>
-                  {ec.code} ({ec.count}){label ? ` — ${label}` : ""}
-                </option>
-              );
-            })}
-          </select>
-
-          <select
-            value={baggageFilter}
-            onChange={(e) => setBaggageFilter(e.target.value as BaggageFilter)}
-            className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-            title={pick("Filtrer par bagages ou conformité franchise", "Filter by baggage or allowance compliance")}
-          >
-            <option value="ALL">{pick("Bagages & Franchise : Tous", "Baggage & Allowance: All")}</option>
-            <option value="WITH_BAGS">{pick("Avec bagages en soute", "With checked baggage")}</option>
-            <option value="NO_BAGS">{pick("Sans bagage (NB / 0)", "No baggage (NB / 0)")}</option>
-            <option value="MISSING_WEIGHT">{pick("Poids bagage non spécifié", "Missing baggage weight")}</option>
-            <option value="CONFORME">{pick("Franchise conforme", "Allowance compliant")}</option>
-            <option value="ECART_NON_COUVERT">{pick("Écart sans EMD", "Excess without EMD")}</option>
-            <option value="COUVERT_EMD">{pick("Couvert par EMD / AE", "Covered by EMD / AE")}</option>
-          </select>
-
-          {filterMeta.destinations.length > 1 && (
-            <select
-              value={destFilter}
-              onChange={(e) => setDestFilter(e.target.value)}
-              className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
-              title={pick("Filtrer par destination passager", "Filter by passenger destination")}
-            >
-              <option value="ALL">{pick("Destination : Toutes", "Destination: All")}</option>
-              {filterMeta.destinations.map((d) => (
-                <option key={d.code} value={d.code}>
-                  → {d.code} ({d.count})
-                </option>
-              ))}
-            </select>
-          )}
-
-          <div className="ml-auto flex items-center gap-3 text-xs font-mono tabular-nums">
-            <span className="text-[#6E472B] dark:text-[#DECAB1]">
-              <strong className="text-[#321B0A] dark:text-[#FAF7F2]">{orderedPassengers.length}</strong>{" "}
-              / {activeFlight.passengers.length} {pick("passagers", "passengers")}
-            </span>
-
             {hasActiveFilters && (
               <button
                 type="button"
@@ -1583,8 +1254,480 @@ export const ManifestFlightDetailView: React.FC<ManifestFlightDetailViewProps> =
                 {pick("Réinitialiser", "Reset")}
               </button>
             )}
+            <button
+              type="button"
+              disabled={orderedPassengers.length === 0}
+              onClick={() =>
+                exportFlightDetailReportToPDF({
+                  flight: activeFlight,
+                  passengers: orderedPassengers,
+                  flightStatusDetail: activeFlightStatus?.detail,
+                  priorLegPaxKeys,
+                  activeFilterSummary,
+                  language,
+                })
+              }
+              className="px-2.5 py-1 rounded-lg bg-[#4C2812] dark:bg-[#5C3016] hover:bg-[#321B0A] dark:hover:bg-[#6E3B1D] disabled:opacity-40 text-[#F7BA42] border border-transparent dark:border-[#E89C1D]/45 text-[11px] font-semibold inline-flex items-center gap-1 transition cursor-pointer disabled:cursor-default whitespace-nowrap"
+              title={pick(
+                "Exporter le rapport du vol et la liste des passagers filtrés en PDF",
+                "Export flight report and filtered passenger list as PDF"
+              )}
+            >
+              <FileText className="w-3 h-3 text-[#E89C1D]" />
+              <span>PDF</span>
+            </button>
+            <button
+              type="button"
+              disabled={orderedPassengers.length === 0}
+              onClick={() =>
+                exportFlightDetailReportToExcel({
+                  flight: activeFlight,
+                  passengers: orderedPassengers,
+                  flightStatusDetail: activeFlightStatus?.detail,
+                  priorLegPaxKeys,
+                  activeFilterSummary,
+                  language,
+                })
+              }
+              className="px-2.5 py-1 rounded-lg border border-[#E6D7C3] dark:border-[#5C351B] bg-white dark:bg-[#1F1209] hover:bg-[#FAF7F2] dark:hover:bg-[#351F11] disabled:opacity-40 text-[#4C2812] dark:text-[#FAF7F2] text-[11px] font-semibold inline-flex items-center gap-1 transition cursor-pointer disabled:cursor-default whitespace-nowrap"
+              title={pick(
+                "Exporter le rapport du vol et la liste des passagers filtrés en Excel",
+                "Export flight report and filtered passenger list as Excel"
+              )}
+            >
+              <FileSpreadsheet className="w-3 h-3 text-emerald-700 dark:text-emerald-400" />
+              <span>Excel</span>
+            </button>
+          </div>
+        }
+      >
+        <div className="space-y-2.5">
+          {/* Row 1: Free-text Search + PageSize + Counter */}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[220px]">
+              <div className="relative w-full sm:max-w-xs">
+                <Search className="w-3.5 h-3.5 text-[#8C5214] dark:text-[#F7BA42] absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder={pick("Nom, billet, tag, EMD, FF...", "Name, ticket, tag, EMD, FF...")}
+                  className="w-full pl-8 pr-3 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-medium text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D]"
+                />
+              </div>
+
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+                className="px-2.5 py-1.5 bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#5C351B] rounded-lg text-xs font-semibold text-[#321B0A] dark:text-[#FAF7F2] focus:outline-none focus:ring-2 focus:ring-[#E89C1D] cursor-pointer"
+              >
+                <option value={20}>20 / page</option>
+                <option value={25}>25 / page</option>
+                <option value={50}>50 / page</option>
+                <option value={200}>{pick("Tout afficher", "Show all")}</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-3 text-xs font-mono tabular-nums">
+              <span className="text-[#6E472B] dark:text-[#DECAB1]">
+                <strong className="text-[#321B0A] dark:text-[#FAF7F2]">{orderedPassengers.length}</strong>{" "}
+                / {activeFlight.passengers.length} {pick("passagers", "passengers")}
+              </span>
+            </div>
+          </div>
+
+          {/* Row 2: Unified Searchable Option Fields Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+            <FilterOptionField
+              value={cabinFilter}
+              onChange={(v) => setCabinFilter(v as CabinFilter)}
+              allValue="BOTH"
+              prefixLabel={pick("Cabine", "Cabin")}
+              allLabel={pick(
+                `Toutes (${activeFlight.passengers.length})`,
+                `All (${activeFlight.passengers.length})`
+              )}
+              placeholder={pick("Cabine...", "Cabin...")}
+              options={[
+                {
+                  value: "C",
+                  label: "Business (C)",
+                  count: activeFlight.businessPassengers.length,
+                  keywords: "business c",
+                },
+                {
+                  value: "Y",
+                  label: pick("Économie (Y)", "Economy (Y)"),
+                  count: activeFlight.economyPassengers.length,
+                  keywords: "economie economy y",
+                },
+              ]}
+            />
+
+            <FilterOptionField
+              value={seatStatusFilter}
+              onChange={(v) => setSeatStatusFilter(v as SeatStatusFilter)}
+              prefixLabel={pick("Statut", "Status")}
+              allLabel={pick(
+                `Tous (${activeFlight.passengers.length})`,
+                `All (${activeFlight.passengers.length})`
+              )}
+              placeholder={pick("Statut siège...", "Seat status...")}
+              options={[
+                {
+                  value: "WITH_SEAT",
+                  label: pick("Avec siège", "Seated"),
+                  count: filterMeta.counts.WITH_SEAT,
+                  keywords: "avec siege seated",
+                },
+                {
+                  value: "NO_SHOW",
+                  label: pick("No-Show / Sans siège", "No-Show / Unseated"),
+                  count: filterMeta.counts.NO_SHOW,
+                  keywords: "no-show noshow sans siege unseated",
+                },
+              ]}
+            />
+
+            <FilterOptionField
+              value={departureTypeFilter}
+              onChange={(v) => setDepartureTypeFilter(v as DepartureTypeFilter)}
+              prefixLabel={pick(`Départ ${activeFlight.origin}`, `Dep. ${activeFlight.origin}`)}
+              allLabel={pick(
+                `Tous (${activeFlight.passengers.length})`,
+                `All (${activeFlight.passengers.length})`
+              )}
+              placeholder={pick("Local / Transit / Corresp...", "Local / Transit / Transfer...")}
+              options={[
+                {
+                  value: "LOCAL",
+                  label: pick(`Locaux · ${activeFlight.origin}`, `Local · ${activeFlight.origin}`),
+                  count: filterMeta.counts.DEP_LOCAL,
+                  keywords: "local locaux",
+                },
+                {
+                  value: "TRANSIT",
+                  label: pick("Transit (même avion)", "Transit (same aircraft)"),
+                  count: filterMeta.counts.DEP_TRANSIT,
+                  keywords: "transit escale meme avion through #",
+                },
+                {
+                  value: "CONNECTION",
+                  label: pick("Correspondance (transfert)", "Connection (transfer)"),
+                  count: filterMeta.counts.DEP_CONNECTION,
+                  keywords: "correspondance transfert autre vol connection ib",
+                },
+              ]}
+              title={pick(
+                "Filtrer par provenance : locaux, transit (même avion) ou correspondance/transfert (autre vol)",
+                "Filter by departure origin: local, through-transit, or transfer connection"
+              )}
+            />
+
+            <FilterOptionField
+              value={genderTypeFilter}
+              onChange={(v) => setGenderTypeFilter(v as GenderTypeFilter)}
+              prefixLabel={pick("Catégorie", "Category")}
+              allLabel={pick("Tous", "All")}
+              placeholder={pick("Sexe / Type...", "Gender / Type...")}
+              options={[
+                {
+                  value: "M",
+                  label: pick("Hommes (M)", "Male (M)"),
+                  count: filterMeta.counts.M,
+                  keywords: "homme male m",
+                },
+                {
+                  value: "F",
+                  label: pick("Femmes (F)", "Female (F)"),
+                  count: filterMeta.counts.F,
+                  keywords: "femme female f",
+                },
+                {
+                  value: "CHD",
+                  label: pick("Enfants (CHD)", "Children (CHD)"),
+                  count: filterMeta.counts.CHD,
+                  keywords: "enfant child chd",
+                },
+                {
+                  value: "INF",
+                  label: pick("Avec Bébé (INF)", "With Infant (INF)"),
+                  count: filterMeta.counts.INF,
+                  keywords: "bebe infant inf",
+                },
+                {
+                  value: "WEB_CHECKIN",
+                  label: pick("Check-in en ligne (WB)", "Online Check-in (WB)"),
+                  count: filterMeta.counts.WEB_CHECKIN,
+                  keywords: "web check-in wb",
+                },
+                {
+                  value: "NO_SEAT",
+                  label: pick("Sans siège / OFL", "No seat / OFL"),
+                  count: filterMeta.counts.NO_SEAT,
+                  keywords: "ofl sans siege offloaded",
+                },
+              ]}
+            />
+
+            <FilterOptionField
+              value={bookingClassFilter}
+              onChange={setBookingClassFilter}
+              prefixLabel={pick("Classe", "Class")}
+              allLabel={pick("Toutes", "All")}
+              placeholder={pick("Classe résa...", "Booking class...")}
+              options={filterMeta.bookingClasses.map((c) => ({
+                value: c.code,
+                label: `${pick("Classe", "Class")} ${c.code}`,
+                count: c.count,
+                keywords: c.code,
+              }))}
+            />
+
+            <FilterOptionField
+              value={editCodeFilter}
+              onChange={setEditCodeFilter}
+              prefixLabel="Edit Code"
+              allLabel={pick("Tous", "All")}
+              placeholder={pick("Saisir ou choisir code...", "Type or select code...")}
+              options={filterMeta.editCodes.map((ec) => {
+                const label = getEditCodeLabel(ec.code, language);
+                return {
+                  value: ec.code,
+                  label: label ? `${ec.code} — ${label}` : ec.code,
+                  count: ec.count,
+                  keywords: `${ec.code} ${label || ""}`,
+                };
+              })}
+            />
+
+            <FilterOptionField
+              value={baggageFilter}
+              onChange={(v) => setBaggageFilter(v as BaggageFilter)}
+              prefixLabel={pick("Bagages", "Baggage")}
+              allLabel={pick("Tous", "All")}
+              placeholder={pick("Bagages / Franchise...", "Baggage / Allowance...")}
+              options={[
+                {
+                  value: "WITH_BAGS",
+                  label: pick("Avec bagages en soute", "With checked baggage"),
+                  keywords: "avec bagages checked",
+                },
+                {
+                  value: "NO_BAGS",
+                  label: pick("Sans bagage (NB / 0)", "No baggage (NB / 0)"),
+                  keywords: "sans bagage nb",
+                },
+                {
+                  value: "MISSING_WEIGHT",
+                  label: pick("Poids non spécifié", "Missing weight"),
+                  keywords: "poids manquant missing weight",
+                },
+                {
+                  value: "CONFORME",
+                  label: pick("Franchise conforme", "Allowance compliant"),
+                  keywords: "conforme compliant",
+                },
+                {
+                  value: "ECART_NON_COUVERT",
+                  label: pick("Écart sans EMD", "Excess without EMD"),
+                  keywords: "ecart exces excess emd",
+                },
+                {
+                  value: "COUVERT_EMD",
+                  label: pick("Couvert par EMD / AE", "Covered by EMD / AE"),
+                  keywords: "couvert emd ae",
+                },
+              ]}
+            />
+
+            {filterMeta.destinations.length > 1 && (
+              <FilterOptionField
+                value={destFilter}
+                onChange={setDestFilter}
+                prefixLabel={pick("Dest.", "Dest.")}
+                allLabel={pick("Toutes", "All")}
+                placeholder={pick("Destination...", "Destination...")}
+                options={filterMeta.destinations.map((d) => ({
+                  value: d.code,
+                  label: `→ ${d.code}`,
+                  count: d.count,
+                  keywords: d.code,
+                }))}
+              />
+            )}
           </div>
         </div>
+      </CollapsiblePanel>
+
+      {/* 2. Flight KPIs Collapse (Same 8 compact KPIs as Overview, scoped to selected flight + Enhanced Manifest button on collapse header) */}
+      <CollapsiblePanel
+        title={`${activeFlight.airline} ${activeFlight.flightNumber} · ${normalizeDcsFlightDate(activeFlight.date)} · ${activeFlight.origin}`}
+        subtitle={`${activeFlightKpis.traveled} pax (C${activeFlightKpis.business}Y${activeFlightKpis.economy}) · ${activeFlightKpis.bags}/${activeFlightKpis.weight.toLocaleString(locale)} kg · ${activeFlightKpis.wbCount} WB · ${activeFlightKpis.emd} EMD · ${activeFlightKpis.noShow} NOSHOW`}
+        icon={<Plane className="w-4 h-4 text-[#4C2812] dark:text-[#F7BA42]" />}
+        defaultOpen={true}
+        rightContent={
+          <button
+            type="button"
+            onClick={() => onOpenEnhancedManifest(activeFlight)}
+            className="px-2.5 py-1 rounded-lg bg-[#4C2812] dark:bg-[#5C3016] hover:bg-[#321B0A] dark:hover:bg-[#6E3B1D] text-[#F7BA42] border border-transparent dark:border-[#E89C1D]/45 text-[11px] font-semibold inline-flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap shrink-0"
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Enhanced Manifest</span>
+          </button>
+        }
+      >
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {/* 1. Traveled Passengers */}
+          <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] rounded-xl p-3 flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1] truncate">
+                {pick("Passagers Voyagés", "Traveled Passengers")}
+              </div>
+              <div className="text-xl font-bold text-[#321B0A] dark:text-[#FAF7F2] mt-1 font-mono tabular-nums leading-none">
+                {activeFlightKpis.traveled}
+              </div>
+              <div className="text-[11px] font-bold text-[#4C2812] dark:text-[#F7BA42] mt-1 font-mono tabular-nums">
+                C{activeFlightKpis.business}Y{activeFlightKpis.economy}
+              </div>
+            </div>
+            <div className="p-2 rounded-lg bg-[#EFE4D4] dark:bg-[#3A2212] shrink-0">
+              <Users className="w-5 h-5 text-[#4C2812] dark:text-[#F7BA42]" />
+            </div>
+          </div>
+
+          {/* 2. Baggage */}
+          <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] rounded-xl p-3 flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1] truncate">
+                {pick("Bagages", "Baggage")}
+              </div>
+              <div className="text-xl font-bold text-[#321B0A] dark:text-[#FAF7F2] mt-1 font-mono tabular-nums leading-none">
+                {activeFlightKpis.bags}/{activeFlightKpis.weight.toLocaleString(locale)}{" "}
+                <span className="text-xs font-semibold text-[#6E472B] dark:text-[#DECAB1]">kg</span>
+              </div>
+              <div className="text-[11px] text-[#6E472B] dark:text-[#DECAB1] mt-1 font-mono tabular-nums">
+                {pick("moy.", "avg.")}{" "}
+                {activeFlightKpis.bags > 0
+                  ? (activeFlightKpis.weight / activeFlightKpis.bags).toFixed(1)
+                  : "0"}{" "}
+                {pick("kg/sac", "kg/bag")}
+              </div>
+            </div>
+            <div className="p-2 rounded-lg bg-[#EFE4D4] dark:bg-[#3A2212] shrink-0">
+              <Luggage className="w-5 h-5 text-[#4C2812] dark:text-[#F7BA42]" />
+            </div>
+          </div>
+
+          {/* 3. Baggage Allowance Deviations */}
+          <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] rounded-xl p-3 flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1] truncate">
+                {pick("Écarts Franchises Bagages", "Baggage Allowance Deviations")}
+              </div>
+              <div className="text-xl font-bold text-rose-700 dark:text-rose-400 mt-1 font-mono tabular-nums leading-none">
+                {activeFlightKpis.uncoveredDeviations}{" "}
+                <span className="text-[11px] font-semibold text-rose-600 dark:text-rose-400">
+                  {pick("sans EMD", "without EMD")}
+                </span>
+              </div>
+              {activeFlightKpis.missingBagWeight > 0 && (
+                <div className="text-[11px] font-bold text-amber-700 dark:text-amber-400 mt-1 font-mono tabular-nums">
+                  +{activeFlightKpis.missingBagWeight}{" "}
+                  {pick("poids manq.", "missing wt")}
+                </div>
+              )}
+            </div>
+            <div className="p-2 rounded-lg bg-rose-100/80 dark:bg-rose-950/60 shrink-0">
+              <ShieldAlert className="w-5 h-5 text-rose-600 dark:text-rose-400" />
+            </div>
+          </div>
+
+          {/* 4. EMD */}
+          <div
+            onClick={() => onOpenEmdAudit?.(activeFlight)}
+            className={`bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] rounded-xl p-3 flex items-start justify-between gap-2 ${
+              onOpenEmdAudit ? "hover:border-[#E89C1D] cursor-pointer transition-colors" : ""
+            }`}
+          >
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1]">
+                EMD
+              </div>
+              <div className="text-xl font-bold text-[#321B0A] dark:text-[#FAF7F2] mt-1 font-mono tabular-nums leading-none">
+                {activeFlightKpis.emd}
+              </div>
+            </div>
+            <div className="p-2 rounded-lg bg-[#FDF4E3] dark:bg-[#3A2212] shrink-0">
+              <CreditCard className="w-5 h-5 text-[#8C5214] dark:text-[#E89C1D]" />
+            </div>
+          </div>
+
+          {/* 5. Loyalty */}
+          <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] rounded-xl p-3 flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1]">
+                {pick("Fidélité", "Loyalty")}
+              </div>
+              <div className="text-xl font-bold text-[#321B0A] dark:text-[#FAF7F2] mt-1 font-mono tabular-nums leading-none">
+                {activeFlightKpis.loyaltyTotal}
+              </div>
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1] mt-1 font-mono tabular-nums">
+                {activeFlightKpis.ff}/{activeFlightKpis.fqtv} FF/FQTV
+              </div>
+            </div>
+            <div className="p-2 rounded-lg bg-[#FDF4E3] dark:bg-[#3A2212] shrink-0">
+              <Award className="w-5 h-5 text-[#E89C1D]" />
+            </div>
+          </div>
+
+          {/* 6. NOSHOW */}
+          <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] rounded-xl p-3 flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1]">
+                NOSHOW
+              </div>
+              <div className="text-xl font-bold text-amber-800 dark:text-amber-300 mt-1 font-mono tabular-nums leading-none">
+                {activeFlightKpis.noShow}
+              </div>
+            </div>
+            <div className="p-2 rounded-lg bg-amber-100/80 dark:bg-amber-950/60 shrink-0">
+              <UserX className="w-5 h-5 text-amber-700 dark:text-amber-400" />
+            </div>
+          </div>
+
+          {/* 7. NO TICKET */}
+          <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] rounded-xl p-3 flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1]">
+                NO TICKET
+              </div>
+              <div className="text-xl font-bold text-rose-700 dark:text-rose-400 mt-1 font-mono tabular-nums leading-none">
+                {activeFlightKpis.noTicket}
+              </div>
+            </div>
+            <div className="p-2 rounded-lg bg-rose-100/80 dark:bg-rose-950/60 shrink-0">
+              <TicketX className="w-5 h-5 text-rose-600 dark:text-rose-400" />
+            </div>
+          </div>
+
+          {/* 8. WEB CHECK IN */}
+          <div className="bg-[#FAF7F2] dark:bg-[#28170C] border border-[#E6D7C3] dark:border-[#4C2812] rounded-xl p-3 flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[11px] font-semibold text-[#6E472B] dark:text-[#DECAB1]">
+                WEB CHECK IN
+              </div>
+              <div className="text-xl font-bold text-sky-700 dark:text-sky-300 mt-1 font-mono tabular-nums leading-none flex items-baseline gap-1.5">
+                <span>{activeFlightKpis.wbCount}</span>
+                <span className="text-xs font-bold text-sky-600 dark:text-sky-400">
+                  ({activeFlightKpis.wbPct}%)
+                </span>
+              </div>
+            </div>
+            <div className="p-2 rounded-lg bg-sky-100/80 dark:bg-sky-950/60 shrink-0">
+              <Smartphone className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+            </div>
+          </div>
         </div>
       </CollapsiblePanel>
 

@@ -296,9 +296,9 @@ export interface ManifestPassenger {
   totalBagWeight: number;
   baggageDestination: string;
   // Allowance & Deviation audit
-  allowedBagsCount: number; // 2
-  allowedWeightPerBag: number; // 32 for Business, 24 for Eco
-  allowedTotalWeight: number; // 64 for Business, 48 for Eco
+  allowedBagsCount: number; // 2 standard, 3 for Web Check-in (WB)
+  allowedWeightPerBag: number; // 32 for Business, 24 for Eco (cumulative pooling allowed)
+  allowedTotalWeight: number; // 64 (69 WB) for Business, 48 (53 WB) for Eco
   baggageCompliance: ManifestBaggageCompliance;
   baggageDeviations: string[];
   hasMissingBaggageWeight?: boolean;
